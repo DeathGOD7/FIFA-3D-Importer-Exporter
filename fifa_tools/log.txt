@@ -1,0 +1,3 @@
+Mesh Count:   0 || Vert Count:   578 || Chunk Length: 36 || File Offset:   15200 || Of Type: hair
+Mesh Count:   1 || Vert Count:  1046 || Chunk Length: 40 || File Offset:   36032 || Of Type: hair
+Bones DetectedBones Detected
