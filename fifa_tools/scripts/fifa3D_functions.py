@@ -21,9 +21,7 @@ else:
 # half = imp.load_source(
 #     'half', prePath + halfpath)
 #half = imp.load_compiled('half', prePath + 'fifa_tools' + os.sep + 'scripts' + os.sep + 'half.pyc')
-# from fifa_tools.scripts import fifa3D_main
-# from fifa_tools.scripts import fifa3D_operators
-# from fifa_tools.scripts import fifa3D_functions
+
 from fifa_tools.scripts import half
 
 dir = 'fifa_tools'

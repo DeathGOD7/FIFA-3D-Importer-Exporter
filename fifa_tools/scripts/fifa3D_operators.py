@@ -28,8 +28,11 @@ else:
 # from fifa_func import texture_helper as tex_gh
 # from fifa_main import sig, crowdGroup
 
+
+import fifa_tools.scripts.fifa3D_functions as fifa_func
 from fifa_tools.scripts.fifa3D_functions import general_helper as gh
 from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
+import fifa_tools.scripts.fifa3D_main as fifa_main
 from fifa_tools.scripts.fifa3D_main import sig, crowdGroup
 
 f = 0
