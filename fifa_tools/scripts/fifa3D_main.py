@@ -30,6 +30,7 @@ from fifa_func import texture_helper as tex_gh
 from fifa_func import half
 comp = half.Float16Compressor()
 
+
 class crowdGroup:
     fullNessDict = {'full': 255,  'almostFull': 75, 
      'halfFull': 25, 
@@ -1564,3 +1565,36 @@ def write_xml_param(name, index, prop):
         elif value_repr == 'False':
             value_repr = '0'
     return '<parameter index=' + chr(34) + str(index) + chr(34) + ' name=' + chr(34) + name + chr(34) + ' value=' + chr(34) + value_repr + chr(34) + ' />\n'
+
+
+def make_annotations(cls):
+	"""Converts class fields to annotations if running with Blender 2.8"""
+	if bpy.app.version < (2, 80):
+		return cls
+	bl_props = {k: v for k, v in cls.__dict__.items() if isinstance(v, tuple)}
+	if bl_props:
+		if '__annotations__' not in cls.__dict__:
+			setattr(cls, '__annotations__', {})
+		annotations = cls.__dict__['__annotations__']
+		for k, v in bl_props.items():
+			annotations[k] = v
+			delattr(cls, k)
+	return cls
+
+classes = [
+	crowdGroup,
+	fifa_rx3
+	]
+
+def register():
+	for cls in classes:
+		make_annotations(cls) # what is this? Read the section on annotations above!
+		bpy.utils.register_class(cls)
+
+
+def unregister():  # note how unregistering is done in reverse
+	for cls in reversed(classes):
+		bpy.utils.unregister_class(cls)
+		
+if __name__ == "__main__":
+	register()
