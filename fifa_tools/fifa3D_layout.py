@@ -14,7 +14,7 @@
 from fifa_tools import bl_info
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
-#version = (0, 67)
+#version = (0, 67, 'alpha')
 
 import bpy
 import imp
