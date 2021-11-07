@@ -53,7 +53,6 @@ credit1 = version_text + ", New version made & updated by Death GOD 7"
 credit2 = "Previous version made by arti-10"
 game_version = " " # you can add number if you want , removed by deathgod7
 dev_status = 0
-
 ###VERTEX GROUP PANEL###
 
 
@@ -423,49 +422,63 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 	def draw(self, context):
 		scn = context.scene
 		layout = self.layout
+
+		#Enable if any export option selected
+		if (scn.stadium_export_flag or scn.trophy_export_flag or scn.face_edit_flag or scn.gen_overwriter_flag):
+			isExportActive = True
+		else:
+			isExportActive = False
 		
+		#region Info Panel
+
 		# Information Panel
-		row = layout.row(align=True)
-		row.label(icon='INFO', text='Export Information Panel')
+		row1 = layout.row(align=True)
+		row1.label(icon='INFO', text='Export Information Panel')
 		box = layout.box()
 		col = box.column()
 		row = col.row()
+		if isExportActive != True:
+			row.label(text='[INFO] All good here. Ready to export.')
 		row.alignment = 'EXPAND'
 
 		# Error Prompts
 		if (scn.stadium_export_flag and scn.trophy_export_flag):
-			row.label(text='Potentional Model Export Conflict.', icon='ERROR')
+			row.label(text='[ERROR] Model Export conflict found.')
 			row = col.row()
-			row.label(text='Check your export flags', icon='ERROR')
+			row.label(text='[ERROR] Check your export flags.')
+			row = col.row()
+		
+		if (scn.face_edit_flag and scn.gen_overwriter_flag):
+			row.label(text='[ERROR] File Overwriter conflict found.')
+			row = col.row()
+			row.label(text='[ERROR] Check your export flags.')
 			row = col.row()
 
 		if (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
 			row.label(
-				text='Exporting and Overwriting enabled. Potential Model Export Conflict.', icon='ERROR')
+				text='[ERROR] Exporting and Overwriting both enabled.')
 			row = col.row()
-			row.label(text='Check your export flags.', icon='ERROR')
-			row = col.row()
-
-		if (scn.face_edit_flag and scn.gen_overwriter_flag):
-			row.label(text='Potentional Overwriter Conflict.', icon='ERROR')
-			row = col.row()
-			row.label(text='Check your export flags', icon='ERROR')
+			row.label(text='[ERROR] Check your export flags.')
 			row = col.row()
 
 		# Valid Notifications
 		if scn.stadium_export_flag and not(scn.trophy_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
-			row.label(text='Stadium Export Scheduled', icon='INFO')
+			row.label(text='[INFO] Stadium Export enabled.')
 			row = col.row()
 
 		if scn.trophy_export_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
-			row.label(text='Trophy/Ball Export Scheduled', icon='INFO')
+			row.label(text='[INFO] Trophy/Ball Export enabled.')
 			row = col.row()
+
 		if scn.face_edit_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.trophy_export_flag):
-			row.label(text='Face Editing Mode Enabled', icon='INFO')
+			row.label(text='[INFO] Face Editing Mode enabled.')
 			row = col.row()
+
 		if scn.gen_overwriter_flag and not (scn.face_edit_flag or scn.stadium_export_flag or scn.trophy_export_flag):
-			row.label(text='General Overwriting Mode Enabled', icon='INFO')
+			row.label(text='[INFO] General Overwriting Mode enabled.')
 			row = col.row()
+
+		#endregion
 
 		# New Exporter
 		row = layout.row(align=True)
