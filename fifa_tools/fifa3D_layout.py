@@ -11,7 +11,7 @@
 # 	"category": "Import-Export"
 #    }
 
-from . import bl_info
+from fifa_tools import bl_info
 vr = bl_info["version"]
 version = (vr[0], vr[1])
 #version = (0, 67)
@@ -33,20 +33,19 @@ if os.name == 'nt':  # windows detected
 else:
 	prePath = linux_path + os.sep
 
-fifa_operators_path = 'fifa_tools' + os.sep + \
-    'scripts' + os.sep + 'fifa3D_operators.py'
-fifa_operators = imp.load_source(
-	'fifa_operators', prePath + fifa_operators_path)
+# fifa_operators_path = 'fifa_tools' + os.sep + \
+#     'scripts' + os.sep + 'fifa3D_operators.py'
 # fifa_operators = imp.load_source(
-#    'fifa_operators', prePath + fifa_operators_path)
-#fifa_operators=imp.load_compiled('fifa_operators','fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_operators.pyc')
+# 	'fifa_operators', prePath + fifa_operators_path)
 
 from fifa_tools.scripts import fifa3D_main
 from fifa_tools.scripts import fifa3D_operators
 from fifa_tools.scripts import fifa3D_functions
+from fifa_tools.scripts import half
+
+#from fifa_tools.scripts.fifa3D_operators import light_props as light_props
 
 fifa3D_operators.outregister()
-#from fifa_operators import light_props as light_props
 
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1])

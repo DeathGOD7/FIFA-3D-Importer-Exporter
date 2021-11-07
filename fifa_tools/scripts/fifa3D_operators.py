@@ -15,17 +15,23 @@ if os.name == 'nt':
 	prePath = ''
 else:
 	prePath = linux_path + os.sep
-fifa_main_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_main.py'
-fifa_main = imp.load_source(
-	'fifa_main', prePath + fifa_main_path)
+# fifa_main_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_main.py'
+# fifa_main = imp.load_source(
+# 	'fifa_main', prePath + fifa_main_path)
 #fifa_main = imp.load_compiled('fifa_main', 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_main.pyc')
-fifa_func_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.py'
-fifa_func = imp.load_source(
-	'fifa_func', prePath + fifa_func_path)
+# fifa_func_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.py'
+# fifa_func = imp.load_source(
+# 	'fifa_func', prePath + fifa_func_path)
 #fifa_func = imp.load_compiled('fifa_func', 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.pyc')
-from fifa_func import general_helper as gh
-from fifa_func import texture_helper as tex_gh
-from fifa_main import sig, crowdGroup
+
+# from fifa_func import general_helper as gh
+# from fifa_func import texture_helper as tex_gh
+# from fifa_main import sig, crowdGroup
+
+from fifa_tools.scripts.fifa3D_functions import general_helper as gh
+from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
+from fifa_tools.scripts.fifa3D_main import sig, crowdGroup
+
 f = 0
 e = 0
 ddsheader = '10'

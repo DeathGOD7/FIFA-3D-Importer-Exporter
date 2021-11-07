@@ -8,6 +8,11 @@
 
 # Decompiled by Death GOD 7 from original fifa15_main.pyc
 
+from fifa_tools import bl_info
+vr = bl_info["version"]
+version = (vr[0], vr[1])
+#version = (0, 67)
+
 import bpy, imp, os, struct, bmesh, zlib, sys
 from math import radians, degrees
 from io import BytesIO
@@ -17,17 +22,27 @@ if os.name == 'nt':
     prePath = ''
 else:
     prePath = linux_path + os.sep
-fifa_func_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.py'
-fifa_func = imp.load_source(
-    'fifa_func', prePath + fifa_func_path)
+# fifa_func_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.py'
+# fifa_func = imp.load_source(
+#     'fifa_func', prePath + fifa_func_path)
 #fifa_func = imp.load_compiled('fifa_func', 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.pyc')
 from mathutils import Vector, Euler, Matrix
 from math import radians, sqrt
 from subprocess import call
-sig = u'FIFA 3D Importer/Exporter, made by arti & updated by Death GOD 7. v0.67. All rights reserved.\xa9'
-from fifa_func import general_helper as gh
-from fifa_func import texture_helper as tex_gh
-from fifa_func import half
+version_text = 'v' + str(version[0]) + '.' + \
+	str(version[1])
+credit1 = version_text + ", New version made & updated by Death GOD 7"
+credit2 = "Previous version made by arti-10"
+sig = credit1 + credit2
+
+# from fifa_func import general_helper as gh
+# from fifa_func import texture_helper as tex_gh
+# from fifa_func import half
+
+from fifa_tools.scripts.fifa3D_functions import general_helper as gh
+from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
+from fifa_tools.scripts.fifa3D_functions import half
+
 comp = half.Float16Compressor()
 
 

@@ -17,10 +17,15 @@ if os.name == 'nt':
     prePath = ''
 else:
     prePath = linux_path + os.sep
-halfpath = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'half.py'
-half = imp.load_source(
-    'half', prePath + halfpath)
+# halfpath = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'half.py'
+# half = imp.load_source(
+#     'half', prePath + halfpath)
 #half = imp.load_compiled('half', prePath + 'fifa_tools' + os.sep + 'scripts' + os.sep + 'half.pyc')
+# from fifa_tools.scripts import fifa3D_main
+# from fifa_tools.scripts import fifa3D_operators
+# from fifa_tools.scripts import fifa3D_functions
+from fifa_tools.scripts import half
+
 dir = 'fifa_tools'
 comp = half.Float16Compressor()
 dict = {(12, 0): (2, 0, 0, 1, 0),  (12, 1): (2, 0, 0, 1, 0), 
