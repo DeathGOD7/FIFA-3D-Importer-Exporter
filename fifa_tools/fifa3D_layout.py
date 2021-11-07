@@ -28,7 +28,7 @@ linux_path = '/media/2tb/Blender/blender-2.71-windows64'
 # Detect different operating system
 
 if os.name == 'nt':  # windows detected
-	print('Windows Platform Detected')
+	print('\nWindows Platform Detected')
 	prePath = ''
 else:
 	prePath = linux_path + os.sep
@@ -58,11 +58,11 @@ dev_status = 0
 ###VERTEX GROUP PANEL###
 
 
-class CrowdSection(bpy.types.Panel):
+class FIFA_PT_CrowdSection(bpy.types.Panel):
 
 	"""Creates a Panel in the Object properties window"""
 	bl_label = "FIFA 3D IE - Stadium Crowd Tools"
-	bl_idname = "crowd_color"
+	bl_idname = "FIFA_PT_CrowdSection"
 	bl_space_type = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context = "data"
@@ -91,15 +91,20 @@ class CrowdSection(bpy.types.Panel):
 			row.operator("mesh.align_crowd_seats")
 
 		col = layout.column()
+		r3 = col.row()
+		r3.alignment ='CENTER'
+		r3.scale_y = 1.2
+		r3.operator(
+			"system.visit_url_blog", text='Visit Official Website')
+		r3.operator(
+			"system.visit_url", text='Visit Official Thread')
+
 		r1 = col.row()
 		r1.alignment = 'CENTER'
 		r1.label(text=credit1)
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
-		row.operator(
-			"system.visit_url", text='Visit Official Thread', emboss=False)
 
 # FACEGEN PANEL
 # class FaceGenSection(bpy.types.Panel):
@@ -129,11 +134,11 @@ class CrowdSection(bpy.types.Panel):
 
 
 
-class Vertex_color_panel(bpy.types.Panel):
+class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 
 	"""Creates a Panel in the Object properties window"""
 	bl_label = "FIFA 3D IE - Vertex Coloring Panel"
-	bl_idname = "vertex_color_panel"
+	bl_idname = "FIFA_PT_Vertex_color_panel"
 	bl_space_type = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context = "data"
@@ -181,22 +186,25 @@ class Vertex_color_panel(bpy.types.Panel):
 		row.operator('mesh.auto_paint_mesh')
 
 		col = layout.column()
+		r3 = col.row()
+		r3.alignment ='CENTER'
+		r3.scale_y = 1.2
+		r3.operator(
+			"system.visit_url_blog", text='Visit Official Website')
+		r3.operator(
+			"system.visit_url", text='Visit Official Thread')
+
 		r1 = col.row()
 		r1.alignment = 'CENTER'
 		r1.label(text=credit1)
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
-		row.operator(
-			"system.visit_url_blog", text='Visit Official Website', emboss=False)
-		row.operator(
-			"system.visit_url", text='Visit Official Thread', emboss=False)
 
 
-class lights_panel(bpy.types.Panel):
+class FIFA_PT_lights_panel(bpy.types.Panel):
 	bl_label = "FIFA 3D IE - Light Configuration Panel"
-	bl_idname = "lights_panel"
+	bl_idname = "FIFA_PT_lights_panel"
 	bl_space_type = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context = "data"
@@ -271,26 +279,29 @@ class lights_panel(bpy.types.Panel):
 						print('')
 		
 		col = layout.column()
+		r3 = col.row()
+		r3.alignment ='CENTER'
+		r3.scale_y = 1.2
+		r3.operator(
+			"system.visit_url_blog", text='Visit Official Website')
+		r3.operator(
+			"system.visit_url", text='Visit Official Thread')
+
 		r1 = col.row()
 		r1.alignment = 'CENTER'
 		r1.label(text=credit1)
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
-		row.operator(
-			"system.visit_url_blog", text='Visit Official Website', emboss=False)
-		row.operator(
-			"system.visit_url", text='Visit Official Thread', emboss=False)
 
 
-class FifaImporter(bpy.types.Panel):
+class FIFA_PT_FifaImporter(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
 
 	"""Creates a Panel in Scene properties window"""
 	bl_label = "FIFA" + game_version + "3D Importer"
-	bl_idname = "FIFA_IMPORTER"
+	bl_idname = "FIFA_PT_FifaImporter"
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
 	#bl_context = "scene"
@@ -400,12 +411,12 @@ class FifaImporter(bpy.types.Panel):
 		r2.label(text=credit2)
 		
 
-class FifaExporter(bpy.types.Panel):
+class FIFA_PT_FifaExporter(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
 
 	bl_label = 'FIFA' + game_version + '3D Exporter'
-	bl_idname = 'FIFA_EXPORTER'
+	bl_idname = 'FIFA_PT_FifaExporter'
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
 	#bl_context = 'scene'
@@ -549,6 +560,14 @@ class FifaExporter(bpy.types.Panel):
 			row.enabled = False
 
 		col = layout.column()
+		r3 = col.row()
+		r3.alignment ='CENTER'
+		r3.scale_y = 1.2
+		r3.operator(
+			"system.visit_url_blog", text='Visit Official Website')
+		r3.operator(
+			"system.visit_url", text='Visit Official Thread')
+
 		r1 = col.row()
 		r1.alignment = 'CENTER'
 		r1.label(text=credit1)
@@ -556,18 +575,13 @@ class FifaExporter(bpy.types.Panel):
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
 		
-		row.operator(
-			"system.visit_url_blog", text='Visit Official Website', emboss=False)
-		row.operator(
-			"system.visit_url", text='Visit Official Thread', emboss=False)
-		
 
-class FifaStadium_Tools(bpy.types.Panel):
+class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
 
 	bl_label = 'FIFA' + game_version + 'Stadium Tools'
-	bl_idname = 'FIFA_STADIUM_TOOLS'
+	bl_idname = 'FIFA_PT_FifaStadium_Tools'
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
 	#bl_context = 'scene'
@@ -601,25 +615,28 @@ class FifaStadium_Tools(bpy.types.Panel):
 		row.operator('mesh.crowd_create_seats')
 
 		col = layout.column()
+		r3 = col.row()
+		r3.alignment ='CENTER'
+		r3.scale_y = 1.2
+		r3.operator(
+			"system.visit_url_blog", text='Visit Official Website')
+		r3.operator(
+			"system.visit_url", text='Visit Official Thread')
+
 		r1 = col.row()
 		r1.alignment = 'CENTER'
 		r1.label(text=credit1)
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
-		row.operator(
-			"system.visit_url_blog", text='Visit Official Website', emboss=False)
-		row.operator(
-			"system.visit_url", text='Visit Official Thread', emboss=False)
 
 
-class FifaHelping_Tools(bpy.types.Panel):
+class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
 
 	bl_label = 'FIFA' + game_version + 'Helping Tools'
-	bl_idname = 'FIFA_HELPING_TOOLS'
+	bl_idname = 'FIFA_PT_FifaHelping_Tools'
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
 	#bl_context = 'scene'
@@ -643,27 +660,30 @@ class FifaHelping_Tools(bpy.types.Panel):
 		row.operator("mesh.hide_props")
 
 		col = layout.column()
+		r3 = col.row()
+		r3.alignment ='CENTER'
+		r3.scale_y = 1.2
+		r3.operator(
+			"system.visit_url_blog", text='Visit Official Website')
+		r3.operator(
+			"system.visit_url", text='Visit Official Thread')
+
 		r1 = col.row()
 		r1.alignment = 'CENTER'
 		r1.label(text=credit1)
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
-		row.operator(
-			"system.visit_url_blog", text='Visit Official Website', emboss=False)
-		row.operator(
-			"system.visit_url", text='Visit Official Thread', emboss=False)
 
 
 if dev_status:
-	class DeveloperPanel(bpy.types.Panel):
+	class FIFA_PT_DeveloperPanel(bpy.types.Panel):
 		"""Create category in N-Menu"""
 		bl_category = "FIFA 3D I/E"
 
 		"""Creates a Panel in Scene properties window"""
 		bl_label = "FIFA" + game_version + "Developer Panel"
-		bl_idname = "FIFA_DEV_PANEL"
+		bl_idname = "FIFA_PT_DeveloperPanel"
 		bl_space_type = 'VIEW_3D'
 		bl_region_type = 'UI'
 		#bl_context = "scene"
@@ -684,6 +704,22 @@ if dev_status:
 			box.label(icon='INFO', text='Rx3 Unlocker')
 			row = box.row()
 			row.operator("system.rx3_unlock", text="UNLOCK")
+
+			col = layout.column()
+			r3 = col.row()
+			r3.alignment ='CENTER'
+			r3.scale_y = 1.2
+			r3.operator(
+				"system.visit_url_blog", text='Visit Official Website')
+			r3.operator(
+				"system.visit_url", text='Visit Official Thread')
+
+			r1 = col.row()
+			r1.alignment = 'CENTER'
+			r1.label(text=credit1)
+			r2 = col.row()
+			r2.alignment = 'CENTER'
+			r2.label(text=credit2)
 
 
 ###SCENE CUSTOM PROPERTIES###
@@ -1089,14 +1125,14 @@ def make_annotations(cls):
 	return cls
 
 classes = [
-	CrowdSection,
-	Vertex_color_panel,
-	lights_panel,
-	FifaImporter,
-	FifaExporter,
-	FifaStadium_Tools,
-	FifaHelping_Tools
-	#DeveloperPanel
+	FIFA_PT_CrowdSection,
+	FIFA_PT_Vertex_color_panel,
+	FIFA_PT_lights_panel,
+	FIFA_PT_FifaImporter,
+	FIFA_PT_FifaExporter,
+	FIFA_PT_FifaStadium_Tools,
+	FIFA_PT_FifaHelping_Tools,
+	#FIFA_PT_DeveloperPanel
 	]
 
 def register():

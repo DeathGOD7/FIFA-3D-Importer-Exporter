@@ -80,7 +80,7 @@ class texture_helper:
                     texture_path = bpy.data.images[texture_image].filepath
                     texture_alpha = bpy.data.images[texture_image].use_alpha
                     texture_maxsize = max(bpy.data.images[texture_image].size[0], bpy.data.images[texture_image].size[1])
-                    if i is not 1:
+                    if i != 1:
                         textures_list.append([
                          texture_name, texture_path, texture_alpha, 0, 0, 0, 0, '', texture_maxsize])
                     else:
