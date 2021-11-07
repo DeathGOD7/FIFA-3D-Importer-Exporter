@@ -382,12 +382,12 @@ class fifa_rx3:
         print('READING FILE OFFSETS...')
         log = open('fifa_tools\\log.txt', 'w')
         for offset in self.offsets:
-            if offset[0] == 0xC28193F0:
+            if offset[0] == 3263271920:
                 self.read_mesh_descr(offset[1])
-            elif offset[0] == 0x7A0B60DA:
+            elif offset[0] == 2047566042:
                 self.read_texture(offset[1], dir)
                 self.texture_count += 1
-            elif offset[0] == 0xF074FBB1 and scn.collision_flag:
+            elif offset[0] == 4034198449 and scn.collision_flag:
                 self.read_collision(offset[1])
             elif offset[0] == 685399266:
                 self.read_prop_positions(offset[1])
@@ -410,7 +410,7 @@ class fifa_rx3:
                     temp = gh.facereadlist(self.data, offset[1], self.endian)
                 self.itable.append(temp[0])
                 self.indices_offsets.append((offset[1], temp[1]))
-            elif offset[0] == 0xDF9AEC1E:
+            elif offset[0] == 3751472158:
                 log.write('Bones Detected')
                 self.data.seek(offset[1])
                 size = struct.unpack(self.endian + 'I', self.data.read(4))[0]
@@ -809,7 +809,7 @@ class fifa_rx3:
                         ind_size = 2
                     self.data.write(struct.pack('<4I', gh.size_round(self.object_list[j].indicesCount * ind_size + 16), self.object_list[j].indicesCount, ind_size, 0))
 
-            elif self.offset_list[i][0] == 0xC28193F0:
+            elif self.offset_list[i][0] == 3263271920:
                 id = self.offset_list[i][3]
                 self.data.write(struct.pack('<4I', self.offset_list[i][2], len(self.object_list[id].meshDescr) + 1, 0, 0))
                 s = bytes(self.object_list[id].meshDescr, 'utf-8')
@@ -827,7 +827,7 @@ class fifa_rx3:
                     self.data.write('\x00')
 
                 for j in range(len(self.object_list)):
-                    self.data.write(struct.pack('<2I', 0xD48D7880, len(self.object_list[j].name) + 1))
+                    self.data.write(struct.pack('<2I', 3566041216, len(self.object_list[j].name) + 1))
                     s = bytes(self.object_list[j].name, 'utf-8')
                     self.data.write(s)
                     self.data.write('\x00')
@@ -857,7 +857,7 @@ class fifa_rx3:
                 id = self.offset_list[i][3]
                 self.data.write(struct.pack('<4I', self.offset_list[i][2], self.object_list[id].vertsCount, self.object_list[id].chunkLength, 1))
                 self.convert_mesh_to_bytes(self.object_list[id].meshDescrShort, self.object_list[id].vertsCount, self.object_list[id].verts, self.object_list[id].uvs, self.object_list[id].colors)
-            elif self.offset_list[i][0] == 0xD48D7880:
+            elif self.offset_list[i][0] == 3566041216:
                 self.data.write(struct.pack('<4I', 4, 0, 0, 0))
             elif self.offset_list[i][0] == 230948820:
                 id = self.offset_list[i][3]
@@ -886,21 +886,21 @@ class fifa_rx3:
 
             elif self.offset_list[i][0] == 2116321516:
                 id = self.offset_list[i][3]
-                self.data.write(struct.pack('<4I', self.offset_list[i][2], 1, 0xFFFFFFFF, 0))
+                self.data.write(struct.pack('<4I', self.offset_list[i][2], 1, 4294967295, 0))
                 self.data.write(struct.pack('<4f', 1, 0, 0, 0))
                 self.data.write(struct.pack('<4f', 0, 1, 0, 0))
                 self.data.write(struct.pack('<4f', 0, 0, 1, 0))
                 self.data.write(struct.pack('<4f', 0, 0, 0, 1))
                 self.data.write(struct.pack('<4f', self.group_list[id][1][0], self.group_list[id][1][1], self.group_list[id][1][2], 1))
                 self.data.write(struct.pack('<4f', self.group_list[id][2][0], self.group_list[id][2][1], self.group_list[id][2][2], 1))
-                self.data.write(struct.pack('<2I', self.group_list[id][3], 0xFFFFFFFF))
+                self.data.write(struct.pack('<2I', self.group_list[id][3], 4294967295))
                 object_offset = self.group_list[id][4]
                 for j in range(self.group_list[id][3]):
                     self.data.write(struct.pack('<4f', self.object_list[(object_offset + j)].boundBox[0][0], self.object_list[(object_offset + j)].boundBox[0][1], self.object_list[(object_offset + j)].boundBox[0][2], 1))
                     self.data.write(struct.pack('<4f', self.object_list[(object_offset + j)].boundBox[1][0], self.object_list[(object_offset + j)].boundBox[1][1], self.object_list[(object_offset + j)].boundBox[1][2], 1))
                     self.data.write(struct.pack('<2I', object_offset + j, self.object_list[(object_offset + j)].material))
 
-            elif self.offset_list[i][0] == 0xF074FBB1:
+            elif self.offset_list[i][0] == 4034198449:
                 id = self.offset_list[i][3]
                 self.data.write(struct.pack('4I', self.offset_list[i][2], 1, 0, 0))
                 s = bytes(self.collision_list[id][2], 'utf-8')
@@ -957,7 +957,7 @@ class fifa_rx3:
         if data_pass == 0:
             self.offset_list.append([582139446, 0, 0])
             for i in range(object_count):
-                self.offset_list.append([0xC28193F0, 0, 0, i])
+                self.offset_list.append([3263271920, 0, 0, i])
 
             self.offset_list.append([1285267122, 0, 0])
             for i in range(object_count):
@@ -972,17 +972,17 @@ class fifa_rx3:
 
             if scn.face_edit_head_flag:
                 for i in range(object_count):
-                    self.offset_list.append([0xDF9AEC1E, 0, 0, i])
+                    self.offset_list.append([3751472158, 0, 0, i])
 
             for i in range(object_count):
-                self.offset_list.append([0xD48D7880, 0, 0, i])
+                self.offset_list.append([3566041216, 0, 0, i])
 
             if scn.stadium_export_flag:
                 for i in range(prop_count):
                     self.offset_list.append([685399266, 0, 0, i])
 
                 for i in range(collision_count):
-                    self.offset_list.append([0xF074FBB1, 0, 0, i])
+                    self.offset_list.append([4034198449, 0, 0, i])
 
                 for i in range(material_count):
                     self.offset_list.append([123459928, 0, 0, i])
@@ -1014,7 +1014,7 @@ class fifa_rx3:
                         size += len(self.texture_list[j]) + 1 + 8
 
                     self.offset_list[i][2] = gh.size_round(size)
-                elif self.offset_list[i][0] == 0xC28193F0:
+                elif self.offset_list[i][0] == 3263271920:
                     id = self.offset_list[i][3]
                     self.offset_list[i][2] = gh.size_round(len(self.object_list[id].meshDescr) + 1 + 16)
                 elif self.offset_list[i][0] == 5798132:
@@ -1027,9 +1027,9 @@ class fifa_rx3:
                 elif self.offset_list[i][0] == 5798561:
                     id = self.offset_list[i][3]
                     self.offset_list[i][2] = gh.size_round(16 + self.object_list[id].vertsCount * self.object_list[id].chunkLength)
-                elif self.offset_list[i][0] == 0xD48D7880:
+                elif self.offset_list[i][0] == 3566041216:
                     self.offset_list[i][2] = 16
-                elif self.offset_list[i][0] == 0xF074FBB1:
+                elif self.offset_list[i][0] == 4034198449:
                     id = self.offset_list[i][3]
                     self.offset_list[i][2] = gh.size_round(16 + len(self.collision_list[id][2]) + 1 + 4 + self.collision_list[id][0] * 3 * 12)
                 elif self.offset_list[i][0] == 685399266:
@@ -1423,7 +1423,7 @@ def texture_convert(textures_list):
             status = call(['./fifa_tools/nvidia_tools/nvdxt.exe', '-file', tex[1], comp, '-nmips',
              str(nmips), '-outdir', './fifa_tools', '-quality_production', '-output', filename + '.dds'])
             tex[1] = os.path.join('fifa_tools', filename + '.dds')
-        if status == 0xFFFFFFFE:
+        if status == 4294967294:
             return 'texture_path_error,' + tex[1]
 
     return str(status)
