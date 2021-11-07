@@ -13,7 +13,7 @@
 
 from fifa_tools import bl_info
 vr = bl_info["version"]
-version = (vr[0], vr[1])
+version = (vr[0], vr[1], vr[2])
 #version = (0, 67)
 
 import bpy
@@ -48,7 +48,7 @@ from fifa_tools.scripts import half
 fifa3D_operators.outregister()
 
 version_text = 'v' + str(version[0]) + '.' + \
-	str(version[1])
+	str(version[1]) + '.' + str(version[2])
 credit1 = version_text + ", New version made & updated by Death GOD 7"
 credit2 = "Previous version made by arti-10"
 game_version = " " # you can add number if you want , removed by deathgod7

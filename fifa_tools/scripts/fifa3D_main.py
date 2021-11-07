@@ -29,8 +29,9 @@ else:
 from mathutils import Vector, Euler, Matrix
 from math import radians, sqrt
 from subprocess import call
+
 version_text = 'v' + str(version[0]) + '.' + \
-	str(version[1])
+	str(version[1]) + '.' + str(version[2])
 credit1 = version_text + ", New version made & updated by Death GOD 7"
 credit2 = "Previous version made by arti-10"
 sig = credit1 + credit2
