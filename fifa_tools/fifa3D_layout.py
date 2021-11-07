@@ -441,25 +441,30 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 			row.label(text='[INFO] All good here. Ready to export.')
 		row.alignment = 'EXPAND'
 
+		conflictFound = False
+
 		# Error Prompts
-		if (scn.stadium_export_flag and scn.trophy_export_flag):
+		if (scn.stadium_export_flag and scn.trophy_export_flag) and not (scn.face_edit_flag or scn.gen_overwriter_flag):
 			row.label(text='[ERROR] Model Export conflict found.')
 			row = col.row()
 			row.label(text='[ERROR] Check your export flags.')
 			row = col.row()
+			conflictFound = True
 		
-		if (scn.face_edit_flag and scn.gen_overwriter_flag):
+		elif (scn.face_edit_flag and scn.gen_overwriter_flag) and not (scn.stadium_export_flag or scn.trophy_export_flag):
 			row.label(text='[ERROR] File Overwriter conflict found.')
 			row = col.row()
 			row.label(text='[ERROR] Check your export flags.')
 			row = col.row()
+			conflictFound = True
 
-		if (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
+		elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
 			row.label(
 				text='[ERROR] Exporting and Overwriting both enabled.')
 			row = col.row()
 			row.label(text='[ERROR] Check your export flags.')
 			row = col.row()
+			conflictFound = True
 
 		# Valid Notifications
 		if scn.stadium_export_flag and not(scn.trophy_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
@@ -525,10 +530,23 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		row = col.row()
 		row.scale_y = 1.2
 
-		row.operator("mesh.test_fifa_export")
+		if scn.trophy_export_flag:
+			txt = "TROPHY / BALL EXPORT"
+		else:
+			txt = "STADIUM EXPORT"
+		
+		row.operator("mesh.test_fifa_export", text=txt)
 		row.operator('mesh.texture_export')
 		row.operator('mesh.crowd_export')
 		row.operator('mesh.lights_export')
+
+		# if scn.stadium_export_flag and scn.trophy_export_flag:
+		# 	row.enabled = False
+		# elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
+		# 	row.enabled = False
+
+		if conflictFound:
+			row.enabled = False
 
 		# Basic Exporter Overwriter
 		row = layout.row(align=True)
@@ -568,7 +586,13 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		else:
 			txt = "OVERWRITE"
 		row.operator("mesh.fifa_overwrite", text=txt)
-		if scn.face_edit_flag and scn.gen_overwriter_flag:
+		
+		# if scn.face_edit_flag and scn.gen_overwriter_flag:
+		# 	row.enabled = False
+		# elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
+		# 	row.enabled = False
+
+		if conflictFound:
 			row.enabled = False
 
 		col = layout.column()
