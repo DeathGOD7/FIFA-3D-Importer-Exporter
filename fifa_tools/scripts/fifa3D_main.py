@@ -227,7 +227,7 @@ class fifa_rx3:
 			try:
 				if mode:
 					self.data = open(self.path, 'wb')
-					return 'new'
+					return 'New RX3 Export'
 				else:
 					self.data = open(self.path, 'r+b')
 					if str(self.data.read(8))[2:-1] == 'chunkzip':
@@ -264,7 +264,7 @@ class fifa_rx3:
 						print(e.read())
 						print('                           I SEE WHAT YOU DID THERE')
 						e.close()
-						return 'file_clopy'
+						return 'file_copy'
 					self.data.seek(0)
 					return self
 			except IOError as e:

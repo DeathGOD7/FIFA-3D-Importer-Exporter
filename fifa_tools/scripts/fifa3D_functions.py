@@ -359,7 +359,13 @@ class general_helper:
 			bbox[1] = j[1]
 			bbox[2] = j[2]
 			object_matrix_wrld = object.matrix_world
-			bbox = rot_x_mat * scale_mat * object_matrix_wrld * bbox
+			
+			## For 2.79 and before
+			# bbox = rot_x_mat * scale_mat * object_matrix_wrld * bbox
+			
+			## For 2.80 and above
+			bbox = rot_x_mat @ scale_mat @ object_matrix_wrld @ bbox
+			
 			bv_list.append((bbox[2], bbox[1], bbox[0]))
 
 		print(bv_list)

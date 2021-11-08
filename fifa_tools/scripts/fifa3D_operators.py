@@ -1025,6 +1025,10 @@ class file_export(bpy.types.Operator):
 			f = fifa_main.fifa_rx3(scn.export_path + 'trophy-ball_' + str(scn.file_id) + '.rx3', 1)
 		#else:
 		for item in bpy.data.objects:
+			print(f'Object Name : {item.name}')
+			print(f'Object Type : {item.type}')
+			print(f'Object Child : {item.children}')
+
 			if scn.stadium_export_flag and item.type == 'EMPTY' and item.name == 'PROPS':
 				item_matrix_wrld = item.matrix_world
 				rot_x_mat = Matrix.Rotation(radians(-90), 4, 'X')
@@ -1038,7 +1042,16 @@ class file_export(bpy.types.Operator):
 					f.prop_list.append((
 						child_item.name, (co[0], co[1], co[2]), rot))
 
-			if item.type == 'EMPTY' and (item.name[0:5] == 'stad_' or item.name == 'TROPHY' or item.name == 'BALL'):
+			if scn.stadium_export_flag and item.type == 'MESH' and item.name[0:14] == 'stad_Collision':
+				entry = []
+				collision_tris_length, collision_verts_table, collision_part_name = fifa_main.convert_mesh_collisions(item)
+				entry.append(collision_tris_length)
+				entry.append(collision_verts_table)
+				entry.append(collision_part_name)
+				f.collision_list.append(entry)
+				continue
+
+			if item.type == 'EMPTY' and item.name[0:5] == 'stad_':
 				print(item.name)
 				if len(item.children) == 0:
 					continue
@@ -1123,14 +1136,83 @@ class file_export(bpy.types.Operator):
 					else:
 						f.object_list.append(entry)
 
-			if scn.stadium_export_flag and item.type == 'MESH' and item.name[0:14] == 'stad_Collision':
-				entry = []
-				collision_tris_length, collision_verts_table, collision_part_name = fifa_main.convert_mesh_collisions(item)
-				entry.append(collision_tris_length)
-				entry.append(collision_verts_table)
-				entry.append(collision_part_name)
-				f.collision_list.append(entry)
-				continue
+			if item.type == 'MESH' and ('trophy' in item.name or 'ball' in item.name):
+				#print(item.name)
+				if len(item.children) != 0:
+					continue
+				
+				entry = fifa_3d_model()
+				entry.diffuseId = 0
+				entry.name = item.name
+				entry.colorList, entry.boundBox, entry.meshDescr, entry.meshDescrShort, entry.chunkLength = fifa_main.convert_mesh_init(item, 0)
+				entry.vertsCount, entry.verts, entry.uvLayerCount, entry.uvs, entry.indicesCount, entry.indices, entry.colors, entry.normals = fifa_main.convert_mesh_init(item, 1)
+				
+				if scn.trophy_export_flag:
+					try:
+						mat_name = item.material_slots[0].name
+						if mat_name not in f.material_dict:
+							materialType = mat_name.split(sep='_')[0]
+							if materialType in standard_materials:
+								local_mat_name = materialType
+							elif bpy.data.materials[mat_name].use_transparency:
+								local_mat_name = 'diffusealpha'
+							else:
+								local_mat_name = 'diffuseopaque'
+							local_texture_list = []
+							local_texture_name_list = []
+							textureCount = 0
+							for i in range(10):
+								try:
+									local_texture_list.append(bpy.data.materials[mat_name].texture_slots[i].name)
+									local_texture_name_list.append(texture_slotType_dict[i])
+									textureCount += 1
+								except:
+									print('Empty Texture Slot')
+
+							print(local_texture_name_list)
+							size = 16 + len(local_mat_name) + 1
+							for i in range(len(local_texture_name_list)):
+								size += len(local_texture_name_list[i])
+								size += 5
+
+							size = gh.size_round(size)
+							f.material_dict[mat_name] = (
+								mat_name, local_mat_name, local_texture_list, local_texture_name_list, size)
+							f.material_list.append(mat_name)
+							for i in range(textureCount):
+								if local_texture_list[i] not in f.texture_list:
+									f.texture_list.append(local_texture_list[i])
+									continue
+
+							try:
+								entry_diffuse = f.texture_list.index(local_texture_list[0])
+								entry_material = f.material_list.index(mat_name)
+							except:
+								self.report({
+									'ERROR'}, 'Missing Texture in ' + str(item.name))
+								return {
+									'CANCELLED'}
+
+						try:
+							entry_diffuse = f.texture_list.index(f.material_dict[mat_name][2][0])
+							entry_material = f.material_list.index(mat_name)
+						except:
+							self.report({
+								'ERROR'}, 'Missing Texture in ' + str(item.name))
+							return {
+								'CANCELLED'}
+					except IndexError:
+						print('No material in object' + str(item.name))
+
+			
+				entry.diffuseId = entry_diffuse
+				try:
+					entry.material = entry_material
+				except:
+					pass
+				
+				f.object_list.append(entry)
+
 
 			f.write_offsets(0)
 			f.write_offsets(1)
@@ -1144,7 +1226,7 @@ class file_export(bpy.types.Operator):
 			s = bytes(sig, 'utf-8')
 			f.data.write(s)
 			f.data.close()
-			self.report({'INFO'}, 'Model exported Successfully')
+			self.report({'INFO'}, 'Model Exported Successfully')
 
 		return {'FINISHED'}
 
