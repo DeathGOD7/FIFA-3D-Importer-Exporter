@@ -109,7 +109,7 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
-	mesh.update()
+	## mesh.update()
 
 	for i in range(len(uvs)):
 		uvtex = mesh.uv_textures.new(name='map' + str(i))
@@ -131,7 +131,8 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 		collayer = bm.loops.layers.color[('col' + str(i))]
 		for f in bm.faces:
 			for l in f.loops:
-				l[collayer].r, l[collayer].g, l[collayer].b = colors[i][l.vert.index]
+				#l[collayer].r, l[collayer].g, l[collayer].b = colors[i][l.vert.index]
+				l[collayer].x, l[collayer].y, l[collayer].z = colors[i][l.vert.index]
 
 	if normal_flag == True:
 		for i in range(len(normals)):
