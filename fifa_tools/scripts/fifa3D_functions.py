@@ -171,6 +171,7 @@ class general_helper:
                             continue
                         faces.append((temp[0], temp[1], temp[2]))
 
+        print(f'data:{f}\noffset:{offset}\nendian:{endian}\nface:{faces}\nindicesCount:{indicescount}\nindicesLength:{indiceslength}')
         return (
          faces, indiceslength)
 
@@ -485,3 +486,34 @@ class general_helper:
 
         bm.to_mesh(me)
         bm.free()
+
+def make_annotations(cls):
+	"""Converts class fields to annotations if running with Blender 2.8"""
+	if bpy.app.version < (2, 80):
+		return cls
+	bl_props = {k: v for k, v in cls.__dict__.items() if isinstance(v, tuple)}
+	if bl_props:
+		if '__annotations__' not in cls.__dict__:
+			setattr(cls, '__annotations__', {})
+		annotations = cls.__dict__['__annotations__']
+		for k, v in bl_props.items():
+			annotations[k] = v
+			delattr(cls, k)
+	return cls
+
+classes = [
+	texture_helper,
+	general_helper
+	]
+
+def register():
+	for cls in classes:
+		make_annotations(cls) # what is this? Read the section on annotations above!
+		bpy.utils.register_class(cls)
+
+def unregister():  # note how unregistering is done in reverse
+	for cls in reversed(classes):
+		bpy.utils.unregister_class(cls)
+		
+if __name__ == "__main__":
+	register()
