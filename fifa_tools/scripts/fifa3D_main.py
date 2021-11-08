@@ -45,6 +45,7 @@ from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
 from fifa_tools.scripts.fifa3D_functions import half
 
 comp = half.Float16Compressor()
+# logfile = os.path.expanduser('~\Documents\FIFA3D') + '\log.txt'
 
 
 class crowdGroup:
@@ -194,6 +195,8 @@ class fifa_rx3:
         self.collision_list = []
         self.name = ''
         self.code = self.init_read(self.path, mode)
+        self.logfile = os.path.expanduser('~\Documents\SE7EN\FIFA 3D') + '\log.txt'
+
         print(self.code)
 
     def init_read(self, path, mode):
@@ -380,7 +383,7 @@ class fifa_rx3:
     def read_file_offsets(self, dir):
         scn = bpy.context.scene
         print('READING FILE OFFSETS...')
-        log = open('fifa_tools\\log.txt', 'w')
+        log = open(self.logfile, 'a+')
         for offset in self.offsets:
             if offset[0] == 3263271920:
                 self.read_mesh_descr(offset[1])
@@ -450,6 +453,8 @@ class fifa_rx3:
         offsets = []
         name = str(self.data.read(3))[2:-1]
         endian = str(self.data.read(1))[2:-1]
+        filesize = 0
+        mesh_count = 0
         if endian == 'b':
             endian = '>'
             endianstr = 'Big Endian'

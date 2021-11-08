@@ -45,7 +45,7 @@ from fifa_tools.scripts import half
 
 #from fifa_tools.scripts.fifa3D_operators import light_props as light_props
 
-fifa3D_operators.outregister()
+#fifa3D_operators.outregister()
 
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
@@ -1172,12 +1172,14 @@ classes = [
 	]
 
 def register():
+	fifa3D_operators.register()
 	for cls in classes:
 		make_annotations(cls) # what is this? Read the section on annotations above!
 		bpy.utils.register_class(cls)
 
 
 def unregister():  # note how unregistering is done in reverse
+	fifa3D_operators.unregister()
 	for cls in reversed(classes):
 		bpy.utils.unregister_class(cls)
 

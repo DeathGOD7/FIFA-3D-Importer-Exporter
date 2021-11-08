@@ -1479,10 +1479,6 @@ def make_annotations(cls):
 			delattr(cls, k)
 	return cls
 
-def outregister():
-	for cls in classes:
-		make_annotations(cls) # what is this? Read the section on annotations above!
-		bpy.utils.register_class(cls)
 
 classes = [
 	align_crowd_faces,
@@ -1513,10 +1509,10 @@ classes = [
 	hide_props
 	]
 
-#def register():
-#	for cls in classes:
-#		make_annotations(cls) # what is this? Read the section on annotations above!
-#		bpy.utils.register_class(cls)
+def register():
+	for cls in classes:
+		make_annotations(cls) # what is this? Read the section on annotations above!
+		bpy.utils.register_class(cls)
 
 
 
