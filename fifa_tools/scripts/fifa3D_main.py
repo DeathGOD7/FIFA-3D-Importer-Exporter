@@ -422,7 +422,7 @@ class fifa_rx3:
 				else:
 					temp = gh.facereadlist(self.data, offset[1], self.endian)
 				self.itable.append(temp[0])
-				print(f'{self.itable}')
+				## print(f'{self.itable}')
 				self.indices_offsets.append((offset[1], temp[1]))
 			elif offset[0] == 3751472158:
 				log.write('Bones Detected\n')

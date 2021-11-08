@@ -179,7 +179,7 @@ class general_helper:
 						continue
 					faces.append((temp[0], temp[1], temp[2]))
 
-		print(f'data:{f}\noffset:{offset}\nendian:{endian}\nface:{faces}\nindicesCount:{indicescount}\nindicesLength:{indiceslength}')
+		## print(f'data:{f}\noffset:{offset}\nendian:{endian}\nface:{faces}\nindicesCount:{indicescount}\nindicesLength:{indiceslength}')
 		return (
 		 faces, indiceslength)
 
