@@ -535,7 +535,7 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		else:
 			txt = "STADIUM EXPORT"
 		
-		row.operator("mesh.test_fifa_export", text=txt)
+		row.operator("mesh.fifa_export", text=txt)
 		row.operator('mesh.texture_export')
 		row.operator('mesh.crowd_export')
 		row.operator('mesh.lights_export')

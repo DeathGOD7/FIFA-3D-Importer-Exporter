@@ -1012,125 +1012,125 @@ class fifa_3d_model:
 		self.material = 0
 
 
-class test_file_export(bpy.types.Operator):
-	bl_idname = 'mesh.test_fifa_export'
+class file_export(bpy.types.Operator):
+	bl_idname = 'mesh.fifa_export'
 	bl_label = 'EXPORT'
 
 	def invoke(self, context, event):
 		scn = bpy.context.scene
-		print('Test Exporter')
+		print('FIFA Exporter')
 		if scn.stadium_export_flag:
 			f = fifa_main.fifa_rx3(scn.export_path + 'stadium_' + str(scn.file_id) + '.rx3', 1)
 		elif scn.trophy_export_flag:
 			f = fifa_main.fifa_rx3(scn.export_path + 'trophy-ball_' + str(scn.file_id) + '.rx3', 1)
-		else:
-			for item in bpy.data.objects:
-				if scn.stadium_export_flag and item.type == 'EMPTY' and item.name == 'PROPS':
-					item_matrix_wrld = item.matrix_world
-					rot_x_mat = Matrix.Rotation(radians(-90), 4, 'X')
-					scale_mat = Matrix.Scale(100, 4)
-					for child_item in item.children:
-						co = scale_mat * rot_x_mat * item_matrix_wrld * child_item.location
-						rot = (child_item.rotation_euler[0],
-						 child_item.rotation_euler[2], child_item.rotation_euler[1])
-						rot = (
-						 round(rot[0] + radians(90)), round(rot[1] - radians(180)), round(rot[2]))
-						f.prop_list.append((
-						 child_item.name, (co[0], co[1], co[2]), rot))
+		#else:
+		for item in bpy.data.objects:
+			if scn.stadium_export_flag and item.type == 'EMPTY' and item.name == 'PROPS':
+				item_matrix_wrld = item.matrix_world
+				rot_x_mat = Matrix.Rotation(radians(-90), 4, 'X')
+				scale_mat = Matrix.Scale(100, 4)
+				for child_item in item.children:
+					co = scale_mat * rot_x_mat * item_matrix_wrld * child_item.location
+					rot = (child_item.rotation_euler[0],
+						child_item.rotation_euler[2], child_item.rotation_euler[1])
+					rot = (
+						round(rot[0] + radians(90)), round(rot[1] - radians(180)), round(rot[2]))
+					f.prop_list.append((
+						child_item.name, (co[0], co[1], co[2]), rot))
 
-				if item.type == 'EMPTY' and (item.name[0:5] == 'stad_' or item.name == 'TROPHY' or item.name == 'BALL'):
-					print(item.name)
-					if len(item.children) == 0:
-						continue
+			if item.type == 'EMPTY' and (item.name[0:5] == 'stad_' or item.name == 'TROPHY' or item.name == 'BALL'):
+				print(item.name)
+				if len(item.children) == 0:
+					continue
+				if scn.stadium_export_flag:
+					if len(f.group_list) == 0:
+						group_object_offset = 0
+					else:
+						group_object_offset = f.group_list[(-1)][4] + f.group_list[(-1)][3]
+					f.group_list.append([
+						item.name, [0, 0, 0], [0, 0, 0], len(item.children), group_object_offset])
+					f.group_list[(-1)][1], f.group_list[(-1)][2] = gh.group_bbox(item)
+				print('Group Found: ' + str(item.name))
+				for child_item in item.children:
+					entry = fifa_3d_model()
+					entry.diffuseId = 0
+					entry.name = child_item.name
+					entry.colorList, entry.boundBox, entry.meshDescr, entry.meshDescrShort, entry.chunkLength = fifa_main.convert_mesh_init(child_item, 0)
+					entry.vertsCount, entry.verts, entry.uvLayerCount, entry.uvs, entry.indicesCount, entry.indices, entry.colors, entry.normals = fifa_main.convert_mesh_init(child_item, 1)
 					if scn.stadium_export_flag:
-						if len(f.group_list) == 0:
-							group_object_offset = 0
-						else:
-							group_object_offset = f.group_list[(-1)][4] + f.group_list[(-1)][3]
-						f.group_list.append([
-						 item.name, [0, 0, 0], [0, 0, 0], len(item.children), group_object_offset])
-						f.group_list[(-1)][1], f.group_list[(-1)][2] = gh.group_bbox(item)
-					print('Group Found: ' + str(item.name))
-					for child_item in item.children:
-						entry = fifa_3d_model()
-						entry.diffuseId = 0
-						entry.name = child_item.name
-						entry.colorList, entry.boundBox, entry.meshDescr, entry.meshDescrShort, entry.chunkLength = fifa_main.convert_mesh_init(child_item, 0)
-						entry.vertsCount, entry.verts, entry.uvLayerCount, entry.uvs, entry.indicesCount, entry.indices, entry.colors, entry.normals = fifa_main.convert_mesh_init(child_item, 1)
-						if scn.stadium_export_flag:
-							try:
-								mat_name = child_item.material_slots[0].name
-								if mat_name not in f.material_dict:
-									materialType = mat_name.split(sep='_')[0]
-									if materialType in standard_materials:
-										local_mat_name = materialType
-									elif bpy.data.materials[mat_name].use_transparency:
-										local_mat_name = 'diffusealpha'
-									else:
-										local_mat_name = 'diffuseopaque'
-									local_texture_list = []
-									local_texture_name_list = []
-									textureCount = 0
-									for i in range(10):
-										try:
-											local_texture_list.append(bpy.data.materials[mat_name].texture_slots[i].name)
-											local_texture_name_list.append(texture_slotType_dict[i])
-											textureCount += 1
-										except:
-											print('Empty Texture Slot')
-
-									print(local_texture_name_list)
-									size = 16 + len(local_mat_name) + 1
-									for i in range(len(local_texture_name_list)):
-										size += len(local_texture_name_list[i])
-										size += 5
-
-									size = gh.size_round(size)
-									f.material_dict[mat_name] = (
-									 mat_name, local_mat_name, local_texture_list, local_texture_name_list, size)
-									f.material_list.append(mat_name)
-									for i in range(textureCount):
-										if local_texture_list[i] not in f.texture_list:
-											f.texture_list.append(local_texture_list[i])
-											continue
-
+						try:
+							mat_name = child_item.material_slots[0].name
+							if mat_name not in f.material_dict:
+								materialType = mat_name.split(sep='_')[0]
+								if materialType in standard_materials:
+									local_mat_name = materialType
+								elif bpy.data.materials[mat_name].use_transparency:
+									local_mat_name = 'diffusealpha'
+								else:
+									local_mat_name = 'diffuseopaque'
+								local_texture_list = []
+								local_texture_name_list = []
+								textureCount = 0
+								for i in range(10):
 									try:
-										entry_diffuse = f.texture_list.index(local_texture_list[0])
-										entry_material = f.material_list.index(mat_name)
+										local_texture_list.append(bpy.data.materials[mat_name].texture_slots[i].name)
+										local_texture_name_list.append(texture_slotType_dict[i])
+										textureCount += 1
 									except:
-										self.report({
-										 'ERROR'}, 'Missing Texture in ' + str(child_item.name))
-										return {
-										 'CANCELLED'}
+										print('Empty Texture Slot')
+
+								print(local_texture_name_list)
+								size = 16 + len(local_mat_name) + 1
+								for i in range(len(local_texture_name_list)):
+									size += len(local_texture_name_list[i])
+									size += 5
+
+								size = gh.size_round(size)
+								f.material_dict[mat_name] = (
+									mat_name, local_mat_name, local_texture_list, local_texture_name_list, size)
+								f.material_list.append(mat_name)
+								for i in range(textureCount):
+									if local_texture_list[i] not in f.texture_list:
+										f.texture_list.append(local_texture_list[i])
+										continue
 
 								try:
-									entry_diffuse = f.texture_list.index(f.material_dict[mat_name][2][0])
+									entry_diffuse = f.texture_list.index(local_texture_list[0])
 									entry_material = f.material_list.index(mat_name)
 								except:
 									self.report({
-									 'ERROR'}, 'Missing Texture in ' + str(child_item.name))
+										'ERROR'}, 'Missing Texture in ' + str(child_item.name))
 									return {
-									 'CANCELLED'}
+										'CANCELLED'}
 
-							except IndexError:
-								print('No material in object' + str(child_item.name))
+							try:
+								entry_diffuse = f.texture_list.index(f.material_dict[mat_name][2][0])
+								entry_material = f.material_list.index(mat_name)
+							except:
+								self.report({
+									'ERROR'}, 'Missing Texture in ' + str(child_item.name))
+								return {
+									'CANCELLED'}
 
-						entry.diffuseId = entry_diffuse
-						try:
-							entry.material = entry_material
-						except:
-							pass
-						else:
-							f.object_list.append(entry)
+						except IndexError:
+							print('No material in object' + str(child_item.name))
 
-				if scn.stadium_export_flag and item.type == 'MESH' and item.name[0:14] == 'stad_Collision':
-					entry = []
-					collision_tris_length, collision_verts_table, collision_part_name = fifa_main.convert_mesh_collisions(item)
-					entry.append(collision_tris_length)
-					entry.append(collision_verts_table)
-					entry.append(collision_part_name)
-					f.collision_list.append(entry)
-					continue
+					entry.diffuseId = entry_diffuse
+					try:
+						entry.material = entry_material
+					except:
+						pass
+					else:
+						f.object_list.append(entry)
+
+			if scn.stadium_export_flag and item.type == 'MESH' and item.name[0:14] == 'stad_Collision':
+				entry = []
+				collision_tris_length, collision_verts_table, collision_part_name = fifa_main.convert_mesh_collisions(item)
+				entry.append(collision_tris_length)
+				entry.append(collision_verts_table)
+				entry.append(collision_part_name)
+				f.collision_list.append(entry)
+				continue
 
 			f.write_offsets(0)
 			f.write_offsets(1)
@@ -1494,7 +1494,7 @@ classes = [
 	lights_export,
 	file_import,
 	texture_export,
-	test_file_export,
+	file_export,
 	crowd_export,
 	ob_group_separator,
 	file_overwrite,
