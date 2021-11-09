@@ -49,12 +49,16 @@ from fifa_tools.scripts import half
 
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
-credit1 = version_text + ", New version made & updated by Death GOD 7"
-credit2 = "Previous version made by arti-10"
-game_version = " " # you can add number if you want , removed by deathgod7
-dev_status = 0
-###VERTEX GROUP PANEL###
 
+# credit1 = version_text + ", New version made & updated by Death GOD 7"
+# credit2 = "Previous version made by arti-10"
+credit1 = version_text + ", FIFA 3D Importer / Exporter "
+credit2 = "Maintained & Updated by Death GOD 7 (Original Author : arti-10)"
+
+game_version = " " # you can add number if you want which shows up in panel layout , removed by deathgod7
+dev_status = 0
+
+###VERTEX GROUP PANEL###
 
 class FIFA_PT_CrowdSection(bpy.types.Panel):
 

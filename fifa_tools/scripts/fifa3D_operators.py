@@ -2,7 +2,7 @@
 # Decompiled by Death GOD 7 from original fifa15_operators.pyc
 
 import bpy, os, webbrowser, imp, math, sys, struct
-from bpy.types import Operator
+from bpy.types import NodeOutputFileSlotLayer, Operator
 from builtins import dir as class_dir
 from mathutils import Vector, Euler, Matrix
 from math import radians
@@ -44,15 +44,19 @@ objectcount = 0
 files = []
 dir = 'fifa_tools\\'
 dir = os.path.realpath(dir)
-texture_slotType_dict = {0: 'diffuseTexture',  1: 'ambientTexture', 
- 2: 'coeffMap', 
- 3: 'normalMap', 
- 4: 'cubicEnvMap', 
- 5: 'incandescenceMap', 
- 6: 'alphamask', 
- 7: 'noiseTexture', 
- 8: 'pitchLinesMap', 
- 9: 'diffuseTexture'}
+
+texture_slotType_dict = {
+	0: 'diffuseTexture', 
+	1: 'ambientTexture', 
+	2: 'coeffMap', 
+	3: 'normalMap', 
+	4: 'cubicEnvMap', 
+	5: 'incandescenceMap', 
+	6: 'alphamask', 
+	7: 'noiseTexture', 
+	8: 'pitchLinesMap', 
+	9: 'diffuseTexture'}
+
 light_props = [
  [
   'sShader', ['fGlareSensitivityCenter', 'fGlareSensitivityEdge', 'fGlareSensitivityPower', 'fGlareSizeMultSpread', 'fGlareBloomScale', 'fGlareBloomSpread', 'fGlareBloomRate', 'fGlareRotationRate', 'fFlareMovementRate', 'fFlareOffsetScale', 'fFlareEndScale'], ['fVbeamAngle', 'fVbeamAngleSpread', 'fVbeamLength', 'fVbeamLengthSpread']],
@@ -1143,6 +1147,7 @@ class file_export(bpy.types.Operator):
 				
 				entry = fifa_3d_model()
 				entry.diffuseId = 0
+				entry_diffuse = 0
 				entry.name = item.name
 				entry.colorList, entry.boundBox, entry.meshDescr, entry.meshDescrShort, entry.chunkLength = fifa_main.convert_mesh_init(item, 0)
 				entry.vertsCount, entry.verts, entry.uvLayerCount, entry.uvs, entry.indicesCount, entry.indices, entry.colors, entry.normals = fifa_main.convert_mesh_init(item, 1)
@@ -1204,7 +1209,6 @@ class file_export(bpy.types.Operator):
 					except IndexError:
 						print('No material in object' + str(item.name))
 
-			
 				entry.diffuseId = entry_diffuse
 				try:
 					entry.material = entry_material

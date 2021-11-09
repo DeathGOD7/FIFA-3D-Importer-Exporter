@@ -32,9 +32,9 @@ from subprocess import call
 
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
-credit1 = version_text + ", New version made & updated by Death GOD 7"
-credit2 = "Previous version made by arti-10"
-sig = credit1 + credit2
+credit1 = version_text + ", FIFA 3D Importer / Exporter "
+credit2 = "Maintained & Updated by Death GOD 7 (Original Author : arti-10)"
+sig = credit1 + '\n' + credit2
 
 # from fifa_func import general_helper as gh
 # from fifa_func import texture_helper as tex_gh
@@ -852,13 +852,15 @@ class fifa_rx3:
 					self.data.write(struct.pack('<2I', 685399266, len(self.prop_list[j][0]) + 1))
 					s = bytes(self.prop_list[j][0], 'utf-8')
 					self.data.write(s)
-					self.data.write('\x00')
+					self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+					# self.data.write(hex(00))
 
 				for j in range(len(self.object_list)):
 					self.data.write(struct.pack('<2I', 3566041216, len(self.object_list[j].name) + 1))
 					s = bytes(self.object_list[j].name, 'utf-8')
 					self.data.write(s)
-					self.data.write('\x00')
+					self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+					# self.data.write(hex(00))
 
 				for j in range(len(self.texture_list)):
 					self.data.write(struct.pack('<I', 2047566042))
@@ -871,7 +873,8 @@ class fifa_rx3:
 						self.data.write(struct.pack('<I', len(self.texture_list[j][0]) + 1))
 					else:
 						self.data.write(s)
-						self.data.write('\x00')
+						self.data.write(bytes('\x00' ,encoding = 'utf-8')) 
+						# self.data.write(hex(00)) 
 
 			elif self.offset_list[i][0] == 5798132:
 				id = self.offset_list[i][3]
@@ -893,23 +896,27 @@ class fifa_rx3:
 				if id >= len(self.group_list):
 					s = bytes('CollisionGeometry', 'utf-8')
 					data += self.data.write(s)
-					data += self.data.write('\x00')
+					data += self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+					# data += self.data.write(hex(00))
 					data += self.data.write(struct.pack('B', id))
 				else:
 					s = bytes(self.group_list[id][0][5:], 'utf-8')
 					self.data.write(s)
-					self.data.write('\x00')
+					self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+					# self.data.write(hex(00))
 					self.data.write(struct.pack('B', id))
 			elif self.offset_list[i][0] == 123459928:
 				id = self.offset_list[i][3]
 				self.data.write(struct.pack('<4I', self.offset_list[i][2], len(self.material_dict[self.material_list[id]][3]), 0, 0))
 				s = bytes(self.material_dict[self.material_list[id]][1], 'utf-8')
 				self.data.write(s)
-				self.data.write('\x00')
+				self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+				# self.data.write(hex(00))
 				for j in range(len(self.material_dict[self.material_list[id]][2])):
 					s = bytes(self.material_dict[self.material_list[id]][3][j], 'utf-8')
 					self.data.write(s)
-					self.data.write('\x00')
+					self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+					# self.data.write(hex(00))
 					self.data.write(struct.pack('I', self.texture_list.index(self.material_dict[self.material_list[id]][2][j])))
 
 			elif self.offset_list[i][0] == 2116321516:
@@ -933,7 +940,8 @@ class fifa_rx3:
 				self.data.write(struct.pack('4I', self.offset_list[i][2], 1, 0, 0))
 				s = bytes(self.collision_list[id][2], 'utf-8')
 				self.data.write(s)
-				self.data.write('\x00')
+				self.data.write(bytes('\x00' ,encoding = 'utf-8'))
+				# self.data.write(hex(00))
 				self.data.write(struct.pack('I', 1))
 				self.data.write(struct.pack('I', self.collision_list[id][0]))
 				for i in range(len(self.collision_list[id][1])):
@@ -1334,10 +1342,12 @@ def convert_mesh_init(object, mode):
 		object_matrix_wrld = object.matrix_world
 		rot_x_mat = Matrix.Rotation(radians(-90), 4, 'X')
 		scale_mat = Matrix.Scale(100, 4)
-		data.update(calc_tessface=True)
+		# data.update(calc_tessface=True)
+		data.update(calc_edges=True, calc_edges_loose=True)
 		uvcount = len(data.uv_layers)
 		colcount = len(data.vertex_colors)
-		for f in data.tessfaces:
+		# for f in data.tessfaces:
+		for f in data.loop_triangles:
 			if len(f.vertices) == 4:
 				indices.append((id, id + 1, id + 2))
 				indices.append((id + 3, id, id + 2))
