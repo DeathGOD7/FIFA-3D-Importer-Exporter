@@ -106,14 +106,14 @@ class crowdGroup:
 def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, normals, loc):
 	# scn = bpy.context.scene
 	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
-	print(f"UVs:{uvs}, Count:{count}")
+	#print(f"UVs:{uvs}, Count:{count}")
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
 	## mesh.update()
 
 	for i in range(len(uvs)):
-		uvtex = mesh.uv_textures.new(name='map' + str(i))
+		uvtex = mesh.uv_layers.new(name='map' + str(i))
 
 	for i in range(len(colors)):
 		coltex = mesh.vertex_colors.new(name='col' + str(i))
@@ -205,7 +205,7 @@ class fifa_rx3:
 		self.code = self.init_read(self.path, mode)
 		self.logfile = os.path.expanduser('~\Documents\SE7EN\FIFA 3D') + '\log.txt'
 
-		print(self.code)
+		print(f"RX3 Data File Object : {self.code}")
 
 	def init_read(self, path, mode):
 		# scn = bpy.context.scene
@@ -462,7 +462,9 @@ class fifa_rx3:
 				self.mesh_count += 1
 				log.write('Mesh Count: %3d || Vert Count: %5d || Chunk Length: %2d || File Offset: %7d || Of Type: %s' % (
 				 self.mesh_count, vc, chunk_length, offset[1], self.type))
-				temp = self.read_test(self.data, self.mesh_descrs[count], vc)
+				print(f'Mesh Descrs : { self.mesh_descrs[count]}\ntotal count:{vc}')
+				temp = self.read_file_data(self.data, self.mesh_descrs[count], vc)
+				#print(f"total uvs : {temp[2]}")
 				self.vxtable.append(temp[0])
 				self.cols.append(temp[1])
 				self.colcount.append(len(temp[1]))
@@ -548,7 +550,7 @@ class fifa_rx3:
 
 		self.mesh_descrs.append(list)
 
-	def read_test(self, f, opts, count):
+	def read_file_data(self, f, opts, count):
 		uvcount = 0
 		colcount = 0
 		verts = []
@@ -576,8 +578,9 @@ class fifa_rx3:
 						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_1(f))')
 					elif j[4] == '2f16':
 						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_0(f))')
-					else:
-						uvcount += 1
+					# else:
+					# 	uvcount += 1
+					uvcount += 1
 
 				elif j[0][0] == 'n':
 					colcount += 1

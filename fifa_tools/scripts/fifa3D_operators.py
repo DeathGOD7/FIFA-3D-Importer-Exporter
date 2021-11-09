@@ -526,7 +526,7 @@ class file_import(bpy.types.Operator):
 				self.report({'ERROR'}, 'File Error')
 				return {
 				 'CANCELLED'}
-			if f.code == 'file_clopy':
+			if f.code == 'file_copy':
 				self.report({'ERROR'}, 'Illegal File')
 				return {
 				 'CANCELLED'}
