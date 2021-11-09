@@ -106,6 +106,7 @@ class crowdGroup:
 def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, normals, loc):
 	# scn = bpy.context.scene
 	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
+	print(f"UVs:{uvs}, Count:{count}")
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
@@ -330,22 +331,40 @@ class fifa_rx3:
 		colcount = len(bm.loops.layers.color)
 		rot_x_mat = Matrix.Rotation(radians(90), 4, 'X')
 		scale_mat = Matrix.Scale(100, 4)
+		
+		if hasattr(bm.verts, "ensure_lookup_table"): 
+			bm.verts.ensure_lookup_table()
+			# only if you need to:
+			# bm.edges.ensure_lookup_table()   
+			# bm.faces.ensure_lookup_table()
+		
 		for vert in bm.verts:
-			co = scale_mat * rot_x_mat * object.matrix_world * vert.co
+			# For blender before 2.79
+			# co = scale_mat * rot_x_mat * object.matrix_world * vert.co
+			
+			# For blender after 2.80
+			co = scale_mat @ rot_x_mat @ object.matrix_world @ vert.co
+			
 			verts.append((co[0], -co[1], -co[2]))
 
+		bm.verts.ensure_lookup_table()
 		for i in range(len(bm.verts)):
+			bm.verts.ensure_lookup_table()
 			for j in range(uvcount):
 				uvlayer = bm.loops.layers.uv[j]
 				eval('uvs_' + str(j) + '.append((round(bm.verts[i].link_loops[0][uvlayer].uv.x,8),round(1-bm.verts[i].link_loops[0][uvlayer].uv.y,8)))')
 
+		bm.verts.ensure_lookup_table()
 		for i in range(len(bm.verts)):
+			bm.verts.ensure_lookup_table()
 			for j in range(colcount):
 				collayer = bm.loops.layers.color[j]
 				vert_data = bm.verts[i].link_loops[0][collayer]
 				eval('col_' + str(j) + '.append((vert_data[0]*1023,vert_data[1]*1023,vert_data[2]*1023))')
 
+		bm.faces.ensure_lookup_table()
 		for f in bm.faces:
+			bm.faces.ensure_lookup_table()
 			indices.append((
 			 f.verts[0].index, f.verts[1].index, f.verts[2].index))
 
@@ -377,6 +396,7 @@ class fifa_rx3:
 					col = (int(cols[2][i][0]) << 20) + (int(cols[2][i][1]) << 10) + int(cols[2][i][2])
 					self.data.write(struct.pack('<I', col))
 				elif o[0] == 't':
+					print(f'{o[1]}...{i}')
 					huvx = eval('comp.compress(round(uvs[int(o[1])][i][0],8))')
 					huvy = eval('comp.compress(round(uvs[int(o[1])][i][1],8))')
 					self.data.write(struct.pack('<HH', huvx, huvy))
