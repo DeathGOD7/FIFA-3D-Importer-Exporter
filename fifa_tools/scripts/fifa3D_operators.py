@@ -28,7 +28,7 @@ else:
 # from fifa_func import texture_helper as tex_gh
 # from fifa_main import sig, crowdGroup
 
-
+import fifa_tools
 import fifa_tools.scripts.fifa3D_functions as fifa_func
 from fifa_tools.scripts.fifa3D_functions import general_helper as gh
 from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
@@ -42,8 +42,8 @@ materials = []
 tex_names = []
 objectcount = 0
 files = []
-dir = 'fifa_tools\\'
-dir = os.path.realpath(dir)
+#dir = fifa_tools.texdir + '\\'
+#dir = os.path.realpath(dir)
 
 texture_slotType_dict = {
 	0: 'diffuseTexture', 
@@ -476,7 +476,7 @@ class file_import(bpy.types.Operator):
 				print(f)
 				f.type = path.split(sep='\\')[(-1)].split(sep='_')[0] + '_' + 'texture'
 				f.file_ident()
-				f.read_file_offsets(dir)
+				f.read_file_offsets(fifa_tools.texdir)
 
 			if f.type == 'stadium_texture':
 				continue
@@ -484,10 +484,13 @@ class file_import(bpy.types.Operator):
 				if f.type.split(sep='_')[0] + '_' + str(f.id) not in bpy.data.materials:
 					new_mat = bpy.data.materials.new(f.type.split(sep='_')[0] + '_' + str(f.id))
 					new_mat.specular_intensity = 0
-					new_mat.use_shadeless = True
-					new_mat.use_transparency = True
-					new_mat.alpha = 0
-					new_mat.specular_alpha = 0
+					# new_mat.use_shadeless = True
+					new_mat.shadow_method = 'NONE'
+					#new_mat.use_transparency = True
+					new_mat.show_transparent_back = True
+					# new_mat.alpha = 0
+					new_mat.alpha_threshold = 0
+					#new_mat.specular_alpha = 0
 				else:
 					new_mat = bpy.data.materials[(f.type.split(sep='_')[0] + '_' + str(f.id))]
 					for i in range(5):
@@ -498,21 +501,34 @@ class file_import(bpy.types.Operator):
 					if len(name) == 0:
 						print('Skipping Texture, Probably Unsupported')
 						continue
-					slot = new_mat.texture_slots.add()
-					name_fixed = name.split(sep='.')[0:len(name.split(sep='.')) - 1]
-					name_fixed = '.'.join(name_fixed)
-					if name_fixed in bpy.data.textures:
-						new_tex = bpy.data.textures[name_fixed]
+					
+					new_mat.use_nodes = True
+					bsdf = new_mat.node_tree.nodes["Principled BSDF"]
+					
+					# slot = new_mat.texture_slots.add()
+					# name_fixed = name.split(sep='.')[0:len(name.split(sep='.')) - 1]
+					# name_fixed = '.'.join(name_fixed)
+					# if name_fixed in bpy.data.textures:
+					# 	new_tex = bpy.data.textures[name_fixed]
+					# else:
+					# 	new_tex = bpy.data.textures.new(name_fixed, type='IMAGE')
+					
+					new_tex = new_mat.node_tree.nodes.new('ShaderNodeTexImage')
+					new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + name)
+					new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
+					
+					if bpy.data.materials:
+											bpy.data.materials[0] = new_mat
 					else:
-						new_tex = bpy.data.textures.new(name_fixed, type='IMAGE')
-					new_tex.image = bpy.data.images.load(dir + '\\' + name)
-					slot.texture = new_tex
-					slot.texture_coords = 'UV'
-					slot.uv_layer = 'map0'
-					slot.blend_type = 'MIX'
-					slot.use_map_color_diffuse = True
-					slot.use_map_alpha = True
-					slot.alpha_factor = 1
+						bpy.data.materials.append(new_mat)
+
+					# slot.texture = new_tex
+					# slot.texture_coords = 'UV'
+					# slot.uv_layer = 'map0'
+					# slot.blend_type = 'MIX'
+					# slot.use_map_color_diffuse = True
+					# slot.use_map_alpha = True
+					# slot.alpha_factor = 1
 
 				continue
 
@@ -539,7 +555,7 @@ class file_import(bpy.types.Operator):
 				 'CANCELLED'}
 			files.append([f, f.type])
 			f.file_ident()
-			f.read_file_offsets(dir)
+			f.read_file_offsets(fifa_tools.texdir)
 			print(f.group_names)
 			if scn.geometry_flag is True:
 				print('PASSING MESHES TO SCENE')
@@ -583,38 +599,53 @@ class file_import(bpy.types.Operator):
 			if scn.materials_flag is True:
 				for index in range(len(f.materials)):
 					new_mat = bpy.data.materials.new(f.materials[index][0])
-					new_mat.use_shadeless = True
+					# new_mat.use_shadeless = True
+					new_mat.shadow_method = 'NONE'
 					new_mat.specular_intensity = 0
-					new_mat.use_transparency = True
-					new_mat.alpha = 0
-					new_mat.specular_alpha = 0
+					#new_mat.use_transparency = True
+					new_mat.show_transparent_back = True
+					# new_mat.alpha = 0
+					new_mat.alpha_threshold = 0
+					#new_mat.specular_alpha = 0
 					for i in f.materials[index][1]:
-						slot = new_mat.texture_slots.add()
-						print(i[0], i[1])
-						if i[0] not in bpy.data.textures:
-							new_tex = bpy.data.textures.new(i[0], type='IMAGE')
-							try:
-								new_tex.image = bpy.data.images.load(os.path.realpath(i[1]))
-							except RuntimeError:
-								print('!!!Texture Not Found!!!', i[1])
-								continue
-							except:
-								print('allh malakia')
-								continue
+						new_mat.use_nodes = True
+						bsdf = new_mat.node_tree.nodes["Principled BSDF"]
+						
+						new_tex = new_mat.node_tree.nodes.new('ShaderNodeTexImage')
+						new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + name)
+						new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
+						
+						if bpy.data.materials:
+							bpy.data.materials[0] = new_mat
+						else:
+							bpy.data.materials.append(new_mat)
+						
+						# slot = new_mat.texture_slots.add()
+						# print(i[0], i[1])
+						# if i[0] not in bpy.data.textures:
+						# 	new_tex = bpy.data.textures.new(i[0], type='IMAGE')
+						# 	try:
+						# 		new_tex.image = bpy.data.images.load(os.path.realpath(i[1]))
+						# 	except RuntimeError:
+						# 		print('!!!Texture Not Found!!!', i[1])
+						# 		continue
+						# 	except:
+						# 		print('allh malakia')
+						# 		continue
 
-							slot.texture = new_tex
-						else:
-							slot.texture = bpy.data.textures[i[0]]
-						slot.texture_coords = 'UV'
-						slot.use_map_color_diffuse = True
-						slot.use_map_alpha = True
-						slot.alpha_factor = 1
-						if i[0].split(sep='_')[0] == 'ambientTexture':
-							slot.uv_layer = 'map1'
-							slot.blend_type = 'MULTIPLY'
-						else:
-							slot.uv_layer = 'map0'
-							slot.blend_type = 'MIX'
+						# 	slot.texture = new_tex
+						# else:
+						# 	slot.texture = bpy.data.textures[i[0]]
+						# slot.texture_coords = 'UV'
+						# slot.use_map_color_diffuse = True
+						# slot.use_map_alpha = True
+						# slot.alpha_factor = 1
+						# if i[0].split(sep='_')[0] == 'ambientTexture':
+						# 	slot.uv_layer = 'map1'
+						# 	slot.blend_type = 'MULTIPLY'
+						# else:
+						# 	slot.uv_layer = 'map0'
+						# 	slot.blend_type = 'MIX'
 
 				for i in f.mat_assign_table:
 					try:
