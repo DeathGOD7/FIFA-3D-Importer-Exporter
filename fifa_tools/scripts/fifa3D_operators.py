@@ -246,22 +246,22 @@ class auto_paint(bpy.types.Operator):
 		 'FINISHED'}
 
 
-class visit_url(bpy.types.Operator):
-	bl_idname = 'system.visit_url'
+class visit_thread_url(bpy.types.Operator):
+	bl_idname = 'system.visit_thread_url'
 	bl_label = ''
 
 	def invoke(self, context, event):
-		webbrowser.open(url='http://www.soccergaming.com/forums/showthread.php?p=3562558')
+		webbrowser.open(url='http://soccergaming.com/index.php?threads/se7en-fifa-3d-importer-exporter-updated-version-blender-2-8x.6470022/')
 		return {
 		 'FINISHED'}
 
 
-class visit_url_blog(bpy.types.Operator):
-	bl_idname = 'system.visit_url_blog'
+class visit_github_url(bpy.types.Operator):
+	bl_idname = 'system.visit_github_url'
 	bl_label = ''
 
 	def invoke(self, context, event):
-		webbrowser.open(url='http://3dgamedevblog.com')
+		webbrowser.open(url='https://github.com/DeathGOD7/FIFA-3D-Importer-Exporter/wiki')
 		return {
 		 'FINISHED'}
 
@@ -1574,8 +1574,8 @@ classes = [
 	get_color,
 	assign_color_to_map,
 	auto_paint,
-	visit_url,
-	visit_url_blog,
+	visit_thread_url,
+	visit_github_url,
 	assign_materials,
 	lights_export,
 	file_import,

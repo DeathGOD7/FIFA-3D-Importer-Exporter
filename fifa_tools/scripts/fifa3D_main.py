@@ -9,6 +9,7 @@
 # Decompiled by Death GOD 7 from original fifa15_main.pyc
 
 from fifa_tools import bl_info
+import fifa_tools
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
 #version = (0, 67, 'alpha')
@@ -45,7 +46,6 @@ from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
 from fifa_tools.scripts.fifa3D_functions import half
 
 comp = half.Float16Compressor()
-# logfile = os.path.expanduser('~\Documents\FIFA3D') + '\log.txt'
 
 
 class crowdGroup:
@@ -203,7 +203,7 @@ class fifa_rx3:
 		self.collision_list = []
 		self.name = ''
 		self.code = self.init_read(self.path, mode)
-		self.logfile = os.path.expanduser('~\Documents\SE7EN\FIFA 3D') + '\log.txt'
+		self.logfile = fifa_tools.logfile
 
 		print(f"RX3 Data File Object : {self.code}")
 

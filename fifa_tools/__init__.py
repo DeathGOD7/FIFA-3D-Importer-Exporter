@@ -14,19 +14,30 @@ bl_info = {
 import bpy
 import os
 from fifa_tools import fifa3D_layout
+import datetime
+
+x = datetime.datetime.now()
+
+
 
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 
+logdir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
+logfilename = x.strftime("%Y-%m-%d")
+logfile = logdir + f'\{logfilename}.log'
+
+texdir = logdir + '\Textures'
+
 def register():
-	logdir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
-	logfile = os.path.expanduser('~\Documents\SE7EN\FIFA 3D') + '\log.txt'
-	
 	if not os.path.exists(logdir):
 		os.makedirs(logdir)
 	
+	if not os.path.exists(texdir):
+		os.makedirs(texdir)
+
 	if not os.path.exists(logfile):
 		f = open(logfile,'a+')
 		f.writelines(f'Blender Version : {bpy.app.version_string}\n')

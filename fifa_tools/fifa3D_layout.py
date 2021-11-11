@@ -50,10 +50,9 @@ from fifa_tools.scripts import half
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 
-# credit1 = version_text + ", New version made & updated by Death GOD 7"
-# credit2 = "Previous version made by arti-10"
 credit1 = version_text + ", FIFA 3D Importer / Exporter "
-credit2 = "Maintained & Updated by Death GOD 7 (Original Author : arti-10)"
+credit2 = "Maintained & Updated by Death GOD 7"
+credit3 = "(Original Author : arti-10)"
 
 game_version = " " # you can add number if you want which shows up in panel layout , removed by deathgod7
 dev_status = 0
@@ -97,9 +96,9 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Official Website')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -107,6 +106,9 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
 
 # FACEGEN PANEL
 # class FaceGenSection(bpy.types.Panel):
@@ -192,9 +194,9 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Official Website')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -202,6 +204,9 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
 
 
 class FIFA_PT_lights_panel(bpy.types.Panel):
@@ -285,9 +290,9 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Official Website')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -295,6 +300,9 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
 
 
 class FIFA_PT_FifaImporter(bpy.types.Panel):
@@ -401,9 +409,9 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -411,7 +419,10 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
+
 
 class FIFA_PT_FifaExporter(bpy.types.Panel):
 	"""Create category in N-Menu"""
@@ -604,9 +615,9 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Official Website')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -614,7 +625,10 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
-		
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
+
 
 class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 	"""Create category in N-Menu"""
@@ -659,9 +673,9 @@ class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Official Website')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -669,6 +683,9 @@ class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
 
 
 class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
@@ -704,9 +721,9 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_url_blog", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Official Website')
 		r3.operator(
-			"system.visit_url", text='Visit Official Thread')
+			"system.visit_thread_url", text='Visit Official Thread')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -714,6 +731,9 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 		r2 = col.row()
 		r2.alignment = 'CENTER'
 		r2.label(text=credit2)
+		r3 = col.row()
+		r3.alignment = 'CENTER'
+		r3.label(text=credit3)
 
 
 if dev_status:
@@ -750,9 +770,9 @@ if dev_status:
 			r3.alignment ='CENTER'
 			r3.scale_y = 1.2
 			r3.operator(
-				"system.visit_url_blog", text='Visit Official Website')
+				"system.visit_github_url", text='Visit Official Website')
 			r3.operator(
-				"system.visit_url", text='Visit Official Thread')
+				"system.visit_thread_url", text='Visit Official Thread')
 
 			r1 = col.row()
 			r1.alignment = 'CENTER'
@@ -760,6 +780,9 @@ if dev_status:
 			r2 = col.row()
 			r2.alignment = 'CENTER'
 			r2.label(text=credit2)
+			r3 = col.row()
+			r3.alignment = 'CENTER'
+			r3.label(text=credit3)
 
 
 ###SCENE CUSTOM PROPERTIES###
