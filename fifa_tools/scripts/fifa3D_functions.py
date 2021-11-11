@@ -12,6 +12,7 @@ import struct, os, bpy, imp, bmesh, itertools, zlib, operator
 from mathutils import Vector, Euler, Matrix
 from math import radians, sqrt, degrees, acos, atan2
 from random import randint
+import fifa_tools
 linux_path = '/media/2tb/Blender/blender-2.71-windows64'
 if os.name == 'nt':
 	prePath = ''
@@ -24,7 +25,7 @@ else:
 
 from fifa_tools.scripts import half
 
-dir = 'fifa_tools'
+#dir = fifa_tools.addonLoc + '\\fifa_tools'
 comp = half.Float16Compressor()
 dict = {(12, 0): (2, 0, 0, 1, 0),  (12, 1): (2, 0, 0, 1, 0), 
  (16, 1): (0, 0, 0, 1, 1), 
@@ -46,7 +47,7 @@ class texture_helper:
 	@staticmethod
 	def read_dds_header(offset):
 		data = []
-		path = os.path.join(prePath, 'fifa_tools', 'dds_headers')
+		path = os.path.join(fifa_tools.addonLoc + '\\fifa_tools', 'dds_headers')
 		headers = open(path, 'rb')
 		headers.seek(offset + 16)
 		for i in range(128):

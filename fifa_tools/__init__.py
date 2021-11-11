@@ -18,7 +18,7 @@ import datetime
 
 x = datetime.datetime.now()
 
-
+addonLoc = bpy.utils.user_resource('SCRIPTS', "addons")
 
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])

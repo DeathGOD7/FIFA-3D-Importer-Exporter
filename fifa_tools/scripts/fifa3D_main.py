@@ -637,8 +637,8 @@ class fifa_rx3:
 
 				text = text[0:-1]
 				try:
-					path = os.path.join(prePath, 'fifa_tools', 'texture_' + str(i) + '.dds')
-					destpath = os.path.join(prePath, 'fifa_tools', text + '.dds')
+					path = os.path.join(fifa_tools.texdir , 'texture_' + str(i) + '.dds')
+					destpath = os.path.join(fifa_tools.texdir , text + '.dds')
 					os.rename(path, destpath)
 					print('Renaming texture_' + str(i) + '.dds to ' + text + '.dds')
 					self.tex_names[i] = text + '.dds'
@@ -745,7 +745,7 @@ class fifa_rx3:
 		data[16] = width.to_bytes(2, 'little')[0]
 		data[17] = width.to_bytes(2, 'little')[1]
 		data[28] = mipmaps.to_bytes(1, 'little')[0]
-		path = os.path.join(prePath, 'fifa_tools', 'texture_' + str(self.texture_count) + '.dds')
+		path = os.path.join(fifa_tools.texdir , 'texture_' + str(self.texture_count) + '.dds')
 		tf = open(path, 'wb')
 		[tf.write(b) for b in [struct.pack('<B', x) for x in data]]
 		for i in range(mipmaps):
@@ -770,10 +770,10 @@ class fifa_rx3:
 			texture_name = texture_type + '_' + str(tex_id)
 			try:
 				entry.append((
-				 texture_name, 'fifa_tools\\' + self.tex_names[tex_id]))
+				 texture_name, fifa_tools.texdir + '\\' + self.tex_names[tex_id]))
 			except:
 				entry.append((
-				 texture_name, 'fifa_tools\\texture_' + str(tex_id)))
+				 texture_name, fifa_tools.texdir + '\\texture_' + str(tex_id)))
 
 		self.materials.append((mat_name, entry))
 		return {
@@ -1140,11 +1140,11 @@ def write_textures_to_file(textures_list, type, id):
 	print('Total Number of textures: ', len(textures_list))
 	if status.split(sep=',')[0] == 'texture_path_error':
 		return 'missing_texture_file'
-	f.offset_list, f.texture_list = read_converted_textures(f.offset_list, textures_list, 'fifa_tools\\')
+	f.offset_list, f.texture_list = read_converted_textures(f.offset_list, textures_list, fifa_tools.texdir + '\\')
 	[print(i) for i in f.texture_list]
 	try:
 		f.write_offsets_to_file()
-		f.write_offset_data_to_file('fifa_tools\\')
+		f.write_offset_data_to_file(fifa_tools.texdir + '\\')
 	except:
 		print(sys.exc_info()[0])
 		print('ERROR ON TEXTURE WRITING')
@@ -1489,12 +1489,12 @@ def texture_convert(textures_list):
 		filename, ext = os.path.splitext(filename)
 		if ext == '.dds':
 			pass
-		elif os.path.isfile(os.path.join('fifa_tools', filename + '.dds')):
-			tex[1] = os.path.join('fifa_tools', filename + '.dds')
+		elif os.path.isfile(os.path.join(fifa_tools.texdir , filename + '.dds')):
+			tex[1] = os.path.join(fifa_tools.texdir , filename + '.dds')
 		else:
 			status = call(['./fifa_tools/nvidia_tools/nvdxt.exe', '-file', tex[1], comp, '-nmips',
-			 str(nmips), '-outdir', './fifa_tools', '-quality_production', '-output', filename + '.dds'])
-			tex[1] = os.path.join('fifa_tools', filename + '.dds')
+			 str(nmips), '-outdir', fifa_tools.texdir , '-quality_production', '-output', filename + '.dds'])
+			tex[1] = os.path.join(fifa_tools.texdir , filename + '.dds')
 		if status == 4294967294:
 			return 'texture_path_error,' + tex[1]
 

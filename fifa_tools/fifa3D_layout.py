@@ -96,7 +96,7 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_github_url", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
 
@@ -194,7 +194,7 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_github_url", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
 
@@ -290,7 +290,7 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_github_url", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
 
@@ -615,7 +615,7 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_github_url", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
 
@@ -673,7 +673,7 @@ class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_github_url", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
 
@@ -721,7 +721,7 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 		r3.alignment ='CENTER'
 		r3.scale_y = 1.2
 		r3.operator(
-			"system.visit_github_url", text='Visit Official Website')
+			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
 
@@ -770,7 +770,7 @@ if dev_status:
 			r3.alignment ='CENTER'
 			r3.scale_y = 1.2
 			r3.operator(
-				"system.visit_github_url", text='Visit Official Website')
+				"system.visit_github_url", text='Visit Github Wiki')
 			r3.operator(
 				"system.visit_thread_url", text='Visit Official Thread')
 
