@@ -54,7 +54,7 @@ credit1 = "           " + version_text + ", FIFA 3D Importer / Exporter "
 credit2 = "           " + "Maintained & Updated by Death GOD 7"
 credit3 = "           " + "(Original Author : arti-10)"
 
-game_version = " " # you can add number if you want which shows up in panel layout , removed by deathgod7
+game_version = " 3D " # you can add number if you want which shows up in panel layout , removed by deathgod7
 dev_status = 0
 
 ###VERTEX GROUP PANEL###
@@ -63,7 +63,7 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
 
 	"""Creates a Panel in the Object properties window"""
-	bl_label = "FIFA 3D Stadium Crowd Tools"
+	bl_label = "FIFA" + game_version + "Stadium Crowd Tools"
 	bl_idname = "FIFA_PT_CrowdSection"
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
@@ -143,7 +143,7 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
 
 	"""Creates a Panel in the Object properties window"""
-	bl_label = "FIFA 3D Vertex Coloring Panel"
+	bl_label = "FIFA" + game_version + "Vertex Coloring Panel"
 	bl_idname = "FIFA_PT_Vertex_color_panel"
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
@@ -214,7 +214,7 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 class FIFA_PT_lights_panel(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
 
-	bl_label = "FIFA 3D Light Configuration Panel"
+	bl_label = "FIFA" + game_version + "Light Configuration Panel"
 	bl_idname = "FIFA_PT_lights_panel"
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
@@ -314,7 +314,7 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
 
 	"""Creates a Panel in Scene properties window"""
-	bl_label = "FIFA" + game_version + "3D Importer"
+	bl_label = "FIFA" + game_version + "Importer"
 	bl_idname = "FIFA_PT_FifaImporter"
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
@@ -435,7 +435,7 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
 
-	bl_label = 'FIFA' + game_version + '3D Exporter'
+	bl_label = 'FIFA' + game_version + 'Exporter'
 	bl_idname = 'FIFA_PT_FifaExporter'
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
