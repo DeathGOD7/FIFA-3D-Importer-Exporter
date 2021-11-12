@@ -1524,7 +1524,7 @@ class clear_temp_directory(bpy.types.Operator):
 		for f in files:
 			if f.endswith('.dds') or f.endswith('.decompressed'):
 				count += 1
-				os.remove('fifa_tools' + os.sep + f)
+				os.remove(fifa_tools.texdir + os.sep + f)
 				print('Deleting ' + f)
 				continue
 
@@ -1581,7 +1581,7 @@ class remove_meshes(bpy.types.Operator):
 				cameras += 1
 
 
-		self.report({'INFO'}, str(curves) + ' Unused Curves Removed ' + str(lights) + ' Unused Lights Removed ' + str(armatures) + ' Unused Armatures Removed' + str(cameras) + ' Unused Cameras Removed')
+		self.report({'INFO'}, str(curves) + ' Unused Curves Removed, ' + str(lights) + ' Unused Lights Removed, ' + str(armatures) + ' Unused Armatures Removed, ' + str(cameras) + ' Unused Cameras Removed')
 		return {
 		 'FINISHED'}
 
