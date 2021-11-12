@@ -50,9 +50,9 @@ from fifa_tools.scripts import half
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 
-credit1 = version_text + ", FIFA 3D Importer / Exporter "
-credit2 = "Maintained & Updated by Death GOD 7"
-credit3 = "(Original Author : arti-10)"
+credit1 = "           " + version_text + ", FIFA 3D Importer / Exporter "
+credit2 = "           " + "Maintained & Updated by Death GOD 7"
+credit3 = "           " + "(Original Author : arti-10)"
 
 game_version = " " # you can add number if you want which shows up in panel layout , removed by deathgod7
 dev_status = 0
@@ -60,13 +60,14 @@ dev_status = 0
 ###VERTEX GROUP PANEL###
 
 class FIFA_PT_CrowdSection(bpy.types.Panel):
+	bl_category = "FIFA 3D I/E"
 
 	"""Creates a Panel in the Object properties window"""
-	bl_label = "FIFA 3D IE - Stadium Crowd Tools"
+	bl_label = "FIFA 3D Stadium Crowd Tools"
 	bl_idname = "FIFA_PT_CrowdSection"
-	bl_space_type = 'PROPERTIES'
-	bl_region_type = 'WINDOW'
-	bl_context = "data"
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'UI'
+	# bl_context = "data"
 
 	def draw(self, context):
 
@@ -139,13 +140,14 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 
 
 class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
+	bl_category = "FIFA 3D I/E"
 
 	"""Creates a Panel in the Object properties window"""
-	bl_label = "FIFA 3D IE - Vertex Coloring Panel"
+	bl_label = "FIFA 3D Vertex Coloring Panel"
 	bl_idname = "FIFA_PT_Vertex_color_panel"
-	bl_space_type = 'PROPERTIES'
-	bl_region_type = 'WINDOW'
-	bl_context = "data"
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'UI'
+	# bl_context = "data"
 
 	def draw(self, context):
 		scn = bpy.context.scene
@@ -210,11 +212,13 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 
 
 class FIFA_PT_lights_panel(bpy.types.Panel):
-	bl_label = "FIFA 3D IE - Light Configuration Panel"
+	bl_category = "FIFA 3D I/E"
+
+	bl_label = "FIFA 3D Light Configuration Panel"
 	bl_idname = "FIFA_PT_lights_panel"
-	bl_space_type = 'PROPERTIES'
-	bl_region_type = 'WINDOW'
-	bl_context = "data"
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'UI'
+	#bl_context = "data"
 
 	def draw(self, context):
 		ob = context.object
@@ -1191,12 +1195,12 @@ def make_annotations(cls):
 	return cls
 
 classes = [
-	FIFA_PT_CrowdSection,
-	FIFA_PT_Vertex_color_panel,
-	FIFA_PT_lights_panel,
 	FIFA_PT_FifaImporter,
 	FIFA_PT_FifaExporter,
 	FIFA_PT_FifaStadium_Tools,
+	FIFA_PT_CrowdSection,
+	FIFA_PT_Vertex_color_panel,
+	FIFA_PT_lights_panel,
 	FIFA_PT_FifaHelping_Tools,
 	#FIFA_PT_DeveloperPanel
 	]
