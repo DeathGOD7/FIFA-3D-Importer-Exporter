@@ -774,7 +774,6 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 		sc2 = row.column()
 		sc2.scale_y = 1.4
 		sc2.operator('system.clean_temp_dir')
-		sc2.enabled = False
 
 		row = col.row()
 		row.scale_y = 1.4
