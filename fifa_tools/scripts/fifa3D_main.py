@@ -639,14 +639,17 @@ class fifa_rx3:
 				try:
 					path = os.path.join(fifa_tools.texdir , 'texture_' + str(i) + '.dds')
 					destpath = os.path.join(fifa_tools.texdir , text + '.dds')
+					
+					if os.path.exists(destpath):
+						print('[WARNING] Image File Exists')
+						print('[WARNING] Deleting Previous Image File')
+						os.remove(destpath)
+
 					os.rename(path, destpath)
 					print('Renaming texture_' + str(i) + '.dds to ' + text + '.dds')
 					self.tex_names[i] = text + '.dds'
 				except FileNotFoundError:
 					print('Unsupported Image File')
-				except FileExistsError:
-					print('!!!File Exists!!!')
-					self.tex_names[i] = text + '.dds'
 
 		else:
 			for i in range(count):

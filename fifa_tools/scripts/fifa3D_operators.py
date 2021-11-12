@@ -657,9 +657,18 @@ class file_import(bpy.types.Operator):
 					new_mat.alpha_threshold = 0
 					#new_mat.specular_alpha = 0
 				else:
-					new_mat = bpy.data.materials[(f.type.split(sep='_')[0] + '_' + str(f.id))]
-					for i in range(5):
-						new_mat.texture_slots.clear(i)
+					# new_mat = bpy.data.materials[(f.type.split(sep='_')[0] + '_' + str(f.id))]
+					new_mat = bpy.data.materials.new(f.type.split(sep='_')[0] + '_' + str(f.id))
+					new_mat.specular_intensity = 0
+					# new_mat.use_shadeless = True
+					new_mat.shadow_method = 'NONE'
+					#new_mat.use_transparency = True
+					new_mat.show_transparent_back = True
+					# new_mat.alpha = 0
+					new_mat.alpha_threshold = 0
+					#new_mat.specular_alpha = 0
+					# for i in range(5):
+					# 	new_mat.texture_slots.clear(i)
 
 				for id in range(f.texture_count):
 					name = f.tex_names[id]
@@ -682,8 +691,14 @@ class file_import(bpy.types.Operator):
 					new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + name)
 					new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
 					
+					_mainObjT = False
 					for obj in bpy.data.objects:
 						objName = obj.name.split(sep='_')[0]
+						mainTextureToUse = ['shoe','ball']
+
+						if any(x in objName for x in mainTextureToUse):
+							_mainObjT = True
+
 						if objName == texObjName:
 							try:
 								obj.data.materials[0] = new_mat
@@ -692,6 +707,9 @@ class file_import(bpy.types.Operator):
 							except:
 								obj.data.materials.append(new_mat)
 								# print (obj.name + " does not have materials.")
+
+					if _mainObjT:
+						break
 
 					# slot.texture = new_tex
 					# slot.texture_coords = 'UV'
