@@ -265,6 +265,16 @@ class visit_github_url(bpy.types.Operator):
 		return {
 		 'FINISHED'}
 
+class report_bug(bpy.types.Operator):
+	bl_idname = 'system.report_bug'
+	bl_label = ''
+
+	def invoke(self, context, event):
+ 		#https://github.com/DeathGOD7/FIFA-3D-Importer-Exporter/issues/new/choose
+		webbrowser.open(url='https://github.com/DeathGOD7/FIFA-3D-Importer-Exporter/issues/new/choose')
+		return {
+		 'FINISHED'}
+
 class assign_materials(bpy.types.Operator):
 	bl_idname = 'mesh.assign_materials'
 	bl_label = 'Assign Created Materials'
@@ -1633,6 +1643,7 @@ classes = [
 	auto_paint,
 	visit_thread_url,
 	visit_github_url,
+	report_bug,
 	assign_materials,
 	lights_export,
 	file_import,

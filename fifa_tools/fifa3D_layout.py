@@ -112,6 +112,10 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -211,6 +215,10 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -317,7 +325,7 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 			row = layout.row()
 			row.label(
 					text='No objects are selected in scene.')
-##
+
 
 		col = layout.column()
 		r3 = col.row()
@@ -327,6 +335,10 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -449,6 +461,10 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -655,6 +671,10 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -713,6 +733,10 @@ class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -761,6 +785,10 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 			"system.visit_github_url", text='Visit Github Wiki')
 		r3.operator(
 			"system.visit_thread_url", text='Visit Official Thread')
+		r3.operator(
+			"system.report_bug", text='Report Bug')
+		r3.operator(
+			"system.report_bug", text='Request Feature')
 
 		r1 = col.row()
 		r1.alignment = 'CENTER'
@@ -810,6 +838,11 @@ if dev_status:
 				"system.visit_github_url", text='Visit Github Wiki')
 			r3.operator(
 				"system.visit_thread_url", text='Visit Official Thread')
+			r3.operator(
+				"system.report_bug", text='Report Bug')
+			r3.operator(
+				"system.report_bug", text='Request Feature')
+
 
 			r1 = col.row()
 			r1.alignment = 'CENTER'
