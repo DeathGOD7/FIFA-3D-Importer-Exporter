@@ -77,21 +77,32 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 
 		row = layout.row()
 		row.label(icon='INFO', text='Crowd Assignment')
-		if not context.object.name.split(sep='_')[0] == 'crowd':
-			row = layout.row()
-			row.label(
-				text='Not a Crowd Object, select one to activate the panel')
+		
+		selection_names = []
+		
+		for obj in bpy.context.selected_objects:
+			selection_names.append(obj.name)
+		
+		if len(selection_names) > 0:
+			if not context.object.name.split(sep='_')[0] == 'crowd':
+				row = layout.row()
+				row.label(
+					text='Not a Crowd Object, select one to activate the panel.')
+			else:
+				row = layout.row()
+				row.prop(scn, 'crowd_type_enum')
+				row.prop(scn, 'crowd_fullness_enum')
+				row.operator("mesh.assign_crowd_type", icon='PLUS')
+
+				row = layout.row()
+				row.label(icon='INFO', text='Seat Alignment')
+				row = layout.row()
+				row.prop(scn, 'crowd_align_enum')
+				row.operator("mesh.align_crowd_seats")
 		else:
 			row = layout.row()
-			row.prop(scn, 'crowd_type_enum')
-			row.prop(scn, 'crowd_fullness_enum')
-			row.operator("mesh.assign_crowd_type", icon='PLUS')
-
-			row = layout.row()
-			row.label(icon='INFO', text='Seat Alignment')
-			row = layout.row()
-			row.prop(scn, 'crowd_align_enum')
-			row.operator("mesh.align_crowd_seats")
+			row.label(
+					text='No objects are selected in scene.')
 
 		col = layout.column()
 		r3 = col.row()
@@ -222,74 +233,82 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 	#bl_context = "data"
 
 	def draw(self, context):
-		ob = context.object
 		layout = self.layout
 
-		if ob.type == 'EMPTY' and ob.name[0:7] == 'LIGHTS_':
-			box = layout.box()
-			box.label(icon='INFO', text='Emit Box Properties')
-			col = box.column()
-
-			for attr in dir(ob.emitbox_props):
-				if attr in light_props:
-					row = col.row()
-					# row.alignment='EXPAND'
-					row.label(text=attr)
-					split = row.split()
-					#split.alignment = 'CENTER'
-					split.scale_x = 1
-					split.prop(ob.emitbox_props, attr, text='')
-
-			box = layout.box()
-			box.label(icon='INFO', text='Action Render Properties')
-			actionrend_col = box.column()
-
-			for k in range(len(light_props)):
-				op = light_props[k]
-
-				if op.__class__.__name__ == 'str':
-					try:
-						val = getattr(ob.actionrender_props, op)
-						row = actionrend_col.row()
-						row.label(text=op)
-						split = row.split()
-						split.scale_x = 1
-						split.prop(ob.actionrender_props, op, text='')
-					except:
-						print('Bump')
-
-				elif op.__class__.__name__ == 'list':
-					try:
-						val = getattr(ob.actionrender_props, op[0])
-						row = actionrend_col.row()
-						row.label(text=op[0])
-						split = row.split()
-						# split_scale_x=0.4
-
-						split.prop(ob.actionrender_props, op[0], text='')
-
-						if val == 'lynxVbeam.fx':
-							sect = 2
-						else:
-							sect = 1
-
-						if val:
-							row = actionrend_col.row()
-							subbox = row.box()
-							subbox.label(
-								icon='SETTINGS', text=op[0] + ' properties')
-							subboxcol = subbox.column()
-							for subprop in op[sect]:
-								print(subprop)
-								row = subboxcol.row()
-								row.label(text=subprop)
-								split = row.split()
-								split_scale_x = 0.4
-								split.prop(
-									ob.actionrender_props, subprop, text='')
-					except:
-						print('')
+		selection_names = []
 		
+		for obj in bpy.context.selected_objects:
+			selection_names.append(obj.name)
+
+		if len(selection_names) > 0:
+			ob = context.object
+			if ob.type == 'EMPTY' and ob.name[0:7] == 'LIGHTS_':
+				box = layout.box()
+				box.label(icon='INFO', text='Emit Box Properties')
+				col = box.column()
+
+				for attr in dir(ob.emitbox_props):
+					if attr in light_props:
+						row = col.row()
+						# row.alignment='EXPAND'
+						row.label(text=attr)
+						split = row.split()
+						#split.alignment = 'CENTER'
+						split.scale_x = 1
+						split.prop(ob.emitbox_props, attr, text='')
+
+				box = layout.box()
+				box.label(icon='INFO', text='Action Render Properties')
+				actionrend_col = box.column()
+
+				for k in range(len(light_props)):
+					op = light_props[k]
+
+					if op.__class__.__name__ == 'str':
+						try:
+							val = getattr(ob.actionrender_props, op)
+							row = actionrend_col.row()
+							row.label(text=op)
+							split = row.split()
+							split.scale_x = 1
+							split.prop(ob.actionrender_props, op, text='')
+						except:
+							print('Bump')
+
+					elif op.__class__.__name__ == 'list':
+						try:
+							val = getattr(ob.actionrender_props, op[0])
+							row = actionrend_col.row()
+							row.label(text=op[0])
+							split = row.split()
+							# split_scale_x=0.4
+
+							split.prop(ob.actionrender_props, op[0], text='')
+
+							if val == 'lynxVbeam.fx':
+								sect = 2
+							else:
+								sect = 1
+
+							if val:
+								row = actionrend_col.row()
+								subbox = row.box()
+								subbox.label(
+									icon='SETTINGS', text=op[0] + ' properties')
+								subboxcol = subbox.column()
+								for subprop in op[sect]:
+									print(subprop)
+									row = subboxcol.row()
+									row.label(text=subprop)
+									split = row.split()
+									split_scale_x = 0.4
+									split.prop(
+										ob.actionrender_props, subprop, text='')
+						except:
+							print('')
+
+##
+
 		col = layout.column()
 		r3 = col.row()
 		r3.alignment ='CENTER'
