@@ -766,9 +766,16 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 		# row.scale_y=1.5
 		col = layout.column()
 		row = col.row()
-		row.scale_y = 1.4
-		row.operator("system.fix_relative_paths")
-		row.operator('system.clean_temp_dir')
+
+		sc1 = row.column()
+		sc1.scale_y = 1.4
+		sc1.operator("system.fix_relative_paths")
+		sc1.enabled = False
+		sc2 = row.column()
+		sc2.scale_y = 1.4
+		sc2.operator('system.clean_temp_dir')
+		sc2.enabled = False
+
 		row = col.row()
 		row.scale_y = 1.4
 		row.operator('mesh.remove_meshes')

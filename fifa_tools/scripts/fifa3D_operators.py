@@ -1504,7 +1504,7 @@ class group_add(bpy.types.Operator):
 class fix_relative_paths(bpy.types.Operator):
 	bl_idname = 'system.fix_relative_paths'
 	bl_label = 'Fix Settings'
-	bl_description = 'Fixes Relative Path Option in User Preferences'
+	bl_description = 'In Blender 2.80 and above relative path default is set to TRUE'
 
 	def invoke(self, context, event):
 		bpy.context.user_preferences.filepaths.use_relative_paths = False
@@ -1516,10 +1516,10 @@ class fix_relative_paths(bpy.types.Operator):
 class clear_temp_directory(bpy.types.Operator):
 	bl_idname = 'system.clean_temp_dir'
 	bl_label = 'Clean Up'
-	bl_description = 'Delete all textures from fifa_tools folder'
+	bl_description = 'Delete all textures from temp texture folder'
 
 	def invoke(self, context, event):
-		files = os.listdir('fifa_tools')
+		files = os.listdir(fifa_tools.texdir)
 		count = 0
 		for f in files:
 			if f.endswith('.dds') or f.endswith('.decompressed'):
@@ -1551,36 +1551,37 @@ class remove_meshes(bpy.types.Operator):
 	bl_description = 'Remove Unused Meshes'
 
 	def invoke(self, context, event):
-		count = 0
-		for m in bpy.data.meshes:
-			if m.users == 0:
-				bpy.data.meshes.remove(m)
-				count += 1
-				continue
+		
+		#CURVE
+		curves = 0
+		for o in bpy.context.scene.objects:
+			if o.type == 'CURVE':
+				bpy.data.objects.remove(o, do_unlink=True)
+				curves += 1
 
-		temp = count
-		count = 0
-		for m in bpy.data.curves:
-			if m.users == 0:
-				bpy.data.curves.remove(m)
-				count += 1
-				continue
+		#LIGHT
+		lights = 0
+		for o in bpy.context.scene.objects:
+			if o.type == 'LIGHT':
+				bpy.data.objects.remove(o, do_unlink=True)
+				lights += 1
 
-		lcount = 0
-		for m in bpy.data.lamps:
-			if m.users == 0:
-				bpy.data.lamps.remove(m)
-				count += 1
-				continue
+		# ARMATURE
+		armatures = 0
+		for o in bpy.context.scene.objects:
+			if o.type == 'ARMATURE':
+				bpy.data.objects.remove(o, do_unlink=True)
+				armatures += 1
 
-		bcount = 0
-		for m in bpy.data.armatures:
-			if m.users == 0:
-				bpy.data.armatures.remove(m)
-				bcount += 1
-				continue
+		# CAMERA		
+		cameras = 0
+		for o in bpy.context.scene.objects:
+			if o.type == 'CAMERA':
+				bpy.data.objects.remove(o, do_unlink=True)
+				cameras += 1
 
-		self.report({'INFO'}, str(temp) + ' Unused Meshes Removed ' + str(count) + ' Unused Curves Removed ' + str(lcount) + ' Unused Lamps Removed ' + str(bcount) + ' Unused Armatures Removed')
+
+		self.report({'INFO'}, str(curves) + ' Unused Curves Removed ' + str(lights) + ' Unused Lights Removed ' + str(armatures) + ' Unused Armatures Removed' + str(cameras) + ' Unused Cameras Removed')
 		return {
 		 'FINISHED'}
 
@@ -1613,8 +1614,9 @@ class hide_props(bpy.types.Operator):
 
 	def invoke(self, context, event):
 		for object in bpy.data.objects:
-			if object.parent == bpy.data.objects['PROPS']:
-				object.hide = not object.hide
+			if 'PROPS' in object.name :
+				object.hide_set(object.visible_get())
+
 			self.report({'INFO'}, 'Props View Toggled')
 
 		return {'FINISHED'}
