@@ -249,6 +249,7 @@ class auto_paint(bpy.types.Operator):
 class visit_thread_url(bpy.types.Operator):
 	bl_idname = 'system.visit_thread_url'
 	bl_label = ''
+	bl_description = 'Visit the official thread of this addon on soccergaming'
 
 	def invoke(self, context, event):
 		webbrowser.open(url='http://soccergaming.com/index.php?threads/se7en-fifa-3d-importer-exporter-updated-version-blender-2-8x.6470022/')
@@ -259,6 +260,7 @@ class visit_thread_url(bpy.types.Operator):
 class visit_github_url(bpy.types.Operator):
 	bl_idname = 'system.visit_github_url'
 	bl_label = ''
+	bl_description = 'Checkout the GitHub wiki to find tutorials about this addon'
 
 	def invoke(self, context, event):
 		webbrowser.open(url='https://github.com/DeathGOD7/FIFA-3D-Importer-Exporter/wiki')
@@ -268,6 +270,7 @@ class visit_github_url(bpy.types.Operator):
 class report_bug(bpy.types.Operator):
 	bl_idname = 'system.report_bug'
 	bl_label = ''
+	bl_description = 'If you have found any bug or want any feature in this addon, click here'
 
 	def invoke(self, context, event):
  		#https://github.com/DeathGOD7/FIFA-3D-Importer-Exporter/issues/new/choose
@@ -278,7 +281,7 @@ class report_bug(bpy.types.Operator):
 class assign_materials(bpy.types.Operator):
 	bl_idname = 'mesh.assign_materials'
 	bl_label = 'Assign Created Materials'
-	bl_description = 'In Blender 2.80 and above, materials are auto assigned to mesh.'
+	bl_description = 'In Blender 2.80 and above, materials are auto assigned to mesh'
 	bl_options = {'UNDO'}
 
 	def invoke(self, context, event):
