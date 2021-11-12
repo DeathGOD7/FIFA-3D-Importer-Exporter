@@ -240,6 +240,9 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 		for obj in bpy.context.selected_objects:
 			selection_names.append(obj.name)
 
+		row = layout.row()
+		row.label(icon='INFO', text='Light Settings')
+
 		if len(selection_names) > 0:
 			ob = context.object
 			if ob.type == 'EMPTY' and ob.name[0:7] == 'LIGHTS_':
@@ -306,7 +309,14 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 										ob.actionrender_props, subprop, text='')
 						except:
 							print('')
-
+			else:
+				row = layout.row()
+				row.label(
+					text='Not a Light Object, select one to activate the panel.')
+		else:
+			row = layout.row()
+			row.label(
+					text='No objects are selected in scene.')
 ##
 
 		col = layout.column()
