@@ -25,15 +25,15 @@ version = (vr[0], vr[1], vr[2])
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 
-logdir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
+maindir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
 logfilename = x.strftime("%Y-%m-%d")
-logfile = logdir + f'\{logfilename}.log'
+logfile = maindir + f'\Logs\{logfilename}.log'
 
-texdir = logdir + '\Textures'
+texdir = maindir + '\Textures'
 
 def register():
-	if not os.path.exists(logdir):
-		os.makedirs(logdir)
+	if not os.path.exists(maindir):
+		os.makedirs(maindir)
 	
 	if not os.path.exists(texdir):
 		os.makedirs(texdir)
@@ -42,7 +42,8 @@ def register():
 		f = open(logfile,'a+')
 		f.writelines(f'Blender Version : {bpy.app.version_string}\n')
 		f.writelines(f'Addon : FIFA 3D Importer/Exporter {version_text}\n')
-		f.writelines('Author : Death GOD 7 , arti-10\n')
+		f.writelines(f'Author : Death GOD 7 , arti-10\n')
+		f.writelines(f'Date : {logfilename}\n')
 		f.writelines('-----------------------------------------------------------------\n')
 
 	fifa3D_layout.register()
