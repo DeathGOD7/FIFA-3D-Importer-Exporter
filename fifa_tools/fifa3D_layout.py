@@ -394,9 +394,12 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 		row = col.row()
 		row.alignment = 'CENTER'
 		row.scale_y = 1.2
-		row.prop(scn, 'create_materials_flag')
-		row.enabled = not scn.materials_flag
-		row.operator("mesh.assign_materials")
+		sc1 = row.column()
+		sc1.enabled = not scn.materials_flag
+		sc1.prop(scn, 'create_materials_flag')
+		sc2 = row.column()
+		sc2.operator("mesh.assign_materials")
+		sc2.enabled = False
 
 		#r0 = layout.col()
 		r0 = layout.row()

@@ -268,7 +268,7 @@ class visit_github_url(bpy.types.Operator):
 class assign_materials(bpy.types.Operator):
 	bl_idname = 'mesh.assign_materials'
 	bl_label = 'Assign Created Materials'
-	bl_description = 'Try to assign Face/Hair/Eyes Materials to Scene Objects'
+	bl_description = 'In Blender 2.80 and above, materials are auto assigned to mesh.'
 	bl_options = {'UNDO'}
 
 	def invoke(self, context, event):
@@ -451,86 +451,6 @@ class file_import(bpy.types.Operator):
 		tex_paths.append(scn.face_texture_import_path)
 		tex_paths.append(scn.hair_texture_import_path)
 		tex_paths.append(scn.eyes_texture_import_path)
-		for path in tex_paths:
-			if path == '':
-				continue
-			elif not path.split(sep='_')[(-1)].split(sep='.')[0] == 'textures':
-				self.report({
-				 'ERROR'}, 'No valid file selected as a texture file')
-				return {
-				 'CANCELLED'}
-			else:
-				f = fifa_main.fifa_rx3(path, 0)
-				if f.code == 'io_error':
-					self.report({'ERROR'}, 'File Error')
-					return {
-					 'CANCELLED'}
-				if f.code == 'file_clopy':
-					self.report({'ERROR'}, 'Illegal File')
-					return {
-					 'CANCELLED'}
-				if f.code == 'corrupt_file':
-					self.report({'ERROR'}, 'Corrupt File')
-					return {
-					 'CANCELLED'}
-				print(f)
-				f.type = path.split(sep='\\')[(-1)].split(sep='_')[0] + '_' + 'texture'
-				f.file_ident()
-				f.read_file_offsets(fifa_tools.texdir)
-
-			if f.type == 'stadium_texture':
-				continue
-			if scn.create_materials_flag is True:
-				if f.type.split(sep='_')[0] + '_' + str(f.id) not in bpy.data.materials:
-					new_mat = bpy.data.materials.new(f.type.split(sep='_')[0] + '_' + str(f.id))
-					new_mat.specular_intensity = 0
-					# new_mat.use_shadeless = True
-					new_mat.shadow_method = 'NONE'
-					#new_mat.use_transparency = True
-					new_mat.show_transparent_back = True
-					# new_mat.alpha = 0
-					new_mat.alpha_threshold = 0
-					#new_mat.specular_alpha = 0
-				else:
-					new_mat = bpy.data.materials[(f.type.split(sep='_')[0] + '_' + str(f.id))]
-					for i in range(5):
-						new_mat.texture_slots.clear(i)
-
-				for id in range(f.texture_count):
-					name = f.tex_names[id]
-					if len(name) == 0:
-						print('Skipping Texture, Probably Unsupported')
-						continue
-					
-					new_mat.use_nodes = True
-					bsdf = new_mat.node_tree.nodes["Principled BSDF"]
-					
-					# slot = new_mat.texture_slots.add()
-					# name_fixed = name.split(sep='.')[0:len(name.split(sep='.')) - 1]
-					# name_fixed = '.'.join(name_fixed)
-					# if name_fixed in bpy.data.textures:
-					# 	new_tex = bpy.data.textures[name_fixed]
-					# else:
-					# 	new_tex = bpy.data.textures.new(name_fixed, type='IMAGE')
-					
-					new_tex = new_mat.node_tree.nodes.new('ShaderNodeTexImage')
-					new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + name)
-					new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
-					
-					if bpy.data.materials:
-											bpy.data.materials[0] = new_mat
-					else:
-						bpy.data.materials.append(new_mat)
-
-					# slot.texture = new_tex
-					# slot.texture_coords = 'UV'
-					# slot.uv_layer = 'map0'
-					# slot.blend_type = 'MIX'
-					# slot.use_map_color_diffuse = True
-					# slot.use_map_alpha = True
-					# slot.alpha_factor = 1
-
-				continue
 
 		for path in paths:
 			if not scn.obj_path == '':
@@ -612,13 +532,13 @@ class file_import(bpy.types.Operator):
 						bsdf = new_mat.node_tree.nodes["Principled BSDF"]
 						
 						new_tex = new_mat.node_tree.nodes.new('ShaderNodeTexImage')
-						new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + name)
+						new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + i[1])
 						new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
 						
-						if bpy.data.materials:
-							bpy.data.materials[0] = new_mat
-						else:
-							bpy.data.materials.append(new_mat)
+						# if bpy.data.materials:
+						# 	bpy.data.materials[0] = new_mat
+						# else:
+						# 	bpy.data.materials.append(new_mat)
 						
 						# slot = new_mat.texture_slots.add()
 						# print(i[0], i[1])
@@ -692,6 +612,94 @@ class file_import(bpy.types.Operator):
 				for collision in f.collisions:
 					obname = fifa_main.createmesh(collision[1], collision[2], [], collision[0], collisioncount, f.id, '', [], False, [], scn.fifa_import_loc)
 					collisioncount += 1
+
+				continue
+
+		for path in tex_paths:
+			if path == '':
+				continue
+			elif not path.split(sep='_')[(-1)].split(sep='.')[0] == 'textures':
+				self.report({
+				 'ERROR'}, 'No valid file selected as a texture file')
+				return {
+				 'CANCELLED'}
+			else:
+				f = fifa_main.fifa_rx3(path, 0)
+				if f.code == 'io_error':
+					self.report({'ERROR'}, 'File Error')
+					return {
+					 'CANCELLED'}
+				if f.code == 'file_copy':
+					self.report({'ERROR'}, 'Illegal File')
+					return {
+					 'CANCELLED'}
+				if f.code == 'corrupt_file':
+					self.report({'ERROR'}, 'Corrupt File')
+					return {
+					 'CANCELLED'}
+				print(f)
+				f.type = path.split(sep='\\')[(-1)].split(sep='_')[0] + '_' + 'texture'
+				texObjName = f.type.split(sep='_')[0]
+				f.file_ident()
+				f.read_file_offsets(fifa_tools.texdir)
+
+			if f.type == 'stadium_texture':
+				continue
+			if scn.create_materials_flag is True:
+				if f.type.split(sep='_')[0] + '_' + str(f.id) not in bpy.data.materials:
+					new_mat = bpy.data.materials.new(f.type.split(sep='_')[0] + '_' + str(f.id))
+					new_mat.specular_intensity = 0
+					# new_mat.use_shadeless = True
+					new_mat.shadow_method = 'NONE'
+					#new_mat.use_transparency = True
+					new_mat.show_transparent_back = True
+					# new_mat.alpha = 0
+					new_mat.alpha_threshold = 0
+					#new_mat.specular_alpha = 0
+				else:
+					new_mat = bpy.data.materials[(f.type.split(sep='_')[0] + '_' + str(f.id))]
+					for i in range(5):
+						new_mat.texture_slots.clear(i)
+
+				for id in range(f.texture_count):
+					name = f.tex_names[id]
+					if len(name) == 0:
+						print('Skipping Texture, Probably Unsupported')
+						continue
+					
+					new_mat.use_nodes = True
+					bsdf = new_mat.node_tree.nodes["Principled BSDF"]
+					
+					# slot = new_mat.texture_slots.add()
+					# name_fixed = name.split(sep='.')[0:len(name.split(sep='.')) - 1]
+					# name_fixed = '.'.join(name_fixed)
+					# if name_fixed in bpy.data.textures:
+					# 	new_tex = bpy.data.textures[name_fixed]
+					# else:
+					# 	new_tex = bpy.data.textures.new(name_fixed, type='IMAGE')
+					
+					new_tex = new_mat.node_tree.nodes.new('ShaderNodeTexImage')
+					new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + name)
+					new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
+					
+					for obj in bpy.data.objects:
+						objName = obj.name.split(sep='_')[0]
+						if objName == texObjName:
+							try:
+								obj.data.materials[0] = new_mat
+								# obj.material_slot_remove()
+								# print ("removed material from " + obj.name)
+							except:
+								obj.data.materials.append(new_mat)
+								# print (obj.name + " does not have materials.")
+
+					# slot.texture = new_tex
+					# slot.texture_coords = 'UV'
+					# slot.uv_layer = 'map0'
+					# slot.blend_type = 'MIX'
+					# slot.use_map_color_diffuse = True
+					# slot.use_map_alpha = True
+					# slot.alpha_factor = 1
 
 				continue
 
