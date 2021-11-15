@@ -44,6 +44,8 @@ from fifa_tools.scripts.fifa3D_operators import light_props as light_props
 from fifa_tools.scripts import fifa3D_functions
 from fifa_tools.scripts import half
 
+
+
 #from fifa_tools.scripts.fifa3D_operators import light_props as light_props
 
 #fifa3D_operators.outregister()
@@ -998,10 +1000,13 @@ bpy.types.Scene.crowd_fullness_enum = bpy.props.EnumProperty(
 	name='Crowd Fullness')
 
 bpy.types.Scene.game_enum = bpy.props.EnumProperty(
-	items=[('0', 'FIFA 13', 'FIFA 13'),
-		   ('1', 'FIFA 14', 'FIFA 14'),
-		   ('2', 'FIFA 15', 'FIFA 15')],
-	default='2',
+	items=[
+		('0', 'FIFA 13', 'FIFA 13'),
+		('1', 'FIFA 14', 'FIFA 14'),
+		('2', 'FIFA 15', 'FIFA 15'),
+		('3', 'FIFA 16', 'FIFA 16')
+		],
+	default='1',
 	name="Game Version")
 
 bpy.types.Scene.bones_flag = bpy.props.BoolProperty(

@@ -6,24 +6,35 @@ bl_info = {
 	"blender": (2, 80, 0),
 	"location": "Toolbar [N]",
 	"warning": "",  # used for warning icon and text in addons panel
-	"wiki_url": "",
+	"wiki_url": "https://github.com/DeathGOD7/FIFA-3D-Importer-Exporter/wiki",
 	"tracker_url": "",
 	"category": "Import-Export"
    }
 
 import bpy
 import os
-from fifa_tools import fifa3D_layout
+import sys
+import platform
 import datetime
 
-x = datetime.datetime.now()
-
+# --------------- Main Var ----------------
+pythonVer = platform.python_version()
+pythonArc = platform.architecture()[0]
 addonLoc = bpy.utils.user_resource('SCRIPTS', "addons")
 
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
+# -----------------------------------------
+
+# --------------- Import Addon ----------------
+from fifa_tools import se7en_helper
+se7en_helper.installPythonNET()
+from fifa_tools import fifa3D_layout
+# -----------------------------------------
+
+x = datetime.datetime.now()
 
 maindir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
 
@@ -43,6 +54,7 @@ def register():
 	if not os.path.exists(logfile):
 		f = open(logfile,'a+')
 		f.writelines(f'Blender Version : {bpy.app.version_string}\n')
+		f.writelines(f'Python Version : {pythonVer} ({pythonArc})\n')
 		f.writelines(f'Addon : FIFA 3D Importer/Exporter {version_text}\n')
 		f.writelines(f'Author : Death GOD 7 , arti-10\n')
 		f.writelines(f'Date : {logfilename}\n')
