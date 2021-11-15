@@ -26,17 +26,19 @@ version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 
 maindir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
+
+logdir = maindir + '\Logs'
 logfilename = x.strftime("%Y-%m-%d")
 logfile = maindir + f'\Logs\{logfilename}.log'
 
 texdir = maindir + '\Textures'
 
+subdirlist = [maindir, logdir, texdir]
+
 def register():
-	if not os.path.exists(maindir):
-		os.makedirs(maindir)
-	
-	if not os.path.exists(texdir):
-		os.makedirs(texdir)
+	for x in subdirlist:
+		if not os.path.exists(x):
+			os.makedirs(x)
 
 	if not os.path.exists(logfile):
 		f = open(logfile,'a+')
