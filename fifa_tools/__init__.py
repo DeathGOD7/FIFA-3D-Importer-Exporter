@@ -16,7 +16,6 @@ import os
 import sys
 import platform
 import datetime
-
 # --------------- Main Var ----------------
 pythonVer = platform.python_version()
 pythonArc = platform.architecture()[0]
@@ -28,23 +27,30 @@ version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 # -----------------------------------------
 
-# --------------- Import Addon ----------------
-from fifa_tools import se7en_helper
-se7en_helper.installPythonNET()
-from fifa_tools import fifa3D_layout
-# -----------------------------------------
-
-x = datetime.datetime.now()
-
+# --------------- Dir Initialize ----------------
 maindir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
 
 logdir = maindir + '\Logs'
+x = datetime.datetime.now()
 logfilename = x.strftime("%Y-%m-%d")
 logfile = maindir + f'\Logs\{logfilename}.log'
 
 texdir = maindir + '\Textures'
-
 subdirlist = [maindir, logdir, texdir]
+# -----------------------------------------
+
+# --------------- Import Addon ----------------
+from fifa_tools import se7en_helper
+
+if not os.path.exists(f'{maindir}\FIFA3DIE.ini'):
+	se7en_helper.CreateConfig("FIFA3DIE")
+
+config = se7en_helper.ReadConfig('FIFA3DIE')
+if (config['SETTINGS'].getboolean('First_Run')):
+	se7en_helper.InstallPythonNET()
+
+from fifa_tools import fifa3D_layout
+# -----------------------------------------
 
 def register():
 	for x in subdirlist:
