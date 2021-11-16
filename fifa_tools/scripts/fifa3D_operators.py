@@ -29,6 +29,7 @@ else:
 # from fifa_main import sig, crowdGroup
 
 import fifa_tools
+from fifa_tools.scripts import fifa3D_se7en
 import fifa_tools.scripts.fifa3D_functions as fifa_func
 from fifa_tools.scripts.fifa3D_functions import general_helper as gh
 from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
@@ -456,6 +457,7 @@ class file_import(bpy.types.Operator):
 		global files
 		global objectcount
 		scn = context.scene
+		testrx3 = fifa3D_se7en.RX3_File.testdll(bpy.context.scene.model_import_path)
 		paths = []
 		paths.append(scn.model_import_path)
 		paths.append(scn.hair_import_path)
