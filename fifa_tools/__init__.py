@@ -45,6 +45,10 @@ subdirlist = [maindir, logdir, texdir, libsdir]
 # --------------- Import Addon ----------------
 from fifa_tools import se7en_helper
 
+for x in subdirlist:
+	if not os.path.exists(x):
+		os.makedirs(x)
+
 if not os.path.exists(f'{maindir}\FIFA3DIE.ini'):
 	se7en_helper.CreateConfig("FIFA3DIE")
 
@@ -56,10 +60,6 @@ from fifa_tools import fifa3D_layout
 # -----------------------------------------
 
 def register():
-	for x in subdirlist:
-		if not os.path.exists(x):
-			os.makedirs(x)
-
 	if not os.path.exists(logfile):
 		f = open(logfile,'a+')
 		f.writelines(f'Blender Version : {bpy.app.version_string}\n')

@@ -4,6 +4,7 @@ import subprocess
 from fifa_tools import se7en_helper
 # path to python.exe
 python_exe = os.path.join(sys.prefix, 'bin', 'python.exe')
+print(f"Using python from : {python_exe}")
 
 def checkFirstRun():
 	config = se7en_helper.ReadConfig('FIFA3DIE')
