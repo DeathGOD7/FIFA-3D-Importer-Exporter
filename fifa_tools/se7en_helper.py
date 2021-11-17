@@ -11,6 +11,7 @@ pyC = "cp" + pyV[0] + pyV[1]
 pyArc = ""
 
 pyNET = fifa_tools.addonLoc + r"\fifa_tools\redist\PythonNET"
+libs = fifa_tools.addonLoc + r"\fifa_tools\libs\FIFA3D_Libs.tar.gz"
 files = os.listdir(pyNET)
 
 correctFile = ""
@@ -58,10 +59,19 @@ def ReadConfig(cfgname, ext="ini"):
 	return config
 
 from fifa_tools import package_manager
+from fifa_tools.scripts import archive_handler
+
+def InstallLibs():
+	if not os.path.exists(fifa_tools.libsdir):
+		os.makedirs(fifa_tools.libsdir)
+
+	archive_handler.decompress(libs, fifa_tools.libsdir)	
 
 def InstallPythonNET():
 	print(f"Installing {correctFile}")
 	package_manager.install(f"{pyNET}\{correctFile}")
 	print(f"Installed PythonNET 2.5.2")
+	print(f"Installing Libs")
+	InstallLibs()
+	print(f"Installed Libs")
 	WriteConfig("FIFA3DIE", "First_Run", "False")
-

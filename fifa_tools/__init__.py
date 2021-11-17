@@ -36,7 +36,10 @@ logfilename = x.strftime("%Y-%m-%d")
 logfile = maindir + f'\Logs\{logfilename}.log'
 
 texdir = maindir + '\Textures'
-subdirlist = [maindir, logdir, texdir]
+
+libsdir = maindir + "\Libs"
+
+subdirlist = [maindir, logdir, texdir, libsdir]
 # -----------------------------------------
 
 # --------------- Import Addon ----------------

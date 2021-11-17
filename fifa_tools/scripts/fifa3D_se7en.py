@@ -4,7 +4,7 @@ import bpy
 import clr
 import fifa_tools
 
-sys.path.append(f'{fifa_tools.addonLoc}\\fifa_tools\\libs')
+sys.path.append(f'{fifa_tools.libsdir}')
 
 clr.AddReference('SE7EN')
 ref1 = clr.AddReference('FIFALibrary_v21_11_13_0_x64')
@@ -75,7 +75,7 @@ class RX3_File():
 			model_test = Rx3File()
 			model_test.Load(file)
 			v = model_test.Rx3VertexBuffers[0]
-			print(v.Vertexes)
+			print(v.Vertexes.Length)
 		else:
 			print("Please choose the model file.")
 
