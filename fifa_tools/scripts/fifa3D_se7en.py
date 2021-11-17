@@ -76,7 +76,9 @@ class RX3_File():
 			model_test.Load(file)
 			v = model_test.Rx3VertexBuffers[0]
 			print(v.Vertexes.Length)
+			print(f"Position X = {v.Vertexes[0].Positions[0].X}")
+			print(f"Position Y = {v.Vertexes[0].Positions[0].Y}")
+			print(f"Position Z = {v.Vertexes[0].Positions[0].Z}")
+			print(f"Position W = {v.Vertexes[0].Positions[0].W}")
 		else:
 			print("Please choose the model file.")
-
-		

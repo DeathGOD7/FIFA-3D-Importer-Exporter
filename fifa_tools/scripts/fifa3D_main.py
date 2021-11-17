@@ -107,6 +107,7 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	# scn = bpy.context.scene
 	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
 	#print(f"UVs:{uvs}, Count:{count}")
+	print(verts[0])
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
@@ -259,8 +260,8 @@ class fifa_rx3:
 					self.data.seek(8)
 					original_size = struct.unpack('<I', self.data.read(4))[0]
 					f_size = len(self.data.read()) + 12
-					if not original_size == f_size and ext == 'rx3' and self.type == 'stadium' and scn.game_enum in ('0',
-																													 '2'):
+					if not original_size == f_size and ext == 'rx3' and self.type == 'stadium' and scn.game_enum in ('3',
+																													 '4'):
 						e = open('fifa_tools\\scripts\\msg', 'r')
 						print(e.read())
 						print('                           I SEE WHAT YOU DID THERE')
@@ -1449,7 +1450,7 @@ def read_crowd_15(file):
 	count = struct.unpack('<H', file.data.read(2))[0]
 	print('Seat Count: ', count)
 	t = open('crowd_log.txt', 'w')
-	if scn.game_enum == '2':
+	if scn.game_enum == '4':
 		skip = 7
 	else:
 		skip = 19

@@ -802,7 +802,7 @@ class file_import(bpy.types.Operator):
 			clog.close()
 			crowd_name = fifa_main.createmesh(crowd_verts, crowd_faces, [], f.type, 0, f.id, 'crowd', [], False, [], scn.fifa_import_loc)
 			gh.crowd_col(crowd_name, crowd_col, 'seat_colors')
-			if scn.game_enum == '2':
+			if scn.game_enum == '4':
 				for i in crowd_types:
 					if i[0][0] == 0:
 						if i[0][1] == 0:

@@ -2,7 +2,7 @@ bl_info = {
 	"name": "FIFA 3D IMPORTER/EXPORTER",
 	"description": "RX3 Importer/Exporter (Updated by Death GOD 7)",
 	"author": "Death GOD 7, arti-10",
-	"version": (0, 67, 'alpha'),
+	"version": (0, 70, 'alpha'),
 	"blender": (2, 80, 0),
 	"location": "Toolbar [N]",
 	"warning": "",  # used for warning icon and text in addons panel

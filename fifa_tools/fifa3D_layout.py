@@ -2,7 +2,7 @@
 # 	"name": "FIFA 3D IMPORTER/EXPORTER",
 # 	"description": "RX3 Importer/Exporter (Updated by Death GOD 7)",
 # 	"author": "Death GOD 7, arti-10",
-# 	"version": (0, 67, 'alpha'),
+# 	"version": (0, 70, 'alpha'),
 # 	"blender": (2, 80, 0),
 # 	"location": "Toolbar [N]",
 # 	"warning": "",  # used for warning icon and text in addons panel
@@ -1001,12 +1001,14 @@ bpy.types.Scene.crowd_fullness_enum = bpy.props.EnumProperty(
 
 bpy.types.Scene.game_enum = bpy.props.EnumProperty(
 	items=[
-		('0', 'FIFA 13', 'FIFA 13'),
-		('1', 'FIFA 14', 'FIFA 14'),
-		('2', 'FIFA 15', 'FIFA 15'),
-		('3', 'FIFA 16', 'FIFA 16')
+		('0', 'FIFA 11', 'FIFA 11'),
+		('1', 'FIFA 12', 'FIFA 12'),
+		('2', 'FIFA 13', 'FIFA 13'),
+		('3', 'FIFA 14', 'FIFA 14'),
+		('4', 'FIFA 15', 'FIFA 15'),
+		('5', 'FIFA 16', 'FIFA 16')
 		],
-	default='1',
+	default='3',
 	name="Game Version")
 
 bpy.types.Scene.bones_flag = bpy.props.BoolProperty(
