@@ -75,7 +75,6 @@ class RX3_File():
 			model_test = Rx3File()
 			model_test.Load(file)
 			
-			print(f"Vertex Format Count : {model_test.Rx3VertexFormats.Length}")
 
 			vF = list()
 
@@ -86,7 +85,7 @@ class RX3_File():
 			print(f"Vertex Formats : {vF}")
 			
 			v = model_test.Rx3VertexBuffers[0]
-			print(v.Vertexes.Length)
+			print(f"Total Vertices Count : {v.Vertexes.Length}")
 			print(f"Position X = {v.Vertexes[0].Positions[0].X}")
 			print(f"Position Y = {v.Vertexes[0].Positions[0].Y}")
 			print(f"Position Z = {v.Vertexes[0].Positions[0].Z}")
