@@ -465,7 +465,7 @@ class fifa_rx3:
 				self.mesh_count += 1
 				log.write('Mesh Count: %3d || Vert Count: %5d || Chunk Length: %2d || File Offset: %7d || Of Type: %s' % (
 				 self.mesh_count, vc, chunk_length, offset[1], self.type))
-				print(f'Mesh Description / Vertex Format : { self.mesh_descrs[count]}\nTotal Vertices count:{vc}')
+				print(f'Mesh Description / Vertex Format : { self.mesh_descrs[count]}\nTotal Vertices Count:{vc}')
 				temp = self.read_file_data(self.data, self.mesh_descrs[count], vc)
 				#print(f"total uvs : {temp[2]}")
 				self.vxtable.append(temp[0])
