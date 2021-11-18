@@ -117,6 +117,16 @@ class RX3_File():
 
 		print(f"Face Count: {self.faceCount}")
 
+		# this is read in addon to get indicescount and length
+		# f.read(4) 
+		# f.read(4) # indicescount
+		# f.read(1) # indiceslength
+		# f.read(3)
+		# f.read(4)
+		# all read are 16 bytes so...auto doing read of 16
+
+		f.read(16)
+
 		if indicesLength == 4:
 			string = endian + 'III'
 		elif indicesLength == 2:
@@ -138,6 +148,14 @@ class RX3_File():
 		self.faceCount = indicesCount - 2
 
 		print(f"Face Count: {self.faceCount}")
+
+		# f.read(4)
+		# f.read(4) # indicescount
+		# f.read(4) # indiceslength
+		# f.read(4)
+		# all read are 16 bytes so...auto doing read of 16
+
+		f.read(16)
 
 		if indicesLength == 4:
 			string = '<III'
@@ -180,6 +198,7 @@ class RX3_File():
 		file = rx3file
 		if file != "":
 			f = self.data = self.getDataRx3(file)
+	
 			model_test = Rx3File()
 			model_test.Load(file)
 
@@ -226,12 +245,13 @@ class RX3_File():
 
 			f.seek(-16, 2)
 			self.primitiveType = int.from_bytes(f.read(1),"little")
+
 			if self.primitiveType == 4:
 				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
-				self.faces = self.facereadlist(f, fcOffset, self.indicesLength, self.indicesCount, self.endianType)
+				self.faces.append(self.facereadlist(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
 			elif self.primitiveType == 6:
 				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
-				self.faces = self.facereadstrip(f, fcOffset, self.indicesLength, self.indicesCount, self.endianType)
+				self.faces.append(self.facereadstrip(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
 			else:
 				print("Unknown Primitive Type")
 
@@ -239,3 +259,4 @@ class RX3_File():
 
 		else:
 			print("Please choose the model file.")
+

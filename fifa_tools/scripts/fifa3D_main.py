@@ -107,8 +107,8 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	# scn = bpy.context.scene
 	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
 	#print(f"UVs:{uvs}, Count:{count}")
-	print(f"Vertices 0 : {verts[0]}")
-	print(f"Face 0 : {faces[0]}")
+	#print(f"Vertices 0 : {verts[0]}")
+	#print(f"Face 0 : {faces[0]}")
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
@@ -445,6 +445,7 @@ class fifa_rx3:
 				else:
 					temp = gh.facereadlist(self.data, offset[1], self.endian)
 				self.itable.append(temp[0])
+				#print(self.itable[0])
 				print(f'Offset for Face/Indices : {offset[1]}')
 				print(f'Indices Length : {temp[1]}')
 				self.indices_offsets.append((offset[1], temp[1]))
