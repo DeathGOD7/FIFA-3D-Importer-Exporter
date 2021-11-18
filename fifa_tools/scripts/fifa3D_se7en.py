@@ -79,6 +79,7 @@ class RX3_File():
 		self.primitiveType = 0
 		self.vertexFormat = []
 		self.vertexPosition = []
+		self.totalVertCount = 0
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -222,6 +223,10 @@ class RX3_File():
 			print(f"\nVertex Formats : {self.vertexFormat}")
 
 			v = model_test.Rx3VertexBuffers[0]
+
+			self.totalVertCount = v.Vertexes.Length
+			print(f"Total Vertices Count : {self.totalVertCount}")
+
 			for x in range(v.Vertexes.Length):
 				data = [v.Vertexes[x].Positions[0].X/100 , v.Vertexes[x].Positions[0].Y/100, -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].W]
 				self.vertexPosition.append(data)
@@ -255,7 +260,7 @@ class RX3_File():
 			else:
 				print("Unknown Primitive Type")
 
-			print(f"Values of Face 0 : {self.faces[0]}")
+			print(f"Values of Face 0 : {self.faces[0][0]}")
 
 		else:
 			print("Please choose the model file.")
