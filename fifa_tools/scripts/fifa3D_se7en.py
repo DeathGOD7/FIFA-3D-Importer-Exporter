@@ -67,6 +67,8 @@ class RX3_File():
 	def __init__(self, file, ftype): 
 		self.file = file
 		self.ftype = ftype
+		self.cols = []
+		self.colCount = 0
 		self.data = 0
 		self.endian = ""
 		self.endianStr = ""
@@ -80,6 +82,8 @@ class RX3_File():
 		self.vertexFormat = []
 		self.vertexPosition = []
 		self.totalVertCount = 0
+		self.uvs = []
+		self.uvCount = 0
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -191,19 +195,115 @@ class RX3_File():
 		for x in range(0, sect_num):
 			obtainedOffsets.append([rx3file.Rx3SectionHeaders[x].Signature, rx3file.Rx3SectionHeaders[x].Offset])
 
-		print(f"Offsets : {obtainedOffsets}")
+		print(f"\nOffsets : {obtainedOffsets}")
 		
 		return obtainedOffsets
 
+	def read_file_data(self, rx3file, opts, count):
+		uvcount = 0
+		colcount = 0
+		verts = []
+		uvs = []
+		cols = []
+		cols_0 = []
+		cols_1 = []
+		cols_2 = []
+		uvs_0, uvs_1, uvs_2, uvs_3, uvs_4, uvs_5, uvs_6, uvs_7 = ([], [], [], [], [], [], [], [])
+		bones_i0 = []
+		bones_i1 = []
+		bones_w = []
+		bones_c = []
+		for i in range(count):
+			uvcount = 0
+			colcount = 0
+			for j in opts:
+				if j[0][0] == 'p':
+					if j[4] == '3f32':
+						verts.append(gh.read_vertices_1(f))
+					elif j[4] == '4f16':
+						verts.append(gh.read_vertices_0(f))
+				elif j[0][0] == 't':
+					if j[4] == '2f32':
+						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_1(f))')
+					elif j[4] == '2f16':
+						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_0(f))')
+					# else:
+					# 	uvcount += 1
+					uvcount += 1
+
+				elif j[0][0] == 'n':
+					colcount += 1
+					cols_0.append(gh.read_cols(f))
+				elif j[0][0] == 'b':
+					colcount += 1
+					cols_2.append(gh.read_cols(f))
+				elif j[0][0] == 'g':
+					colcount += 1
+					cols_1.append(gh.read_cols(f))
+				elif j[0][0] == 'i':
+					if j[4] == '4u8':
+						eval('bones_i' + str(j[0][1]) + ".append(struct.unpack('<4B',f.read(4)))")
+					elif j[4] == '4u16':
+						eval('bones_i' + str(j[0][1]) + ".append(struct.unpack('<4H',f.read(8)))")
+				elif j[0][0] == 'w':
+					bones_w.append(struct.unpack('<4B', f.read(4)))
+				elif j[0][0] == 'c':
+					bones_c.append(struct.unpack('<4B', f.read(4)))
+					continue
+
+		for j in range(uvcount):
+			eval('uvs.append(uvs_' + str(j) + ')')
+
+		for j in range(colcount):
+			eval('cols.append(cols_' + str(j) + ')')
+
+		return (
+		 verts, cols, uvs, bones_i0, bones_w)
+
+	def getVertexFormats(self, rx3file):
+		for x in range(rx3file.Rx3VertexFormats.Length):
+			for y in range(rx3file.Rx3VertexFormats[x].VertexFormat.Length):
+				self.vertexFormat.append(rx3file.Rx3VertexFormats[x].VertexFormat[y])
+
+		print(f"\nVertex Formats : {self.vertexFormat}\n")
+		return self.vertexFormat
+
+	def getVertexPosition(self, rx3file):
+		v = rx3file.Rx3VertexBuffers[0]
+
+		self.totalVertCount = v.Vertexes.Length
+		print(f"Total Vertices Count : {self.totalVertCount}")
+
+		for x in range(v.Vertexes.Length):
+			data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
+			self.vertexPosition.append(data)
+		
+		print(f"Position X,Z,Y,W of Vertex 0 = {self.vertexPosition[0]}")
+		return self.vertexPosition
+
+	def getIndicesData(self, rx3file):
+		# rx3model.Rx3IndexBuffer(meshid) ==> For faces
+		# rx3model.Rx3IndexBuffer(meshid).Rx3IndexBufferHeader.IndexSize is the same as "indiceslength" in your code
+			
+		indices = rx3file.Rx3IndexBuffers[0]
+
+		self.indicesCount = indices.IndexStream.Length
+		print(f"Incides Count : {self.indicesCount}")
+
+		self.indicesLength =  indices.Rx3IndexBufferHeader.IndexSize
+		print(f"Indices Length : {self.indicesLength}")
+
+		return [self.indicesCount, self.indicesLength]
+			
 	def loadRx3(self, rx3file):
 		file = rx3file
 		if file != "":
 			f = self.data = self.getDataRx3(file)
 	
-			model_test = Rx3File()
-			model_test.Load(file)
+			mainFile = Rx3File()
+			mainFile.Load(file)
 
-			self.endian = model_test.Rx3Header.Endianness
+			self.endian = mainFile.Rx3Header.Endianness
 			if self.endian == "b":
 				self.endianType = '>'
 				self.endianStr = "Big Endian"
@@ -213,36 +313,14 @@ class RX3_File():
 				self.endianStr = "Little Endian"
 				print(f"Endian Type : {self.endianStr}")
 
+			self.offsets = self.getOffsets(mainFile)
 
-			self.offsets = self.getOffsets(model_test)
+			self.getVertexFormats(mainFile)
 
-			for x in range(model_test.Rx3VertexFormats.Length):
-				for y in range(model_test.Rx3VertexFormats[x].VertexFormat.Length):
-					self.vertexFormat.append(model_test.Rx3VertexFormats[x].VertexFormat[y])
+			self.getVertexPosition(mainFile)
 
-			print(f"\nVertex Formats : {self.vertexFormat}")
+			self.getIndicesData(mainFile)
 
-			v = model_test.Rx3VertexBuffers[0]
-
-			self.totalVertCount = v.Vertexes.Length
-			print(f"Total Vertices Count : {self.totalVertCount}")
-
-			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Positions[0].X/100 , v.Vertexes[x].Positions[0].Y/100, -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].W]
-				self.vertexPosition.append(data)
-			
-			print(f"Position X,Y,Z,W of Vertex 0 = {self.vertexPosition[0]}")
-			
-			# rx3model.Rx3IndexBuffer(meshid) ==> For faces
-			# rx3model.Rx3IndexBuffer(meshid).Rx3IndexBufferHeader.IndexSize is the same as "indiceslength" in your code
-			indices = model_test.Rx3IndexBuffers[0]
-
-			self.indicesCount = indices.IndexStream.Length
-			print(f"Incides Count : {self.indicesCount}")
-
-			self.indicesLength =  indices.Rx3IndexBufferHeader.IndexSize
-			print(f"Indices Length : {self.indicesLength}")
-			
 			fcOffset = 0
 			for x in self.offsets:
 				if x[0] == 5798132:
