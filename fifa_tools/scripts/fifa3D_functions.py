@@ -158,6 +158,8 @@ class general_helper:
 		indiceslength = struct.unpack(endian + 'B', f.read(1))[0]
 		f.read(3)
 		facecount = int(indicescount / 3)
+		print(f"Indices Count : {indicescount}")
+		print(f"Face Count: {facecount}")
 		f.read(4)
 		
 		if indiceslength == 4:
@@ -192,8 +194,10 @@ class general_helper:
 		indicescount = struct.unpack('<I', f.read(4))[0]
 		indiceslength = struct.unpack('<i', f.read(4))[0]
 		facecount = indicescount - 2
-		print(indicescount, facecount)
+		print(f"Indices Count : {indicescount}")
+		print(f"Face Count: {facecount}")
 		f.read(4)
+
 		if indiceslength == 4:
 			string = '<III'
 		elif indiceslength == 2:

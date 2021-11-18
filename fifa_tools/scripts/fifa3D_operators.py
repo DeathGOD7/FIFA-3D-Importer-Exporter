@@ -457,7 +457,8 @@ class file_import(bpy.types.Operator):
 		global files
 		global objectcount
 		scn = context.scene
-		testrx3 = fifa3D_se7en.RX3_File.testdll(bpy.context.scene.model_import_path)
+		testrx3 = fifa3D_se7en.RX3_File("ball.rx3", "RX3")
+		testrx3.testdll(bpy.context.scene.model_import_path)
 		paths = []
 		paths.append(scn.model_import_path)
 		paths.append(scn.hair_import_path)

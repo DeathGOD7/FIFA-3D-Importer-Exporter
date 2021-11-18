@@ -68,8 +68,8 @@ class RX3_File():
 		self.file = file
 		self.ftype = ftype
 
-	@staticmethod
-	def testdll(rx3file):
+#	@staticmethod
+	def testdll(self, rx3file):
 		file = rx3file
 		if file != "":
 			model_test = Rx3File()
