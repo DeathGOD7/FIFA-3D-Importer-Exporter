@@ -107,7 +107,8 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	# scn = bpy.context.scene
 	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
 	#print(f"UVs:{uvs}, Count:{count}")
-	print(verts[0])
+	print(f"Vertices 0 : {verts[0]}")
+	print(f"Face 0 : {faces[0]}")
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
@@ -414,6 +415,7 @@ class fifa_rx3:
 		# scn = bpy.context.scene
 		scn = bpy.context.scene
 		print('READING FILE OFFSETS...')
+		print(f"Offsets : {self.offsets}")
 		log = open(self.logfile, 'a+')
 		for offset in self.offsets:
 			if offset[0] == 3263271920:
