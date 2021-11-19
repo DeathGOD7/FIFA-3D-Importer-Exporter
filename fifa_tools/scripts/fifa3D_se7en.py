@@ -319,8 +319,9 @@ class RX3_File():
 				if x[0] == 5798132:
 					fcOffset = x[1]
 
-			f.seek(-16, 2)
-			self.primitiveType = int.from_bytes(f.read(1),"little")
+			# f.seek(-16, 2)
+			# self.primitiveType = int.from_bytes(f.read(1),"little")
+			self.primitiveType = mainFile.GetPrimitiveType(0)
 
 			if self.primitiveType == 4:
 				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
@@ -597,22 +598,22 @@ class RX3_File_Hybrid():
 
 			self.getIndicesData(mainFile)
 
-			# fcOffset = 0
+			fcOffset = 0
 			# for x in self.offsets:
 			# 	if x[0] == 5798132:
 			# 		fcOffset = x[1]
 
-			# f.seek(-16, 2)
-			# self.primitiveType = int.from_bytes(f.read(1),"little")
+			self.primitiveType = mainFile.GetPrimitiveType(0)
+			# self.primitiveType = mainFile.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
 
-			# if self.primitiveType == 4:
-			# 	print(f"Primitive Type : {self.primitiveType} (TriangleList)")
-			# 	self.faces.append(self.facereadlist(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
-			# elif self.primitiveType == 6:
-			# 	print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
-			# 	self.faces.append(self.facereadstrip(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
-			# else:
-			# 	print("Unknown Primitive Type")
+			if self.primitiveType == 4:
+				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
+				self.faces.append(self.facereadlist(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
+			elif self.primitiveType == 6:
+				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
+				self.faces.append(self.facereadstrip(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
+			else:
+				print("Unknown Primitive Type")
 
 			# print(f"Values of Face 0 : {self.faces[0][0]}")
 
