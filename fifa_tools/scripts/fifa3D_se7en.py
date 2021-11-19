@@ -255,6 +255,7 @@ class RX3_File():
 
 	def getVertexFormats(self, rx3file):
 		for x in range(rx3file.Rx3VertexFormats.Length):
+			print(f"Total Vertex Elements : {rx3file.Rx3VertexFormats[x].VertexFormat.Length}")
 			for y in range(rx3file.Rx3VertexFormats[x].VertexFormat.Length):
 				self.vertexFormat.append(rx3file.Rx3VertexFormats[x].VertexFormat[y])
 
