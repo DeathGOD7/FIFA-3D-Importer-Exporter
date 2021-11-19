@@ -88,7 +88,7 @@ class RX3_File():
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
 		filename = os.path.basename(file)
-		print(f"File : {filename}")
+		print(f"\nFile : {filename}")
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
 			data.read(12)
@@ -189,7 +189,7 @@ class RX3_File():
 	def getOffsets(self, rx3file):
 		obtainedOffsets = []
 		sect_num  = rx3file.Rx3Header.NumSections
-		print('\nNumber of Sectors Detected : ', sect_num)
+		print('Number of Sectors Detected : ', sect_num)
 
 		# blender offset[0] -> rx3file.Rx3SectionHeaders(id).Signature (= section hashed name) 
 		# blender offset[1] -> rx3file.Rx3SectionHeaders(id).Offset (= where the section starts in file)
@@ -197,7 +197,7 @@ class RX3_File():
 		for x in range(0, sect_num):
 			obtainedOffsets.append([rx3file.Rx3SectionHeaders[x].Signature, rx3file.Rx3SectionHeaders[x].Offset])
 
-		print(f"\nOffsets : {obtainedOffsets}")
+		print(f"Offsets : {obtainedOffsets}")
 		
 		return obtainedOffsets
 
@@ -258,7 +258,7 @@ class RX3_File():
 			for y in range(rx3file.Rx3VertexFormats[x].VertexFormat.Length):
 				self.vertexFormat.append(rx3file.Rx3VertexFormats[x].VertexFormat[y])
 
-		print(f"\nVertex Formats : {self.vertexFormat}\n")
+		print(f"Vertex Formats : {self.vertexFormat}")
 		return self.vertexFormat
 
 	def getVertexPosition(self, rx3file):
@@ -363,7 +363,7 @@ class RX3_File_Hybrid():
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
 		filename = os.path.basename(file)
-		print(f"File : {filename}")
+		print(f"\nFile : {filename}")
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
 			data.read(12)
@@ -464,7 +464,7 @@ class RX3_File_Hybrid():
 	def getOffsets(self, rx3file):
 		obtainedOffsets = []
 		sect_num  = rx3file.Rx3Header.NumSections
-		print('\nNumber of Sectors Detected : ', sect_num)
+		print('Number of Sectors Detected : ', sect_num)
 
 		# blender offset[0] -> rx3file.Rx2SectionHeaders(id).Signature (= section hashed name) 
 		# blender offset[1] -> rx3file.Rx2SectionHeaders(id).Offset (= where the section starts in file)
@@ -472,7 +472,7 @@ class RX3_File_Hybrid():
 		for x in range(0, sect_num):
 			obtainedOffsets.append([rx3file.Rx3SectionHeaders[x].Signature, rx3file.Rx3SectionHeaders[x].Offset])
 
-		print(f"\nOffsets : {obtainedOffsets}")
+		print(f"Offsets : {obtainedOffsets}")
 		
 		return obtainedOffsets
 
@@ -532,14 +532,14 @@ class RX3_File_Hybrid():
 		# RW4VertexDescriptors
 
 		for x in range(rx3file.RW4Section.RW4VertexDescriptors.Length):
-			print(f"\nTotal Vertex Elements : {rx3file.RW4Section.RW4VertexDescriptors[x].NumElements}")
+			print(f"Total Vertex Elements : {rx3file.RW4Section.RW4VertexDescriptors[x].NumElements}")
 			for y in range(rx3file.RW4Section.RW4VertexDescriptors[x].Elements.Length):
 				temp0 = rx3file.RW4Section.RW4VertexDescriptors[x].Elements[y]
 				# usage, usageIndex, offset, unk0, dataType
 				temp1 = f"{temp0.Usage, temp0.UsageIndex, temp0.Offset, 0, temp0.DataType}"
 				self.vertexFormat.append(temp1)
 
-		print(f"\nVertex Formats : {self.vertexFormat}\n")
+		print(f"Vertex Formats : {self.vertexFormat}")
 		return self.vertexFormat
 
 	def getVertexPosition(self, rx3file):
@@ -599,9 +599,9 @@ class RX3_File_Hybrid():
 			self.getIndicesData(mainFile)
 
 			fcOffset = 0
-			# for x in self.offsets:
-			# 	if x[0] == 5798132:
-			# 		fcOffset = x[1]
+			for x in self.offsets:
+				if x[0] == 5798132:
+					fcOffset = x[1]
 
 			self.primitiveType = mainFile.GetPrimitiveType(0)
 			# self.primitiveType = mainFile.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
@@ -615,7 +615,7 @@ class RX3_File_Hybrid():
 			else:
 				print("Unknown Primitive Type")
 
-			# print(f"Values of Face 0 : {self.faces[0][0]}")
+			print(f"Values of Face 0 : {self.faces[0][0]}")
 
 		else:
 			print("Please choose the model file.")
