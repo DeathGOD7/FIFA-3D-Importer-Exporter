@@ -22,21 +22,21 @@ class GameType(str, Enum):
 	FIFA16 = "FIFA16"
 
 class FileType(str, Enum):
-	RX2_OLD = "RX2_OLD"
-	RX2 = "RX2"
-	RX3_Hybrid = "RX3_Hybrid"
-	RX3 = "RX3"
-	FB = "FB"
+	RX2_OLD = "RX2_OLD" # FIFA 06/WC06
+	RX2 = "RX2" # FIFA 07/08/euro08/09
+	RX3_Hybrid = "RX3_Hybrid" # FIFA 10_console, FIFA 11 (pc+console), FO3_old : rx3 with RW4 sections
+	RX3 = "RX3" # FIFA 12 - 16 or later
+	FB = "FB" # FrostBite3 format (fbx)
 
 class SkeletonType(str, Enum):
 	OLD_SKELETON = "OLD_SKELETON"
 	FIFA11PC_SKELETON = "FIFA11PC_SKELETON"
-	IE_SKELETON = "IE_SKELETON"
-	FIFA14_SKELETON = "FIFA14_SKELETON"
-	FIFA15_SKELETON = "FIFA15_SKELETON"
-	FIFA16_SKELETON = "FIFA16_SKELETON"
-	FROSTBITE_OLD_SKELETON = "FROSTBITE_OLD_SKELETON"
-	FROSTBITE_NEW_SKELETON = "FROSTBITE_NEW_SKELETON"
+	IE_SKELETON = "IE_SKELETON" #impact engine
+	FIFA14_SKELETON = "FIFA14_SKELETON" #ignite engine_v1
+	FIFA15_SKELETON = "FIFA15_SKELETON" #ignite engine_v2
+	FIFA16_SKELETON = "FIFA16_SKELETON" #ignite engine_v3
+	FROSTBITE_OLD_SKELETON = "FROSTBITE_OLD_SKELETON" #Fifa_online_4_old
+	FROSTBITE_NEW_SKELETON = "FROSTBITE_NEW_SKELETON" #Fifa_online_4_new + FIFA 17-21 pc
 
 def GetFileType(GType):
 	rx3 = [GameType.FIFA12, GameType.FIFA13, GameType.FIFA14, GameType.FIFA15, GameType.FIFA16]
@@ -87,6 +87,8 @@ class RX3_File():
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
+		filename = os.path.basename(file)
+		print(f"File : {filename}")
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
 			data.read(12)
@@ -187,7 +189,7 @@ class RX3_File():
 	def getOffsets(self, rx3file):
 		obtainedOffsets = []
 		sect_num  = rx3file.Rx3Header.NumSections
-		print('Number of Sectors Detected : ', sect_num)
+		print('\nNumber of Sectors Detected : ', sect_num)
 
 		# blender offset[0] -> rx3file.Rx3SectionHeaders(id).Signature (= section hashed name) 
 		# blender offset[1] -> rx3file.Rx3SectionHeaders(id).Offset (= where the section starts in file)
@@ -202,7 +204,6 @@ class RX3_File():
 	def read_file_data(self, rx3file, opts, count):
 		uvcount = 0
 		colcount = 0
-		verts = []
 		uvs = []
 		cols = []
 		cols_0 = []
@@ -217,20 +218,12 @@ class RX3_File():
 			uvcount = 0
 			colcount = 0
 			for j in opts:
-				if j[0][0] == 'p':
-					if j[4] == '3f32':
-						verts.append(gh.read_vertices_1(f))
-					elif j[4] == '4f16':
-						verts.append(gh.read_vertices_0(f))
-				elif j[0][0] == 't':
+				if j[0][0] == 't':
 					if j[4] == '2f32':
 						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_1(f))')
 					elif j[4] == '2f16':
 						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_0(f))')
-					# else:
-					# 	uvcount += 1
 					uvcount += 1
-
 				elif j[0][0] == 'n':
 					colcount += 1
 					cols_0.append(gh.read_cols(f))
@@ -344,7 +337,7 @@ class RX3_File():
 			print("Please choose the model file.")
 
 
-class RX2_File():
+class RX3_File_Hybrid():
 	def __init__(self, file, ftype): 
 		self.file = file
 		self.ftype = ftype
@@ -366,8 +359,10 @@ class RX2_File():
 		self.uvs = []
 		self.uvCount = 0
 
-	def getDataRx2(self, file):
+	def getDataRx3(self, file):
 		data = open(file, 'rb')
+		filename = os.path.basename(file)
+		print(f"File : {filename}")
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
 			data.read(12)
@@ -465,22 +460,22 @@ class RX2_File():
 
 		return faces
 
-	def getOffsets(self, rx2file):
+	def getOffsets(self, rx3file):
 		obtainedOffsets = []
-		sect_num  = rx2file.Rx3Header.NumSections
-		print('Number of Sectors Detected : ', sect_num)
+		sect_num  = rx3file.Rx3Header.NumSections
+		print('\nNumber of Sectors Detected : ', sect_num)
 
-		# blender offset[0] -> rx2file.Rx2SectionHeaders(id).Signature (= section hashed name) 
-		# blender offset[1] -> rx2file.Rx2SectionHeaders(id).Offset (= where the section starts in file)
+		# blender offset[0] -> rx3file.Rx2SectionHeaders(id).Signature (= section hashed name) 
+		# blender offset[1] -> rx3file.Rx2SectionHeaders(id).Offset (= where the section starts in file)
 
 		for x in range(0, sect_num):
-			obtainedOffsets.append([rx2file.Rx3SectionHeaders[x].Signature, rx2file.Rx3SectionHeaders[x].Offset])
+			obtainedOffsets.append([rx3file.Rx3SectionHeaders[x].Signature, rx3file.Rx3SectionHeaders[x].Offset])
 
 		print(f"\nOffsets : {obtainedOffsets}")
 		
 		return obtainedOffsets
 
-	def read_file_data(self, rx2file, opts, count):
+	def read_file_data(self, rx3file, opts, count):
 		uvcount = 0
 		colcount = 0
 		uvs = []
@@ -532,13 +527,13 @@ class RX2_File():
 		return (
 		 verts, cols, uvs, bones_i0, bones_w)
 
-	def getVertexFormats(self, rx2file):
+	def getVertexFormats(self, rx3file):
 		# RW4VertexDescriptors
 
-		for x in range(rx2file.RW4Section.RW4VertexDescriptors.Length):
-			print(f"Total Elements : {rx2file.RW4Section.RW4VertexDescriptors[x].NumElements}")
-			for y in range(rx2file.RW4Section.RW4VertexDescriptors[x].Elements.Length):
-				temp0 = rx2file.RW4Section.RW4VertexDescriptors[x].Elements[y]
+		for x in range(rx3file.RW4Section.RW4VertexDescriptors.Length):
+			print(f"\nTotal Vertex Elements : {rx3file.RW4Section.RW4VertexDescriptors[x].NumElements}")
+			for y in range(rx3file.RW4Section.RW4VertexDescriptors[x].Elements.Length):
+				temp0 = rx3file.RW4Section.RW4VertexDescriptors[x].Elements[y]
 				# usage, usageIndex, offset, unk0, dataType
 				temp1 = f"{temp0.Usage, temp0.UsageIndex, temp0.Offset, 0, temp0.DataType}"
 				self.vertexFormat.append(temp1)
@@ -546,8 +541,8 @@ class RX2_File():
 		print(f"\nVertex Formats : {self.vertexFormat}\n")
 		return self.vertexFormat
 
-	def getVertexPosition(self, rx2file):
-		v = rx2file.Rx3VertexBuffers[0]
+	def getVertexPosition(self, rx3file):
+		v = rx3file.Rx3VertexBuffers[0]
 
 		self.totalVertCount = v.Vertexes.Length
 		print(f"Total Vertices Count : {self.totalVertCount}")
@@ -559,11 +554,11 @@ class RX2_File():
 		print(f"Position X,Z,Y,W of Vertex 0 = {self.vertexPosition[0]}")
 		return self.vertexPosition
 
-	def getIndicesData(self, rx2file):
+	def getIndicesData(self, rx3file):
 		# rx3model.Rx3IndexBuffer(meshid) ==> For faces
 		# rx3model.Rx3IndexBuffer(meshid).Rx3IndexBufferHeader.IndexSize is the same as "indiceslength" in your code
 			
-		indices = rx2file.Rx3IndexBuffers[0]
+		indices = rx3file.Rx3IndexBuffers[0]
 
 		self.indicesCount = indices.IndexStream.Length
 		print(f"Incides Count : {self.indicesCount}")
@@ -573,12 +568,12 @@ class RX2_File():
 
 		return [self.indicesCount, self.indicesLength]
 			
-	def loadRx2(self, rx2file):
-		file = rx2file
+	def loadRx3(self, rx3file):
+		file = rx3file
 		if file != "":
-			f = self.data = self.getDataRx2(file)
+			f = self.data = self.getDataRx3(file)
 	
-			mainFile = Rx2File()
+			mainFile = Rx3File()
 			mainFile.Load(file)
 
 
@@ -594,13 +589,13 @@ class RX2_File():
 				self.endianStr = "Little Endian"
 				print(f"Endian Type : {self.endianStr}")
 
-			#self.offsets = self.getOffsets(mainFile)
+			self.offsets = self.getOffsets(mainFile)
 
 			self.getVertexFormats(mainFile)
 
-			# self.getVertexPosition(mainFile)
+			self.getVertexPosition(mainFile)
 
-			# self.getIndicesData(mainFile)
+			self.getIndicesData(mainFile)
 
 			# fcOffset = 0
 			# for x in self.offsets:
