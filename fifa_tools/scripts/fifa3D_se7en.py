@@ -78,6 +78,7 @@ class RX3_File():
 		self.indicesCount = 0
 		self.indicesLength = 0
 		self.offsets = []
+		self.meshcount = 0
 		self.primitiveType = 0
 		self.vertexFormat = []
 		self.vertexPosition = []
@@ -297,6 +298,12 @@ class RX3_File():
 			mainFile = Rx3File()
 			mainFile.Load(file)
 
+			self.meshcount = mainFile.Rx3VertexBuffers.Length
+			print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
+			#print(mainFile.Rx3IndexBuffers.Length)
+			# rx3file.Rx3VertexBuffers.Length => can be used for mesh count
+			# rx3file.Rx3IndexBuffers.Length => can also be used for mesh count
+
 			self.endian = mainFile.Rx3Header.Endianness
 			if self.endian == "b":
 				self.endianType = '>'
@@ -353,6 +360,7 @@ class RX3_File_Hybrid():
 		self.faceCount = 0
 		self.indicesCount = 0
 		self.indicesLength = 0
+		self.meshcount = 0
 		self.offsets = []
 		self.primitiveType = 0
 		self.vertexFormat = []
@@ -578,6 +586,11 @@ class RX3_File_Hybrid():
 			mainFile = Rx3File()
 			mainFile.Load(file)
 
+			self.meshcount = mainFile.Rx3VertexBuffers.Length
+			print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
+			#print(mainFile.Rx3IndexBuffers.Length)
+			# rx3file.Rx3VertexBuffers.Length => can be used for mesh count
+			# rx3file.Rx3IndexBuffers.Length => can also be used for mesh count
 
 			self.endian = mainFile.RW4Section.RW4Header.Endianness
 			if self.endian == 1:
