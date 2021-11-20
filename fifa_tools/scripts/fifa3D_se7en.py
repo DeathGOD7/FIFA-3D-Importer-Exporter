@@ -343,10 +343,12 @@ class RX3_File():
 			if self.primitiveType == 4:
 				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
 				for x in range(self.meshcount):
+					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
 					self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			elif self.primitiveType == 6:
 				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
 				for x in range(self.meshcount):
+					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
 					self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			else:
 				print("Unknown Primitive Type")
@@ -640,10 +642,12 @@ class RX3_File_Hybrid():
 			if self.primitiveType == 4:
 				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
 				for x in range(self.meshcount):
+					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
 					self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			elif self.primitiveType == 6:
 				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
 				for x in range(self.meshcount):
+					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
 					self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			else:
 				print("Unknown Primitive Type")
