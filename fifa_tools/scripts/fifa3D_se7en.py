@@ -68,23 +68,23 @@ class RX3_File():
 		self.file = file
 		self.ftype = ftype
 		self.cols = []
-		self.colCount = 0
+		self.colCount = []
 		self.data = 0
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
 		self.faces= []
-		self.faceCount = 0
-		self.indicesCount = 0
-		self.indicesLength = 0
+		self.faceCount = []
+		self.indicesCount = []
+		self.indicesLength = []
 		self.offsets = []
 		self.meshcount = 0
 		self.primitiveType = 0
 		self.vertexFormat = []
 		self.vertexPosition = []
-		self.totalVertCount = 0
+		self.totalVertCount = []
 		self.uvs = []
-		self.uvCount = 0
+		self.uvCount = []
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -118,12 +118,13 @@ class RX3_File():
 
 		return data
 
-	def facereadlist(self, f, offset, indicesLength, indicesCount, endian):
+	def facereadlist(self, f, offset, mID, indicesLength, indicesCount, endian):
 		f.seek(offset)
 		faces = []
-		self.faceCount = int(indicesCount / 3)
+	
+		self.faceCount.append(int(indicesCount / 3))
 
-		print(f"Face Count: {self.faceCount}")
+		print(f"Face Count, Mesh {mID}: {self.faceCount[mID]}")
 
 		# this is read in addon to get indicescount and length
 		# f.read(4) 
@@ -140,7 +141,7 @@ class RX3_File():
 		elif indicesLength == 2:
 			string = endian + 'HHH'
 
-		for i in range(self.faceCount):
+		for i in range(self.faceCount[mID]):
 			temp = struct.unpack(string, f.read(indicesLength * 3))
 			if not temp[0] == temp[1]:
 				if not temp[2] == temp[1]:
@@ -148,14 +149,15 @@ class RX3_File():
 						continue
 					faces.append((temp[0], temp[1], temp[2]))
 
+		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
 
-	def facereadstrip(self, f, offset, indicesLength, indicesCount, endian):
+	def facereadstrip(self, f, offset, mID, indicesLength, indicesCount, endian):
 		f.seek(offset)
 		faces = []
 		self.faceCount = indicesCount - 2
 
-		print(f"Face Count: {self.faceCount}")
+		print(f"Face Count, Mesh {mID}: {self.faceCount[mID]}")
 
 		# f.read(4)
 		# f.read(4) # indicescount
@@ -171,7 +173,7 @@ class RX3_File():
 			string = '<HHH'
 
 		flag = False
-		for i in range(self.faceCount):
+		for i in range(self.faceCount[mID]):
 			back = f.tell()
 			temp = struct.unpack(string, f.read(indicesLength * 3))
 			if temp[0] == temp[1] or temp[1] == temp[2] or temp[0] == temp[2]:
@@ -185,6 +187,7 @@ class RX3_File():
 			flag = not flag
 			f.seek(back + indicesLength)
 
+		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
 
 	def getOffsets(self, rx3file):
@@ -256,37 +259,43 @@ class RX3_File():
 
 	def getVertexFormats(self, rx3file):
 		for x in range(rx3file.Rx3VertexFormats.Length):
-			print(f"Total Vertex Elements : {rx3file.Rx3VertexFormats[x].VertexFormat.Length}")
+			temp = []
+			print(f"Total Vertex Elements , Mesh {x}: {rx3file.Rx3VertexFormats[x].VertexFormat.Length}")
 			for y in range(rx3file.Rx3VertexFormats[x].VertexFormat.Length):
-				self.vertexFormat.append(rx3file.Rx3VertexFormats[x].VertexFormat[y])
+				temp.append(rx3file.Rx3VertexFormats[x].VertexFormat[y])
+			self.vertexFormat.append(temp)
 
 		print(f"Vertex Formats : {self.vertexFormat}")
 		return self.vertexFormat
 
 	def getVertexPosition(self, rx3file):
-		v = rx3file.Rx3VertexBuffers[0]
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
 
-		self.totalVertCount = v.Vertexes.Length
-		print(f"Total Vertices Count : {self.totalVertCount}")
+			self.totalVertCount.append(v.Vertexes.Length)
+			print(f"Total Vertices Count, Mesh {i} : {self.totalVertCount[i]}")
 
-		for x in range(v.Vertexes.Length):
-			data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
-			self.vertexPosition.append(data)
-		
-		print(f"Position X,Z,Y,W of Vertex 0 = {self.vertexPosition[0]}")
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
+				temp.append(data)
+			
+			self.vertexPosition.append(temp)
+			print(f"Position X,Z,Y,W of Vertex 0, Mesh {i} = {self.vertexPosition[i][0]}")
+
 		return self.vertexPosition
 
 	def getIndicesData(self, rx3file):
 		# rx3model.Rx3IndexBuffer(meshid) ==> For faces
 		# rx3model.Rx3IndexBuffer(meshid).Rx3IndexBufferHeader.IndexSize is the same as "indiceslength" in your code
-			
-		indices = rx3file.Rx3IndexBuffers[0]
+		for i in range( rx3file.Rx3IndexBuffers.Length):
+			indices = rx3file.Rx3IndexBuffers[i]
 
-		self.indicesCount = indices.IndexStream.Length
-		print(f"Incides Count : {self.indicesCount}")
+			self.indicesCount.append(indices.IndexStream.Length)
+			print(f"Incides Count, Mesh {i} : {self.indicesCount[i]}")
 
-		self.indicesLength =  indices.Rx3IndexBufferHeader.IndexSize
-		print(f"Indices Length : {self.indicesLength}")
+			self.indicesLength.append(indices.Rx3IndexBufferHeader.IndexSize)
+			print(f"Indices Length, Mesh {i} : {self.indicesLength[i]}")
 
 		return [self.indicesCount, self.indicesLength]
 			
@@ -322,10 +331,10 @@ class RX3_File():
 
 			self.getIndicesData(mainFile)
 
-			fcOffset = 0
+			fcOffset = []
 			for x in self.offsets:
 				if x[0] == 5798132:
-					fcOffset = x[1]
+					fcOffset.append(x[1])
 
 			# f.seek(-16, 2)
 			# self.primitiveType = int.from_bytes(f.read(1),"little")
@@ -333,14 +342,15 @@ class RX3_File():
 
 			if self.primitiveType == 4:
 				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
-				self.faces.append(self.facereadlist(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
+				for x in range(self.meshcount):
+					self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			elif self.primitiveType == 6:
 				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
-				self.faces.append(self.facereadstrip(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
+				for x in range(self.meshcount):
+					self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			else:
 				print("Unknown Primitive Type")
 
-			print(f"Values of Face 0 : {self.faces[0][0]}")
 
 		else:
 			print("Please choose the model file.")
@@ -351,23 +361,23 @@ class RX3_File_Hybrid():
 		self.file = file
 		self.ftype = ftype
 		self.cols = []
-		self.colCount = 0
+		self.colCount = []
 		self.data = 0
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
 		self.faces= []
-		self.faceCount = 0
-		self.indicesCount = 0
-		self.indicesLength = 0
-		self.meshcount = 0
+		self.faceCount = []
+		self.indicesCount = []
+		self.indicesLength = []
 		self.offsets = []
+		self.meshcount = 0
 		self.primitiveType = 0
 		self.vertexFormat = []
 		self.vertexPosition = []
-		self.totalVertCount = 0
+		self.totalVertCount = []
 		self.uvs = []
-		self.uvCount = 0
+		self.uvCount = []
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -401,12 +411,13 @@ class RX3_File_Hybrid():
 
 		return data
 
-	def facereadlist(self, f, offset, indicesLength, indicesCount, endian):
+	def facereadlist(self, f, offset, mID, indicesLength, indicesCount, endian):
 		f.seek(offset)
 		faces = []
-		self.faceCount = int(indicesCount / 3)
+	
+		self.faceCount.append(int(indicesCount / 3))
 
-		print(f"Face Count: {self.faceCount}")
+		print(f"Face Count, Mesh {mID}: {self.faceCount[mID]}")
 
 		# this is read in addon to get indicescount and length
 		# f.read(4) 
@@ -423,7 +434,7 @@ class RX3_File_Hybrid():
 		elif indicesLength == 2:
 			string = endian + 'HHH'
 
-		for i in range(self.faceCount):
+		for i in range(self.faceCount[mID]):
 			temp = struct.unpack(string, f.read(indicesLength * 3))
 			if not temp[0] == temp[1]:
 				if not temp[2] == temp[1]:
@@ -431,14 +442,15 @@ class RX3_File_Hybrid():
 						continue
 					faces.append((temp[0], temp[1], temp[2]))
 
+		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
 
-	def facereadstrip(self, f, offset, indicesLength, indicesCount, endian):
+	def facereadstrip(self, f, offset, mID, indicesLength, indicesCount, endian):
 		f.seek(offset)
 		faces = []
 		self.faceCount = indicesCount - 2
 
-		print(f"Face Count: {self.faceCount}")
+		print(f"Face Count, Mesh {mID}: {self.faceCount[mID]}")
 
 		# f.read(4)
 		# f.read(4) # indicescount
@@ -454,7 +466,7 @@ class RX3_File_Hybrid():
 			string = '<HHH'
 
 		flag = False
-		for i in range(self.faceCount):
+		for i in range(self.faceCount[mID]):
 			back = f.tell()
 			temp = struct.unpack(string, f.read(indicesLength * 3))
 			if temp[0] == temp[1] or temp[1] == temp[2] or temp[0] == temp[2]:
@@ -468,6 +480,7 @@ class RX3_File_Hybrid():
 			flag = not flag
 			f.seek(back + indicesLength)
 
+		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
 
 	def getOffsets(self, rx3file):
@@ -552,29 +565,33 @@ class RX3_File_Hybrid():
 		return self.vertexFormat
 
 	def getVertexPosition(self, rx3file):
-		v = rx3file.Rx3VertexBuffers[0]
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
 
-		self.totalVertCount = v.Vertexes.Length
-		print(f"Total Vertices Count : {self.totalVertCount}")
+			self.totalVertCount.append(v.Vertexes.Length)
+			print(f"Total Vertices Count, Mesh {i} : {self.totalVertCount[i]}")
 
-		for x in range(v.Vertexes.Length):
-			data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
-			self.vertexPosition.append(data)
-		
-		print(f"Position X,Z,Y,W of Vertex 0 = {self.vertexPosition[0]}")
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
+				temp.append(data)
+			
+			self.vertexPosition.append(temp)
+			print(f"Position X,Z,Y,W of Vertex 0, Mesh {i} = {self.vertexPosition[i][0]}")
+
 		return self.vertexPosition
 
 	def getIndicesData(self, rx3file):
 		# rx3model.Rx3IndexBuffer(meshid) ==> For faces
 		# rx3model.Rx3IndexBuffer(meshid).Rx3IndexBufferHeader.IndexSize is the same as "indiceslength" in your code
-			
-		indices = rx3file.Rx3IndexBuffers[0]
+		for i in range( rx3file.Rx3IndexBuffers.Length):
+			indices = rx3file.Rx3IndexBuffers[i]
 
-		self.indicesCount = indices.IndexStream.Length
-		print(f"Incides Count : {self.indicesCount}")
+			self.indicesCount.append(indices.IndexStream.Length)
+			print(f"Incides Count, Mesh {i} : {self.indicesCount[i]}")
 
-		self.indicesLength =  indices.Rx3IndexBufferHeader.IndexSize
-		print(f"Indices Length : {self.indicesLength}")
+			self.indicesLength.append(indices.Rx3IndexBufferHeader.IndexSize)
+			print(f"Indices Length, Mesh {i} : {self.indicesLength[i]}")
 
 		return [self.indicesCount, self.indicesLength]
 			
@@ -612,24 +629,24 @@ class RX3_File_Hybrid():
 
 			self.getIndicesData(mainFile)
 
-			fcOffset = 0
+			fcOffset = []
 			for x in self.offsets:
 				if x[0] == 5798132:
-					fcOffset = x[1]
+					fcOffset.append(x[1])
 
 			self.primitiveType = mainFile.GetPrimitiveType(0)
 			# self.primitiveType = mainFile.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
 
 			if self.primitiveType == 4:
 				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
-				self.faces.append(self.facereadlist(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
+				for x in range(self.meshcount):
+					self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			elif self.primitiveType == 6:
 				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
-				self.faces.append(self.facereadstrip(self.data, fcOffset, self.indicesLength, self.indicesCount, self.endianType))
+				for x in range(self.meshcount):
+					self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
 			else:
 				print("Unknown Primitive Type")
-
-			print(f"Values of Face 0 : {self.faces[0][0]}")
 
 		else:
 			print("Please choose the model file.")
