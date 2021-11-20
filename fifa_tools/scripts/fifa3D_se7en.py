@@ -86,6 +86,7 @@ class RX3_File():
 		self.totalVertCount = []
 		self.uvs = []
 		self.uvCount = []
+		self.vertexSize = []
 
 		## Load Rx3
 		if GetFileType(self.gtype) == FileType.RX3:
@@ -284,8 +285,12 @@ class RX3_File():
 			temp = []
 			v = rx3file.Rx3VertexBuffers[i]
 
-			self.totalVertCount.append(v.Vertexes.Length)
+			self.totalVertCount.append(v.NumVertices)
+			# self.totalVertCount.append(v.Vertexes.Length)
 			print(f"Total Vertices Count, Mesh {i} : {self.totalVertCount[i]}")
+
+			self.vertexSize.append(v.VertexSize)
+			print(f"Total Vertex Size, Mesh {i} : {self.vertexSize[i]}")
 
 			for x in range(v.Vertexes.Length):
 				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
@@ -391,6 +396,7 @@ class RX3_File_Hybrid():
 		self.totalVertCount = []
 		self.uvs = []
 		self.uvCount = []
+		self.vertexSize = []
 
 		## Load Rx3
 		if GetFileType(self.gtype) == FileType.RX3_Hybrid:
@@ -591,8 +597,12 @@ class RX3_File_Hybrid():
 			temp = []
 			v = rx3file.Rx3VertexBuffers[i]
 
-			self.totalVertCount.append(v.Vertexes.Length)
+			self.totalVertCount.append(v.NumVertices)
+			# self.totalVertCount.append(v.Vertexes.Length)
 			print(f"Total Vertices Count, Mesh {i} : {self.totalVertCount[i]}")
+
+			self.vertexSize.append(v.VertexSize)
+			print(f"Total Vertex Size, Mesh {i} : {self.vertexSize[i]}")
 
 			for x in range(v.Vertexes.Length):
 				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
