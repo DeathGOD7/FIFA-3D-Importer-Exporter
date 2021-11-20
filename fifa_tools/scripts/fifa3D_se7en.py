@@ -14,12 +14,12 @@ from FIFALibrary20 import *
 from enum import Enum
 
 class GameType(str, Enum):
-	FIFA11 = "FIFA11"
-	FIFA12 = "FIFA12"
-	FIFA13 = "FIFA13"
-	FIFA14 = "FIFA14"
-	FIFA15 = "FIFA15"
-	FIFA16 = "FIFA16"
+	FIFA11 = "FIFA 11"
+	FIFA12 = "FIFA 12"
+	FIFA13 = "FIFA 13"
+	FIFA14 = "FIFA 14"
+	FIFA15 = "FIFA 15"
+	FIFA16 = "FIFA 16"
 
 class FileType(str, Enum):
 	RX2_OLD = "RX2_OLD" # FIFA 06/WC06
@@ -38,7 +38,7 @@ class SkeletonType(str, Enum):
 	FROSTBITE_OLD_SKELETON = "FROSTBITE_OLD_SKELETON" #Fifa_online_4_old
 	FROSTBITE_NEW_SKELETON = "FROSTBITE_NEW_SKELETON" #Fifa_online_4_new + FIFA 17-21 pc
 
-def GetFileType(GType):
+def GetFileType(GType:GameType):
 	rx3 = [GameType.FIFA12, GameType.FIFA13, GameType.FIFA14, GameType.FIFA15, GameType.FIFA16]
 	rx3_hybrid = [GameType.FIFA11]
 
@@ -49,24 +49,25 @@ def GetFileType(GType):
 	else:
 		return "Unsupported Game"
 
-def GetSkeletonType(GType):
-	if GType == "FIFA11":
+def GetSkeletonType(GType:GameType):
+	if GType == GameType.FIFA11:
 		return SkeletonType.FIFA11PC_SKELETON
-	elif (GType == "FIFA12") or (GType == "FIFA13"):
+	elif (GType == GameType.FIFA12) or (GType == GameType.FIFA13):
 		return SkeletonType.IE_SKELETON
-	elif GType == "FIFA14":
+	elif GType == GameType.FIFA14:
 		return SkeletonType.FIFA14_SKELETON
-	elif GType == "FIFA15":
+	elif GType == GameType.FIFA15:
 		return SkeletonType.FIFA15_SKELETON
-	elif GType == "FIFA16":
+	elif GType == GameType.FIFA16:
 		return SkeletonType.FIFA16_SKELETON
 	else:
 		return "Unsupported Game"
 
+
 class RX3_File():
-	def __init__(self, file, ftype): 
+	def __init__(self, file, gtype): 
 		self.file = file
-		self.ftype = ftype
+		self.gtype = gtype
 		self.cols = []
 		self.colCount = []
 		self.data = 0
@@ -85,6 +86,16 @@ class RX3_File():
 		self.totalVertCount = []
 		self.uvs = []
 		self.uvCount = []
+
+		## Load Rx3
+		if GetFileType(self.gtype) == FileType.RX3:
+			if self.file.endswith(".rx3"):
+				self.loadRx3()
+			else:
+				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
+		else:
+				print(f"\n[ERROR] File {self.gtype} is not valid supported game or wrong file loaded.")
+
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -299,8 +310,8 @@ class RX3_File():
 
 		return [self.indicesCount, self.indicesLength]
 			
-	def loadRx3(self, rx3file):
-		file = rx3file
+	def loadRx3(self):
+		file = self.file
 		if file != "":
 			f = self.data = self.getDataRx3(file)
 	
@@ -359,9 +370,9 @@ class RX3_File():
 
 
 class RX3_File_Hybrid():
-	def __init__(self, file, ftype): 
+	def __init__(self, file, gtype): 
 		self.file = file
-		self.ftype = ftype
+		self.gtype = gtype
 		self.cols = []
 		self.colCount = []
 		self.data = 0
@@ -380,6 +391,15 @@ class RX3_File_Hybrid():
 		self.totalVertCount = []
 		self.uvs = []
 		self.uvCount = []
+
+		## Load Rx3
+		if GetFileType(self.gtype) == FileType.RX3_Hybrid:
+			if self.file.endswith(".rx3"):
+				self.loadRx3()
+			else:
+				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
+		else:
+				print(f"\n[ERROR] File {self.gtype} is not valid supported game or wrong file loaded.")
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -597,8 +617,8 @@ class RX3_File_Hybrid():
 
 		return [self.indicesCount, self.indicesLength]
 			
-	def loadRx3(self, rx3file):
-		file = rx3file
+	def loadRx3(self):
+		file = self.file
 		if file != "":
 			f = self.data = self.getDataRx3(file)
 	
