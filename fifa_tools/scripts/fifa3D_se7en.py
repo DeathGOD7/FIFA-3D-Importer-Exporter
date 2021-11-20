@@ -94,7 +94,7 @@ class RX3_File():
 			else:
 				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 		else:
-				print(f"\n[ERROR] File {self.gtype} is not valid supported game or wrong file loaded.")
+				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
 
 
 	def getDataRx3(self, file):
@@ -399,7 +399,7 @@ class RX3_File_Hybrid():
 			else:
 				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 		else:
-				print(f"\n[ERROR] File {self.gtype} is not valid supported game or wrong file loaded.")
+				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
