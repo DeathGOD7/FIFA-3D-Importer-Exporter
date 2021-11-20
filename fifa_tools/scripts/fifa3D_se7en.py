@@ -576,7 +576,7 @@ class RX3_File_Hybrid():
 		# RW4VertexDescriptors
 
 		for x in range(rx3file.RW4Section.RW4VertexDescriptors.Length):
-			print(f"Total Vertex Elements : {rx3file.RW4Section.RW4VertexDescriptors[x].NumElements}")
+			print(f"Total Vertex Elements, Mesh {x} : {rx3file.RW4Section.RW4VertexDescriptors[x].NumElements}")
 			for y in range(rx3file.RW4Section.RW4VertexDescriptors[x].Elements.Length):
 				temp0 = rx3file.RW4Section.RW4VertexDescriptors[x].Elements[y]
 				# usage, usageIndex, offset, unk0, dataType
