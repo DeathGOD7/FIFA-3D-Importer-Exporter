@@ -81,11 +81,13 @@ class RX3_File():
 		self.offsets = []
 		self.meshCount = 0
 		self.primitiveType = 0
-		self.vertexFormat = []
-		self.vertexPosition = []
-		self.totalVertCount = []
 		self.uvs = []
 		self.uvCount = []
+		self.vertexFormat = []
+		self.vertexPosition = []
+		self.vertexColor = []
+		self.vertexColorCount = []
+		self.totalVertCount = []
 		self.vertexSize = []
 
 		## Load Rx3
@@ -96,7 +98,6 @@ class RX3_File():
 				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 		else:
 				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
-
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -314,7 +315,38 @@ class RX3_File():
 			print(f"Indices Length, Mesh {i} : {self.indicesLength[i]}")
 
 		return [self.indicesCount, self.indicesLength]
+
+	def getVertexColor(self, rx3file):
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
+				temp.append(data)
 			
+			self.vertexColor.append(temp)
+			self.vertexColorCount.append(len(self.vertexColor[i]))
+			print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
+			print(f"Vertex Color Count : {self.vertexColorCount[i]}")
+		
+		return self.vertexColor
+
+	def getNormalCols(self, rx3file):
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
+				temp.append(data)
+			
+			self.cols.append(temp)
+			self.colCount.append(len(self.cols[i]))
+			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+
+		return self.vertexColor
+
 	def loadRx3(self):
 		file = self.file
 		if file != "":
@@ -344,6 +376,8 @@ class RX3_File():
 			self.getVertexFormats(mainFile)
 
 			self.getVertexPosition(mainFile)
+
+			self.getNormalCols(mainFile)
 
 			self.getIndicesData(mainFile)
 
@@ -391,11 +425,13 @@ class RX3_File_Hybrid():
 		self.offsets = []
 		self.meshCount = 0
 		self.primitiveType = 0
-		self.vertexFormat = []
-		self.vertexPosition = []
-		self.totalVertCount = []
 		self.uvs = []
 		self.uvCount = []
+		self.vertexFormat = []
+		self.vertexPosition = []
+		self.vertexColor = []
+		self.vertexColorCount = []
+		self.totalVertCount = []
 		self.vertexSize = []
 
 		## Load Rx3
@@ -626,7 +662,38 @@ class RX3_File_Hybrid():
 			print(f"Indices Length, Mesh {i} : {self.indicesLength[i]}")
 
 		return [self.indicesCount, self.indicesLength]
+
+	def getVertexColor(self, rx3file):
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
+				temp.append(data)
 			
+			self.vertexColor.append(temp)
+			self.vertexColorCount.append(len(self.vertexColor[i]))
+			print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
+			print(f"Vertex Color Count : {self.vertexColorCount[i]}")
+		
+		return self.vertexColor
+
+	def getNormalCols(self, rx3file):
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
+				temp.append(data)
+			
+			self.cols.append(temp)
+			self.colCount.append(len(self.cols[i]))
+			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+
+		return self.vertexColor
+
 	def loadRx3(self):
 		file = self.file
 		if file != "":
@@ -658,6 +725,8 @@ class RX3_File_Hybrid():
 			self.getVertexFormats(mainFile)
 
 			self.getVertexPosition(mainFile)
+
+			self.getNormalCols(mainFile)
 
 			self.getIndicesData(mainFile)
 
