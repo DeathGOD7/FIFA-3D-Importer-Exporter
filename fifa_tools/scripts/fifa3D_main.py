@@ -154,6 +154,63 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	#scn.objects.link(object)
 	return object.name
 
+def testmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, normals, loc):
+	# scn = bpy.context.scene
+	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
+	#print(f"UVs:{uvs}, Count:{count}")
+	print(f"Vertices 0 : {verts[0]}")
+	print(f"Face 0 : {faces[0]}")
+	print(f"Colors 0: {colors[0]}")
+	print(f"UVS 0: {uvs[0]}")
+	scn = bpy.context.scene
+	mesh = bpy.data.meshes.new('mesh' + str(count))
+	mesh.from_pydata(verts, [], faces)
+	## mesh.update()
+
+	# for i in range(len(uvs)):
+	for i in range(1):
+		uvtex = mesh.uv_layers.new(name='map' + str(i))
+
+	# for i in range(len(colors)):
+	for i in range(1):
+		coltex = mesh.vertex_colors.new(name='col' + str(i))
+
+	bm = bmesh.new()
+	bm.from_mesh(mesh)
+
+	# for i in range(len(uvs)):
+	for i in range(1):
+		uvlayer = bm.loops.layers.uv[('map' + str(i))]
+		for f in bm.faces:
+			for l in f.loops:
+				l[uvlayer].uv.x = uvs[l.vert.index][0]
+				l[uvlayer].uv.y = 1 - uvs[l.vert.index][1]
+				# l[uvlayer].uv.x = uvs[i][l.vert.index][0]
+				# l[uvlayer].uv.y = 1 - uvs[i][l.vert.index][1]
+
+	for i in range(1):
+		collayer = bm.loops.layers.color[('col' + str(i))]
+		for f in bm.faces:
+			for l in f.loops:
+				#l[collayer].r, l[collayer].g, l[collayer].b = colors[i][l.vert.index]
+				l[collayer].x, l[collayer].y, l[collayer].z = colors[l.vert.index]
+				# l[collayer].x, l[collayer].y, l[collayer].z = colors[i][l.vert.index]
+
+	if normal_flag == True:
+		for i in range(len(normals)):
+			bm.verts[i].normal = normals[i]
+
+	bm.to_mesh(mesh)
+	bm.free()
+	if name.split(sep='_')[0] in ('stadium', 'head'):
+		object = bpy.data.objects.new(subname, mesh)
+	else:
+		object = bpy.data.objects.new(name + '_' + str(id) + '_' + str(count), mesh)
+	object.location = loc
+	scn.collection.objects.link(object)
+	#scn.objects.link(object)
+	return object.name
+
 
 class fifa_rx3:
 

@@ -247,6 +247,27 @@ class auto_paint(bpy.types.Operator):
 		 'FINISHED'}
 
 
+class test_dll(bpy.types.Operator):
+	bl_idname = 'system.test_dll'
+	bl_label = ''
+	bl_description = 'For testing the dll functions'
+
+	def invoke(self, context, event):
+		scn = context.scene
+		xc = 0
+		if scn.model_import_path != "":
+			# tt = fifa3D_se7en.RX3_File("E:\\SE7EN\\test\\specificball_0_13_0.rx3", fifa3D_se7en.GameType.FIFA14)
+			tt = fifa3D_se7en.RX3_File(scn.model_import_path , fifa3D_se7en.GameType.FIFA14)
+			# tt = fifa3D_se7en.RX3_File_Hybrid("E:\\SE7EN\\test\\ball_11.rx3", fifa3D_se7en.GameType.FIFA11)
+			for i in range(tt.meshCount):
+				fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
+				xc += 1
+		else:
+			print("Empty file path.")
+		return {
+		 'FINISHED'}
+
+
 class visit_thread_url(bpy.types.Operator):
 	bl_idname = 'system.visit_thread_url'
 	bl_label = ''
@@ -457,9 +478,6 @@ class file_import(bpy.types.Operator):
 		global files
 		global objectcount
 		scn = context.scene
-		
-		tt = fifa3D_se7en.RX3_File_Hybrid("E:\\SE7EN\\test\\ball_11.rx3", fifa3D_se7en.GameType.FIFA11)
-		fifa_main.createmesh(tt.vertexPosition[0] , tt.faces[0] , tt.uvs[0] , "test" , tt.meshCount , 0 , "test ", tt.cols[0], False, [], scn.fifa_import_loc)
 		
 		paths = []
 		paths.append(scn.model_import_path)
@@ -1651,6 +1669,7 @@ classes = [
 	get_color,
 	assign_color_to_map,
 	auto_paint,
+	test_dll,
 	visit_thread_url,
 	visit_github_url,
 	report_bug,
