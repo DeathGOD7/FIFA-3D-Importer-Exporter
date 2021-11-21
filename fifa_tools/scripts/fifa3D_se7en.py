@@ -330,8 +330,9 @@ class RX3_File():
 			
 			self.vertexColor.append(temp)
 			self.vertexColorCount.append(len(self.vertexColor[i]))
-			print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
-			print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
+			if len(self.vertexColor[i]) > 0:
+				print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
+				print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
 		
 		return self.vertexColor
 
@@ -359,10 +360,11 @@ class RX3_File():
 			
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
-			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
-			print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
-			print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
-			print(f"Color Count, Mesh {i} : {self.colCount[i]}")
+			if len(self.cols[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
+				print(f"Color Count, Mesh {i} : {self.colCount[i]}")
 
 		return self.cols
 
@@ -378,8 +380,9 @@ class RX3_File():
 			
 			self.uvs.append(temp)
 			self.uvCount.append(len(self.uvs[i]))
-			print(f"UVS U,V,Extra_Value of UV 0, Mesh {i} = {self.uvs[i][0]}")
-			print(f"UV Count, Mesh {i} : {self.uvCount[i]}")
+			if len(self.uvs[i]) > 0:
+				print(f"UVS U,V,Extra_Value of UV 0, Mesh {i} = {self.uvs[i][0]}")
+				print(f"UV Count, Mesh {i} : {self.uvCount[i]}")
 
 		return self.uvs
 
@@ -714,8 +717,9 @@ class RX3_File_Hybrid():
 			
 			self.vertexColor.append(temp)
 			self.vertexColorCount.append(len(self.vertexColor[i]))
-			print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
-			print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
+			if len(self.vertexColor[i]) > 0:
+				print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
+				print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
 		
 		return self.vertexColor
 
@@ -743,10 +747,11 @@ class RX3_File_Hybrid():
 			
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
-			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
-			print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
-			print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
-			print(f"Color Count, Mesh {i} : {self.colCount[i]}")
+			if len(self.cols[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
+				print(f"Color Count, Mesh {i} : {self.colCount[i]}")
 
 		return self.cols
 
@@ -762,8 +767,9 @@ class RX3_File_Hybrid():
 			
 			self.uvs.append(temp)
 			self.uvCount.append(len(self.uvs[i]))
-			print(f"UVS U,V,Extra_Value of UV 0, Mesh {i} = {self.uvs[i][0]}")
-			print(f"UV Count, Mesh {i} : {self.uvCount[i]}")
+			if len(self.uvs[i]) > 0:
+				print(f"UVS U,V,Extra_Value of UV 0, Mesh {i} = {self.uvs[i][0]}")
+				print(f"UV Count, Mesh {i} : {self.uvCount[i]}")
 
 		return self.uvs
 
