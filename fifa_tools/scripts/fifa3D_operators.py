@@ -457,8 +457,10 @@ class file_import(bpy.types.Operator):
 		global files
 		global objectcount
 		scn = context.scene
-		#testrx3 = fifa3D_se7en.RX3_File("ball.rx3", "RX3")
-		#testrx3.testdll(bpy.context.scene.model_import_path)
+		
+		tt = fifa3D_se7en.RX3_File_Hybrid("E:\\SE7EN\\test\\ball_11.rx3", fifa3D_se7en.GameType.FIFA11)
+		fifa_main.createmesh(tt.vertexPosition[0] , tt.faces[0] , tt.uvs[0] , "test" , tt.meshCount , 0 , "test ", tt.cols[0], False, [], scn.fifa_import_loc)
+		
 		paths = []
 		paths.append(scn.model_import_path)
 		paths.append(scn.hair_import_path)

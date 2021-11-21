@@ -1,8 +1,9 @@
+import clr
 import os
 import sys
 import bpy
-import clr
 import fifa_tools
+import zlib, struct
 
 sys.path.append(f'{fifa_tools.libsdir}')
 
@@ -168,7 +169,7 @@ class RX3_File():
 	def facereadstrip(self, f, offset, mID, indicesLength, indicesCount, endian):
 		f.seek(offset)
 		faces = []
-		self.faceCount = indicesCount - 2
+		self.faceCount.append(indicesCount - 2)
 
 		print(f"Face Count, Mesh {mID}: {self.faceCount[mID]}")
 
@@ -294,7 +295,8 @@ class RX3_File():
 			print(f"Total Vertex Size, Mesh {i} : {self.vertexSize[i]}")
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
+				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100]
+				# data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
 				temp.append(data)
 			
 			self.vertexPosition.append(temp)
@@ -322,7 +324,8 @@ class RX3_File():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
+				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B]
+				# data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
 				temp.append(data)
 			
 			self.vertexColor.append(temp)
@@ -340,15 +343,18 @@ class RX3_File():
 			for x in range(v.Vertexes.Length):
 				#normals / n
 				if v.Vertexes[x].Normals != None:
-					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
+					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z]
+					# data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
 					temp.append(data1)
 				#binormals / b
 				if v.Vertexes[x].Binormals != None:
-					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
+					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z]
+					# data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
 					temp.append(data2)
 				#tangent / g
 				if v.Vertexes[x].Tangents != None:
-					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
+					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z]
+					# data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
 					temp.append(data3)
 			
 			self.cols.append(temp)
@@ -366,7 +372,8 @@ class RX3_File():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
+				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V]
+				# data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
 				temp.append(data)
 			
 			self.uvs.append(temp)
@@ -543,7 +550,7 @@ class RX3_File_Hybrid():
 	def facereadstrip(self, f, offset, mID, indicesLength, indicesCount, endian):
 		f.seek(offset)
 		faces = []
-		self.faceCount = indicesCount - 2
+		self.faceCount.append(indicesCount - 2)
 
 		print(f"Face Count, Mesh {mID}: {self.faceCount[mID]}")
 
@@ -672,7 +679,8 @@ class RX3_File_Hybrid():
 			print(f"Total Vertex Size, Mesh {i} : {self.vertexSize[i]}")
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
+				data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100]
+				# data = [v.Vertexes[x].Positions[0].X/100 , -v.Vertexes[x].Positions[0].Z/100, v.Vertexes[x].Positions[0].Y/100, v.Vertexes[x].Positions[0].W]
 				temp.append(data)
 			
 			self.vertexPosition.append(temp)
@@ -700,7 +708,8 @@ class RX3_File_Hybrid():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
+				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B]
+				# data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
 				temp.append(data)
 			
 			self.vertexColor.append(temp)
@@ -718,15 +727,18 @@ class RX3_File_Hybrid():
 			for x in range(v.Vertexes.Length):
 				#normals / n
 				if v.Vertexes[x].Normals != None:
-					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
+					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z]
+					# data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
 					temp.append(data1)
 				#binormals / b
 				if v.Vertexes[x].Binormals != None:
-					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
+					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z]
+					# data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
 					temp.append(data2)
 				#tangent / g
 				if v.Vertexes[x].Tangents != None:
-					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
+					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z]
+					# data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
 					temp.append(data3)
 			
 			self.cols.append(temp)
@@ -744,7 +756,8 @@ class RX3_File_Hybrid():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
+				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V]
+				# data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
 				temp.append(data)
 			
 			self.uvs.append(temp)
