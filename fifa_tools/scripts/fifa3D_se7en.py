@@ -328,7 +328,7 @@ class RX3_File():
 			self.vertexColor.append(temp)
 			self.vertexColorCount.append(len(self.vertexColor[i]))
 			print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
-			print(f"Vertex Color Count : {self.vertexColorCount[i]}")
+			print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
 		
 		return self.vertexColor
 
@@ -344,8 +344,25 @@ class RX3_File():
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
 			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+			print(f"Color Count, Mesh {i} : {self.colCount[i]}")
 
-		return self.vertexColor
+		return self.cols
+
+	def getUVS(self, rx3file):
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
+				temp.append(data)
+			
+			self.uvs.append(temp)
+			self.uvCount.append(len(self.uvs[i]))
+			print(f"UVS U,V,Extra_Value of UV 0, Mesh {i} = {self.uvs[i][0]}")
+			print(f"UV Count, Mesh {i} : {self.uvCount[i]}")
+
+		return self.uvs
 
 	def loadRx3(self):
 		file = self.file
@@ -378,6 +395,8 @@ class RX3_File():
 			self.getVertexPosition(mainFile)
 
 			self.getNormalCols(mainFile)
+
+			self.getUVS(mainFile)
 
 			self.getIndicesData(mainFile)
 
@@ -675,7 +694,7 @@ class RX3_File_Hybrid():
 			self.vertexColor.append(temp)
 			self.vertexColorCount.append(len(self.vertexColor[i]))
 			print(f"Color R,G,B,A of Vertex Color 0, Mesh {i} = {self.vertexColor[i][0]}")
-			print(f"Vertex Color Count : {self.vertexColorCount[i]}")
+			print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
 		
 		return self.vertexColor
 
@@ -691,8 +710,25 @@ class RX3_File_Hybrid():
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
 			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+			print(f"Color Count, Mesh {i} : {self.colCount[i]}")
 
-		return self.vertexColor
+		return self.cols
+
+	def getUVS(self, rx3file):
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			for x in range(v.Vertexes.Length):
+				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
+				temp.append(data)
+			
+			self.uvs.append(temp)
+			self.uvCount.append(len(self.uvs[i]))
+			print(f"UVS U,V,Extra_Value of UV 0, Mesh {i} = {self.uvs[i][0]}")
+			print(f"UV Count, Mesh {i} : {self.uvCount[i]}")
+
+		return self.uvs
 
 	def loadRx3(self):
 		file = self.file
@@ -727,6 +763,8 @@ class RX3_File_Hybrid():
 			self.getVertexPosition(mainFile)
 
 			self.getNormalCols(mainFile)
+
+			self.getUVS(mainFile)
 
 			self.getIndicesData(mainFile)
 
