@@ -110,6 +110,7 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	print(f"Vertices 0 : {verts[0]}")
 	print(f"Face 0 : {faces[0]}")
 	print(f"Colors 0: {colors[0][0]}")
+	print(f"UVS 0: {uvs[0][0]}")
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)

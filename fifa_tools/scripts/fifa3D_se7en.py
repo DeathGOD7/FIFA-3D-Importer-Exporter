@@ -338,12 +338,24 @@ class RX3_File():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
-				temp.append(data)
+				#normals / n
+				if v.Vertexes[x].Normals != None:
+					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
+					temp.append(data1)
+				#binormals / b
+				if v.Vertexes[x].Binormals != None:
+					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
+					temp.append(data2)
+				#tangent / g
+				if v.Vertexes[x].Tangents != None:
+					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
+					temp.append(data3)
 			
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
 			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+			print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
+			print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
 			print(f"Color Count, Mesh {i} : {self.colCount[i]}")
 
 		return self.cols
@@ -704,12 +716,24 @@ class RX3_File_Hybrid():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
-				temp.append(data)
+				#normals / n
+				if v.Vertexes[x].Normals != None:
+					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
+					temp.append(data1)
+				#binormals / b
+				if v.Vertexes[x].Binormals != None:
+					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
+					temp.append(data2)
+				#tangent / g
+				if v.Vertexes[x].Tangents != None:
+					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
+					temp.append(data3)
 			
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
 			print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
+			print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
+			print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
 			print(f"Color Count, Mesh {i} : {self.colCount[i]}")
 
 		return self.cols
