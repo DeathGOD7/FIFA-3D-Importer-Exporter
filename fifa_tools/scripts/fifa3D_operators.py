@@ -255,9 +255,9 @@ class test_dll(bpy.types.Operator):
 	def invoke(self, context, event):
 		scn = context.scene
 		xc = 0
-		mainrx3 = ["FIFA 12","FIFA 13","FIFA 14","FIFA 15","FIFA 16"]
+		mainrx3 = ["FIFA12","FIFA13","FIFA14","FIFA15","FIFA16"]
 		if scn.model_import_path != "":
-			if scn.game_enum == "FIFA 11":
+			if scn.game_enum == "FIFA11":
 				tt = fifa3D_se7en.RX3_File_Hybrid(scn.model_import_path, fifa3D_se7en.GameType.FIFA11)
 				for i in range(tt.meshCount):
 					fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
@@ -267,6 +267,8 @@ class test_dll(bpy.types.Operator):
 				for i in range(tt.meshCount):
 					fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
 					xc += 1
+			else:
+				print(f"Unsupported Game or Type : {scn.game_enum}")
 		else:
 			print("Empty file path.")
 		return {
@@ -828,7 +830,7 @@ class file_import(bpy.types.Operator):
 			clog.close()
 			crowd_name = fifa_main.createmesh(crowd_verts, crowd_faces, [], f.type, 0, f.id, 'crowd', [], False, [], scn.fifa_import_loc)
 			gh.crowd_col(crowd_name, crowd_col, 'seat_colors')
-			if scn.game_enum == '4':
+			if scn.game_enum == 'FIFA15':
 				for i in crowd_types:
 					if i[0][0] == 0:
 						if i[0][1] == 0:

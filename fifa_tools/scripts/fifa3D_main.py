@@ -328,8 +328,7 @@ class fifa_rx3:
 					self.data.seek(8)
 					original_size = struct.unpack('<I', self.data.read(4))[0]
 					f_size = len(self.data.read()) + 12
-					if not original_size == f_size and ext == 'rx3' and self.type == 'stadium' and scn.game_enum in ('3',
-																													 '4'):
+					if not original_size == f_size and ext == 'rx3' and self.type == 'stadium' and scn.game_enum in ('FIFA14','FIFA15'):
 						e = open('fifa_tools\\scripts\\msg', 'r')
 						print(e.read())
 						print('                           I SEE WHAT YOU DID THERE')
@@ -1523,7 +1522,7 @@ def read_crowd_15(file):
 	count = struct.unpack('<H', file.data.read(2))[0]
 	print('Seat Count: ', count)
 	t = open('crowd_log.txt', 'w')
-	if scn.game_enum == '4':
+	if scn.game_enum == 'FIFA15':
 		skip = 7
 	else:
 		skip = 19

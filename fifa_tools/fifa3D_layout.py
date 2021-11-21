@@ -1004,12 +1004,12 @@ bpy.types.Scene.crowd_fullness_enum = bpy.props.EnumProperty(
 
 bpy.types.Scene.game_enum = bpy.props.EnumProperty(
 	items=[
-		('0', 'FIFA 11', 'FIFA 11'),
-		('1', 'FIFA 12', 'FIFA 12'),
-		('2', 'FIFA 13', 'FIFA 13'),
-		('3', 'FIFA 14', 'FIFA 14'),
-		('4', 'FIFA 15', 'FIFA 15'),
-		('5', 'FIFA 16', 'FIFA 16')
+		('FIFA11', 'FIFA 11', 'FIFA 11'),
+		('FIFA12', 'FIFA 12', 'FIFA 12'),
+		('FIFA13', 'FIFA 13', 'FIFA 13'),
+		('FIFA14', 'FIFA 14', 'FIFA 14'),
+		('FIFA15', 'FIFA 15', 'FIFA 15'),
+		('FIFA16', 'FIFA 16', 'FIFA 16')
 		],
 	default='3',
 	name="Game Version")
