@@ -148,6 +148,8 @@ class RX3_File():
 		# f.read(4)
 		# all read are 16 bytes so...auto doing read of 16
 
+		# > = big endian
+		# < = little endian
 		f.read(16)
 
 		if indicesLength == 4:
@@ -179,12 +181,14 @@ class RX3_File():
 		# f.read(4)
 		# all read are 16 bytes so...auto doing read of 16
 
+		# > = big endian
+		# < = little endian
 		f.read(16)
 
 		if indicesLength == 4:
-			string = '<III'
+			string = endian + 'HHH'
 		elif indicesLength == 2:
-			string = '<HHH'
+			string = endian + 'HHH'
 
 		flag = False
 		for i in range(self.faceCount[mID]):
@@ -532,6 +536,8 @@ class RX3_File_Hybrid():
 		# f.read(4)
 		# all read are 16 bytes so...auto doing read of 16
 
+		# > = big endian
+		# < = little endian
 		f.read(16)
 
 		if indicesLength == 4:
@@ -563,12 +569,14 @@ class RX3_File_Hybrid():
 		# f.read(4)
 		# all read are 16 bytes so...auto doing read of 16
 
+		# > = big endian
+		# < = little endian
 		f.read(16)
 
 		if indicesLength == 4:
-			string = '<III'
+			string = endian + 'III'
 		elif indicesLength == 2:
-			string = '<HHH'
+			string = endian + 'HHH'
 
 		flag = False
 		for i in range(self.faceCount[mID]):

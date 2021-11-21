@@ -255,13 +255,18 @@ class test_dll(bpy.types.Operator):
 	def invoke(self, context, event):
 		scn = context.scene
 		xc = 0
+		mainrx3 = ["FIFA 12","FIFA 13","FIFA 14","FIFA 15","FIFA 16"]
 		if scn.model_import_path != "":
-			# tt = fifa3D_se7en.RX3_File("E:\\SE7EN\\test\\specificball_0_13_0.rx3", fifa3D_se7en.GameType.FIFA14)
-			tt = fifa3D_se7en.RX3_File(scn.model_import_path , fifa3D_se7en.GameType.FIFA14)
-			# tt = fifa3D_se7en.RX3_File_Hybrid("E:\\SE7EN\\test\\ball_11.rx3", fifa3D_se7en.GameType.FIFA11)
-			for i in range(tt.meshCount):
-				fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
-				xc += 1
+			if scn.game_enum == "FIFA 11":
+				tt = fifa3D_se7en.RX3_File_Hybrid(scn.model_import_path, fifa3D_se7en.GameType.FIFA11)
+				for i in range(tt.meshCount):
+					fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
+					xc += 1
+			elif scn.game_enum in mainrx3:
+				tt = fifa3D_se7en.RX3_File(scn.model_import_path , fifa3D_se7en.GameType.FIFA14)
+				for i in range(tt.meshCount):
+					fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
+					xc += 1
 		else:
 			print("Empty file path.")
 		return {

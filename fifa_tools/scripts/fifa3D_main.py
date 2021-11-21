@@ -109,10 +109,10 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	#print(f"UVs:{uvs}, Count:{count}")
 	print(f"Vertices 0 : {verts[0]}")
 	print(f"Face 0 : {faces[0]}")
-	if len(colors[0]) > 0 :
-		print(f"Colors 0: {colors[0][0]}")
-	if len(uvs[0]) > 0 :
-		print(f"UVS 0: {uvs[0][0]}")
+	# if len(colors[0]) > 0 :
+	# 	print(f"Colors 0: {colors[0][0]}")
+	# if len(uvs[0]) > 0 :
+	# 	print(f"UVS 0: {uvs[0][0]}")
 	scn = bpy.context.scene
 	mesh = bpy.data.meshes.new('mesh' + str(count))
 	mesh.from_pydata(verts, [], faces)
@@ -171,34 +171,38 @@ def testmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, n
 	mesh.from_pydata(verts, [], faces)
 	## mesh.update()
 
-	# for i in range(len(uvs)):
-	for i in range(1):
-		uvtex = mesh.uv_layers.new(name='map' + str(i))
+	if len(uvs) > 0 :
+		# for i in range(len(uvs)):
+		for i in range(1):
+			uvtex = mesh.uv_layers.new(name='map' + str(i))
 
-	# for i in range(len(colors)):
-	for i in range(1):
-		coltex = mesh.vertex_colors.new(name='col' + str(i))
+	if len(colors) > 0 :
+		# for i in range(len(colors)):
+		for i in range(1):
+			coltex = mesh.vertex_colors.new(name='col' + str(i))
 
 	bm = bmesh.new()
 	bm.from_mesh(mesh)
 
-	# for i in range(len(uvs)):
-	for i in range(1):
-		uvlayer = bm.loops.layers.uv[('map' + str(i))]
-		for f in bm.faces:
-			for l in f.loops:
-				l[uvlayer].uv.x = uvs[l.vert.index][0]
-				l[uvlayer].uv.y = 1 - uvs[l.vert.index][1]
-				# l[uvlayer].uv.x = uvs[i][l.vert.index][0]
-				# l[uvlayer].uv.y = 1 - uvs[i][l.vert.index][1]
+	if len(uvs) > 0 :
+		# for i in range(len(uvs)):
+		for i in range(1):
+			uvlayer = bm.loops.layers.uv[('map' + str(i))]
+			for f in bm.faces:
+				for l in f.loops:
+					l[uvlayer].uv.x = uvs[l.vert.index][0]
+					l[uvlayer].uv.y = 1 - uvs[l.vert.index][1]
+					# l[uvlayer].uv.x = uvs[i][l.vert.index][0]
+					# l[uvlayer].uv.y = 1 - uvs[i][l.vert.index][1]
 
-	for i in range(1):
-		collayer = bm.loops.layers.color[('col' + str(i))]
-		for f in bm.faces:
-			for l in f.loops:
-				#l[collayer].r, l[collayer].g, l[collayer].b = colors[i][l.vert.index]
-				l[collayer].x, l[collayer].y, l[collayer].z = colors[l.vert.index]
-				# l[collayer].x, l[collayer].y, l[collayer].z = colors[i][l.vert.index]
+	if len(colors) > 0 :
+		for i in range(1):
+			collayer = bm.loops.layers.color[('col' + str(i))]
+			for f in bm.faces:
+				for l in f.loops:
+					#l[collayer].r, l[collayer].g, l[collayer].b = colors[i][l.vert.index]
+					l[collayer].x, l[collayer].y, l[collayer].z = colors[l.vert.index]
+					# l[collayer].x, l[collayer].y, l[collayer].z = colors[i][l.vert.index]
 
 	if normal_flag == True:
 		for i in range(len(normals)):
