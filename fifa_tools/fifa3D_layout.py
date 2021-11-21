@@ -1011,7 +1011,7 @@ bpy.types.Scene.game_enum = bpy.props.EnumProperty(
 		('FIFA15', 'FIFA 15', 'FIFA 15'),
 		('FIFA16', 'FIFA 16', 'FIFA 16')
 		],
-	default='3',
+	default='FIFA14',
 	name="Game Version")
 
 bpy.types.Scene.bones_flag = bpy.props.BoolProperty(
