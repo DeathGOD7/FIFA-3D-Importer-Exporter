@@ -846,10 +846,12 @@ class fifa_rx3:
 			texture_name = texture_type + '_' + str(tex_id)
 			try:
 				entry.append((
-				 texture_name, fifa_tools.texdir + '\\' + self.tex_names[tex_id]))
+				 texture_name, self.tex_names[tex_id]))
+				#  texture_name, fifa_tools.texdir + '\\' + self.tex_names[tex_id]))
 			except:
 				entry.append((
-				 texture_name, fifa_tools.texdir + '\\texture_' + str(tex_id)))
+				 texture_name, '\\texture_' + str(tex_id)))
+				#  texture_name, fifa_tools.texdir + '\\texture_' + str(tex_id)))
 
 		self.materials.append((mat_name, entry))
 		return {

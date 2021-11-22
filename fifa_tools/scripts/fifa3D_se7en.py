@@ -39,7 +39,7 @@ class SkeletonType(str, Enum):
 	FROSTBITE_OLD_SKELETON = "FROSTBITE_OLD_SKELETON" #Fifa_online_4_old
 	FROSTBITE_NEW_SKELETON = "FROSTBITE_NEW_SKELETON" #Fifa_online_4_new + FIFA 17-21 pc
 
-def GetFileType(GType:GameType):
+def GetRX3FileType(GType:GameType):
 	rx3 = [GameType.FIFA12, GameType.FIFA13, GameType.FIFA14, GameType.FIFA15, GameType.FIFA16]
 	rx3_hybrid = [GameType.FIFA11]
 
@@ -92,13 +92,15 @@ class RX3_File():
 		self.vertexSize = []
 
 		## Load Rx3
-		if GetFileType(self.gtype) == FileType.RX3:
+		if GetRX3FileType(self.gtype) == FileType.RX3:
 			if self.file.endswith(".rx3"):
 				self.loadRx3()
 			else:
 				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 		else:
 				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
+
+	#region Importer
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -452,6 +454,19 @@ class RX3_File():
 		else:
 			print("Please choose the model file.")
 
+	#endregion
+
+	#region Exporter
+
+	def saveRx3(self, rx3file):
+		file = rx3file
+		
+		if file != "":
+			outFile = open(file, 'wb+')
+		else:
+			print(f"Please specify the export directory.")
+
+	#endregion
 
 class RX3_File_Hybrid():
 	def __init__(self, file, gtype): 
@@ -480,13 +495,15 @@ class RX3_File_Hybrid():
 		self.vertexSize = []
 
 		## Load Rx3
-		if GetFileType(self.gtype) == FileType.RX3_Hybrid:
+		if GetRX3FileType(self.gtype) == FileType.RX3_Hybrid:
 			if self.file.endswith(".rx3"):
 				self.loadRx3()
 			else:
 				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 		else:
 				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
+
+	#region Importer
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
@@ -842,4 +859,6 @@ class RX3_File_Hybrid():
 
 		else:
 			print("Please choose the model file.")
+
+	#endregion
 
