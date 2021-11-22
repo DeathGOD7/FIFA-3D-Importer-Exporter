@@ -445,7 +445,7 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			r0 = layout.row()
 			r0.alignment = 'CENTER'
 			r0.scale_y = 1.2
-			r0.operator("system.test_dll", text='IMPORT')
+			r0.operator("system.se7en_import", text='IMPORT')
 		
 		elif scn.se7en_mode == "Legacy":
 			col = box.column()

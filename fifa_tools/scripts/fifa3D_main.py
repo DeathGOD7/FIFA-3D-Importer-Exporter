@@ -156,7 +156,7 @@ def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag,
 	#scn.objects.link(object)
 	return object.name
 
-def testmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, normals, loc):
+def se7en_importmesh(verts, faces, uvs, name, count, id, colors, normal_flag, normals, loc):
 	# scn = bpy.context.scene
 	#print(f"Face:{faces}, UVs:{uvs}, Name:{name}, Count:{count}, ID:{id}, SubName:{subname}, Colors:{colors}, Normal Flag:{normal_flag}, Normals:{normals}, Loc:{loc}")
 	#print(f"UVs:{uvs}, Count:{count}")
@@ -210,10 +210,7 @@ def testmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, n
 
 	bm.to_mesh(mesh)
 	bm.free()
-	if name.split(sep='_')[0] in ('stadium', 'head'):
-		object = bpy.data.objects.new(subname, mesh)
-	else:
-		object = bpy.data.objects.new(name + '_' + str(id) + '_' + str(count), mesh)
+	object = bpy.data.objects.new(name, mesh)
 	object.location = loc
 	scn.collection.objects.link(object)
 	#scn.objects.link(object)

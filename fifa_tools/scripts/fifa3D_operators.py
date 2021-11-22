@@ -247,26 +247,39 @@ class auto_paint(bpy.types.Operator):
 		 'FINISHED'}
 
 
-class test_dll(bpy.types.Operator):
-	bl_idname = 'system.test_dll'
+class se7en_import(bpy.types.Operator):
+	bl_idname = 'system.se7en_import'
 	bl_label = ''
-	bl_description = 'For testing the dll functions'
+	bl_description = 'For importing with the dll functions'
 
 	def invoke(self, context, event):
 		scn = context.scene
-		xc = 0
+		meshimportcount = 0
+		
 		mainrx3 = ["FIFA12","FIFA13","FIFA14","FIFA15","FIFA16"]
 		if scn.model_import_path != "":
 			if scn.game_enum == "FIFA11":
-				tt = fifa3D_se7en.RX3_File_Hybrid(scn.model_import_path, fifa3D_se7en.GameType.FIFA11)
-				for i in range(tt.meshCount):
-					fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
-					xc += 1
+				mainImport = fifa3D_se7en.RX3_File_Hybrid(scn.model_import_path, fifa3D_se7en.GameType.FIFA11)
+				for i in range(mainImport.meshCount):
+					name = mainImport.fileType + '_' + str(mainImport.fileId) + '_' + str(i)
+					if mainImport.fileType == 'head':
+						if i == 0:
+							name += '_' + "head"
+						elif i == 1:
+							name += '_' + "eyes"
+					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , xc , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+					meshimportcount += 1
 			elif scn.game_enum in mainrx3:
-				tt = fifa3D_se7en.RX3_File(scn.model_import_path , fifa3D_se7en.GameType.FIFA14)
-				for i in range(tt.meshCount):
-					fifa_main.testmesh(tt.vertexPosition[i] , tt.faces[i] , tt.uvs[i] , "test" , xc , 0 , "test ", tt.cols[i], False, [], scn.fifa_import_loc)
-					xc += 1
+				mainImport = fifa3D_se7en.RX3_File(scn.model_import_path , fifa3D_se7en.GameType.FIFA14)
+				for i in range(mainImport.meshCount):
+					name = mainImport.fileType + '_' + str(mainImport.fileId) + '_' + str(i)
+					if mainImport.fileType == 'head':
+						if i == 0:
+							name += '_' + "head"
+						elif i == 1:
+							name += '_' + "eyes"
+					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , xc , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+					meshimportcount += 1
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
 		else:
@@ -1676,7 +1689,7 @@ classes = [
 	get_color,
 	assign_color_to_map,
 	auto_paint,
-	test_dll,
+	se7en_import,
 	visit_thread_url,
 	visit_github_url,
 	report_bug,
