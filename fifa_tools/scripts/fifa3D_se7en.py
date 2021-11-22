@@ -64,11 +64,28 @@ def GetSkeletonType(GType:GameType):
 	else:
 		return "Unsupported Game"
 
+def GetFileType(file):
+	filePath, fileName = os.path.split(file)
+	fileName, filEext = os.path.splitext(fileName)
+	try:
+		fileId = fileName.split(sep='_')[1]
+		fileType = fileName.split(sep='_')[0]
+		return (fileName, filEext, fileType, fileId, filePath)
+	except:
+		return 'corrupt_filename'
+
 
 class RX3_File():
 	def __init__(self, file, gtype): 
+		# file info
 		self.file = file
+		self.fileName = ""
+		self.fileExt = ""
+		self.filePath = ""
+		self.fileType = ""
+		self.fileId = 0
 		self.gtype = gtype
+		# file info end
 		self.cols = []
 		self.colCount = []
 		self.data = 0
@@ -91,21 +108,35 @@ class RX3_File():
 		self.totalVertCount = []
 		self.vertexSize = []
 
-		## Load Rx3
-		if GetRX3FileType(self.gtype) == FileType.RX3:
-			if self.file.endswith(".rx3"):
-				self.loadRx3()
+		# Get file infos
+		fI = GetFileType(self.file)
+		if fI != "corrupt_filename":
+			self.fileName = fI[0]
+			self.fileExt = fI[1]
+			self.fileType = fI[2]
+			self.fileId = fI[3]
+			self.filePath = fI[4]
+			## Load Rx3
+			if GetRX3FileType(self.gtype) == FileType.RX3:
+				if self.fileExt == ".rx3":
+					self.loadRx3()
+				else:
+					print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 			else:
-				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
-		else:
 				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
+		else:
+			print(f"\n[ERROR] File {self.file} is not valid RX3 file or wrong file loaded here.")
 
 	#region Importer
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
-		filename = os.path.basename(file)
-		print(f"\nFile : {filename}")
+		
+		print(f"\nFile : {self.fileName+self.fileExt}")
+		print(f"File ID : {self.fileId}")
+		print(f"File Type : {self.fileType}")
+		print(f"File Path : {self.filePath}\n")
+
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
 			data.read(12)
@@ -470,8 +501,15 @@ class RX3_File():
 
 class RX3_File_Hybrid():
 	def __init__(self, file, gtype): 
+		# file info
 		self.file = file
+		self.fileName = ""
+		self.fileExt = ""
+		self.filePath = ""
+		self.fileType = ""
+		self.fileId = 0
 		self.gtype = gtype
+		# file info end
 		self.cols = []
 		self.colCount = []
 		self.data = 0
@@ -494,21 +532,35 @@ class RX3_File_Hybrid():
 		self.totalVertCount = []
 		self.vertexSize = []
 
-		## Load Rx3
-		if GetRX3FileType(self.gtype) == FileType.RX3_Hybrid:
-			if self.file.endswith(".rx3"):
-				self.loadRx3()
+		# Get file infos
+		fI = GetFileType(self.file)
+		if fI != "corrupt_filename":
+			self.fileName = fI[0]
+			self.fileExt = fI[1]
+			self.fileType = fI[2]
+			self.fileId = fI[3]
+			self.filePath = fI[4]
+			## Load Rx3
+			if GetRX3FileType(self.gtype) == FileType.RX3_Hybrid:
+				if self.fileExt == ".rx3":
+					self.loadRx3()
+				else:
+					print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
 			else:
-				print(f"\n[ERROR] File {self.file} is not valid RX3 file.")
-		else:
 				print(f"\n[ERROR] Game {self.gtype} is not valid supported game or wrong file loaded here.")
+		else:
+			print(f"\n[ERROR] File {self.file} is not valid RX3 file or wrong file loaded here.")
 
 	#region Importer
 
 	def getDataRx3(self, file):
 		data = open(file, 'rb')
-		filename = os.path.basename(file)
-		print(f"\nFile : {filename}")
+
+		print(f"\nFile : {self.fileName+self.fileExt}")
+		print(f"File ID : {self.fileId}")
+		print(f"File Type : {self.fileType}")
+		print(f"File Path : {self.filePath}\n")
+
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
 			data.read(12)
