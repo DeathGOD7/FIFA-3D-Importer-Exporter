@@ -267,7 +267,7 @@ class se7en_import(bpy.types.Operator):
 							name += '_' + "head"
 						elif i == 1:
 							name += '_' + "eyes"
-					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , xc , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
 			elif scn.game_enum in mainrx3:
 				mainImport = fifa3D_se7en.RX3_File(scn.model_import_path , fifa3D_se7en.GameType.FIFA14)
@@ -278,7 +278,7 @@ class se7en_import(bpy.types.Operator):
 							name += '_' + "head"
 						elif i == 1:
 							name += '_' + "eyes"
-					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , xc , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
