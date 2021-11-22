@@ -375,10 +375,10 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 		box = layout.box()
 		
 		row.alignment = 'RIGHT'
-		row.label(text='  Method')
-		row.prop(scn, 'se7en_method', text='')
+		row.label(text='  Mode')
+		row.prop(scn, 'se7en_mode', text='')
 
-		if scn.se7en_method == "Modern":
+		if scn.se7en_mode == "Modern":
 			col = box.column()
 			col.alignment = 'EXPAND'
 			row = col.row()
@@ -392,11 +392,36 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			row.prop(scn, 'model_import_path')
 			row = col.row()
 
+			innerbox = row.box()
+			innerbox.scale_x = 0.7
+			innerbox.label(text='All Models')
+			col = innerbox.column()
+			col.scale_y = 1.2
+			col.prop(scn, 'geometry_flag')
+			col.prop(scn, 'bone_groups_flag')
+			col.prop(scn, 'create_materials_flag')
+
+			innerbox = row.box()
+			innerbox.scale_x = 0.7
+			innerbox.label(text='Stadiums Only')
+			col = innerbox.column()
+			col.scale_y = 1.2
+			# col.prop(scn, 'materials_flag')
+			col.prop(scn, 'props_flag')
+			col.prop(scn, 'collision_flag')
+
+			innerbox = row.box()
+			innerbox.scale_x = 0.7
+			innerbox.label(text='Faces Only')
+			col = innerbox.column()
+			col.scale_y = 1.2
+			col.prop(scn, 'bones_flag')
+
 			r0 = layout.row()
 			r0.alignment = 'CENTER'
 			r0.scale_y = 1.2
 			r0.operator("system.test_dll", text='Import')
-		elif scn.se7en_method == "Legacy":
+		elif scn.se7en_mode == "Legacy":
 			col = box.column()
 			col.alignment = 'EXPAND'
 			row = col.row()
@@ -428,12 +453,12 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			col.prop(scn, 'props_flag')
 			col.prop(scn, 'collision_flag')
 
-			col = row.column()
-
-			innerbox = col.box()
+			innerbox = row.box()
 			innerbox.scale_x = 0.7
 			innerbox.label(text='Faces Only')
-			innerbox.prop(scn, 'bones_flag')
+			col = innerbox.column()
+			col.scale_y = 1.2
+			col.prop(scn, 'bones_flag')
 
 			row = layout.row()
 			row.label(icon='INFO', text='Additional Model Files')
@@ -582,17 +607,17 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		row = layout.row(align=True)
 		row.label(icon='INFO', text="File Exporter")
 		row.alignment = 'RIGHT'
-		row.label(text='  Method')
-		row.prop(scn, 'se7en_method', text='')
+		row.label(text='  Mode')
+		row.prop(scn, 'se7en_mode', text='')
 		# New Exporter
-		if scn.se7en_method == "Modern":
+		if scn.se7en_mode == "Modern":
 			box = layout.box()
 			col = box.column()
 			row = col.row()
 			row.alignment = 'RIGHT'
 			row.label(text='  Game Version')
 			row.prop(scn, 'game_enum', text='')
-		elif scn.se7en_method == "Legacy":
+		elif scn.se7en_mode == "Legacy":
 			box = layout.box()
 			col = box.column()
 			row = col.row()
@@ -1046,13 +1071,13 @@ bpy.types.Scene.game_enum = bpy.props.EnumProperty(
 	default='FIFA14',
 	name="Game Version")
 
-bpy.types.Scene.se7en_method = bpy.props.EnumProperty(
+bpy.types.Scene.se7en_mode = bpy.props.EnumProperty(
 	items=[
 		('Legacy', 'Legacy', 'Legacy'),
 		('Modern', 'Modern', 'Modern')
 		],
 	default='Legacy',
-	name="Method")
+	name="Mode")
 
 bpy.types.Scene.bones_flag = bpy.props.BoolProperty(
 	name="Import Bones",
