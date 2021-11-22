@@ -59,7 +59,6 @@ credit3 = "           " + "(Original Author : arti-10)"
 
 game_version = " 3D " # you can add number if you want which shows up in panel layout , removed by deathgod7
 dev_status = 0
-dll_test = True
 
 ###VERTEX GROUP PANEL###
 
@@ -396,9 +395,7 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			r0 = layout.row()
 			r0.alignment = 'CENTER'
 			r0.scale_y = 1.2
-			r0.operator("mesh.fifa_import")
-			if dll_test:
-				r0.operator("system.test_dll", text='Test Import')
+			r0.operator("system.test_dll", text='Import')
 		elif scn.se7en_method == "Legacy":
 			col = box.column()
 			col.alignment = 'EXPAND'
@@ -480,8 +477,6 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			r0.alignment = 'CENTER'
 			r0.scale_y = 1.2
 			r0.operator("mesh.fifa_import")
-			if dll_test:
-				r0.operator("system.test_dll", text='Test Import')
 
 		col = layout.column()
 		r3 = col.row()
