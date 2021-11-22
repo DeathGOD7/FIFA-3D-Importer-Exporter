@@ -103,10 +103,18 @@ class RX3_File():
 		self.uvCount = []
 		self.vertexFormat = []
 		self.vertexPosition = []
-		self.vertexColor = []
-		self.vertexColorCount = []
 		self.totalVertCount = []
 		self.vertexSize = []
+		self.vertexColor = [] ## was used bone_c in it on original addon
+		self.vertexColorCount = [] ## was used bone_c in it on original addon
+		#bones section
+		# -> 4 bones/vertex : FIFA 11 - 14
+		# -> 8 bones/vertex : FIFA 15-16
+		self.bonesIndice = [] ## was also used as bone_i in original addon
+		self.bonesIndiceCount = [] ## was also used as bone_i in original addon
+		self.bonesWeight = [] ## was also used as bone_w in original addon
+		self.bonesWeightCount = []## was also used as bone_w in original addon
+		#bones section end
 
 		# Get file infos
 		fI = GetFileType(self.file)
@@ -355,15 +363,19 @@ class RX3_File():
 
 		return [self.indicesCount, self.indicesLength]
 
-	def getVertexColor(self, rx3file):
+	def getVertexColor(self, rx3file): #was also used as bone_c in original addon
 		for i in range(rx3file.Rx3VertexBuffers.Length):
 			temp = []
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B]
-				# data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
-				temp.append(data)
+				if (v.Vertexes[x].Colors != None) :
+					data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B]
+					# data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
+					temp.append(data)
+				else:
+					print(f"No Vertex Color Found in Mesh {i}!")
+					break
 			
 			self.vertexColor.append(temp)
 			self.vertexColorCount.append(len(self.vertexColor[i]))
@@ -372,6 +384,61 @@ class RX3_File():
 				print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
 		
 		return self.vertexColor
+	
+	def getBoneIndice(self, rx3file): #was also used as bone_i in original addon
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			if (v.Vertexes[0].BlendIndices != None) :
+				print(f"Total Blend Indices Set : [{v.Vertexes[0].BlendIndices.Length}]")
+			
+			for x in range(v.Vertexes.Length):
+				if (v.Vertexes[x].BlendIndices != None) :
+					vertexdata = []
+					for y in range(v.Vertexes[x].BlendIndices.Length):
+						tempdata = [v.Vertexes[x].BlendIndices[y].Index_1 , v.Vertexes[x].BlendIndices[y].Index_2, v.Vertexes[x].BlendIndices[y].Index_3, v.Vertexes[x].BlendIndices[y].Index_4]
+						vertexdata.append(tempdata)
+					temp.append(vertexdata)
+				else:
+					print(f"No Bone Indices Found in Mesh {i}!")
+					break
+			
+			self.bonesIndice.append(temp)
+			self.bonesIndiceCount.append(len(self.bonesIndice[i]))
+			if len(self.bonesIndice[i]) > 0:
+				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 0, Mesh {i} = {self.bonesIndice[i][0]}")
+				print(f"Bone Indice Count, Mesh {i} : {self.bonesIndiceCount[i]}")
+		
+		return self.bonesIndice
+	
+	def getBoneWeight(self, rx3file): #was also used as bone_w in original addon
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			if (v.Vertexes[0].BlendWeights != None) :
+				print(f"Total Blend Weights Set : [{v.Vertexes[0].BlendWeights.Length}]")
+			
+
+			for x in range(v.Vertexes.Length):
+				if (v.Vertexes[x].BlendWeights != None) :
+					vertexdata = []
+					for y in range(v.Vertexes[x].BlendWeights.Length):
+						tempdata = [v.Vertexes[x].BlendWeights[y].Weight_1 , v.Vertexes[x].BlendWeights[y].Weight_2, v.Vertexes[x].BlendWeights[y].Weight_3, v.Vertexes[x].BlendWeights[y].Weight_4]
+						vertexdata.append(tempdata)
+					temp.append(vertexdata)
+				else:
+					print(f"No Bone Weights Found in Mesh {i}!")
+					break
+			
+			self.bonesWeight.append(temp)
+			self.bonesWeightCount.append(len(self.bonesWeight[i]))
+			if len(self.bonesWeight[i]) > 0:
+				print(f"Bone Weights 1,2,3,4 of Vertex Bone 0, Mesh {i} = {self.bonesWeight[i][0]}")
+				print(f"Bone Weights Count, Mesh {i} : {self.bonesWeightCount[i]}")
+		
+		return self.bonesWeight
 
 	def getNormalCols(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):
@@ -459,6 +526,12 @@ class RX3_File():
 
 			self.getIndicesData(mainFile)
 
+			self.getVertexColor(mainFile)
+
+			self.getBoneIndice(mainFile)
+			
+			self.getBoneWeight(mainFile)
+
 			fcOffset = []
 			for x in self.offsets:
 				if x[0] == 5798132:
@@ -490,7 +563,7 @@ class RX3_File():
 	#region Exporter
 
 	def saveRx3(self, rx3file):
-		file = rx3file
+		file = rx3file + ".rx3"
 		
 		if file != "":
 			outFile = open(file, 'wb+')
@@ -527,10 +600,18 @@ class RX3_File_Hybrid():
 		self.uvCount = []
 		self.vertexFormat = []
 		self.vertexPosition = []
-		self.vertexColor = []
-		self.vertexColorCount = []
 		self.totalVertCount = []
 		self.vertexSize = []
+		self.vertexColor = [] ## was used bone_c in it on original addon
+		self.vertexColorCount = [] ## was used bone_c in it on original addon
+		#bones section
+		# -> 4 bones/vertex : FIFA 11 - 14
+		# -> 8 bones/vertex : FIFA 15-16
+		self.bonesIndice = [] ## was also used as bone_i in original addon
+		self.bonesIndicecount = [] ## was also used as bone_i in original addon
+		self.bonesWeight = [] ## was also used as bone_w in original addon
+		self.bonesWeightcount = []## was also used as bone_w in original addon
+		#bones section end
 
 		# Get file infos
 		fI = GetFileType(self.file)
@@ -782,15 +863,19 @@ class RX3_File_Hybrid():
 
 		return [self.indicesCount, self.indicesLength]
 
-	def getVertexColor(self, rx3file):
+	def getVertexColor(self, rx3file): #was also used as bone_c in original addon
 		for i in range(rx3file.Rx3VertexBuffers.Length):
 			temp = []
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B]
-				# data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
-				temp.append(data)
+				if (v.Vertexes[x].Colors != None) :
+					data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B]
+					# data = [v.Vertexes[x].Colors[0].Value_R , v.Vertexes[x].Colors[0].Value_G, v.Vertexes[x].Colors[0].Value_B, v.Vertexes[x].Colors[0].Value_A]
+					temp.append(data)
+				else:
+					print(f"No Vertex Color Found in Mesh {i}!")
+					break
 			
 			self.vertexColor.append(temp)
 			self.vertexColorCount.append(len(self.vertexColor[i]))
@@ -799,6 +884,61 @@ class RX3_File_Hybrid():
 				print(f"Vertex Color Count, Mesh {i} : {self.vertexColorCount[i]}")
 		
 		return self.vertexColor
+	
+	def getBoneIndice(self, rx3file): #was also used as bone_i in original addon
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			if (v.Vertexes[0].BlendIndices != None) :
+				print(f"Total Blend Indices Set : [{v.Vertexes[0].BlendIndices.Length}]")
+			
+			for x in range(v.Vertexes.Length):
+				if (v.Vertexes[x].BlendIndices != None) :
+					vertexdata = []
+					for y in range(v.Vertexes[x].BlendIndices.Length):
+						tempdata = [v.Vertexes[x].BlendIndices[y].Index_1 , v.Vertexes[x].BlendIndices[y].Index_2, v.Vertexes[x].BlendIndices[y].Index_3, v.Vertexes[x].BlendIndices[y].Index_4]
+						vertexdata.append(tempdata)
+					temp.append(vertexdata)
+				else:
+					print(f"No Bone Indices Found in Mesh {i}!")
+					break
+			
+			self.bonesIndice.append(temp)
+			self.bonesIndiceCount.append(len(self.bonesIndice[i]))
+			if len(self.bonesIndice[i]) > 0:
+				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 0, Mesh {i} = {self.bonesIndice[i][0]}")
+				print(f"Bone Indice Count, Mesh {i} : {self.bonesIndiceCount[i]}")
+		
+		return self.bonesIndice
+	
+	def getBoneWeight(self, rx3file): #was also used as bone_w in original addon
+		for i in range(rx3file.Rx3VertexBuffers.Length):
+			temp = []
+			v = rx3file.Rx3VertexBuffers[i]
+
+			if (v.Vertexes[0].BlendWeights != None) :
+				print(f"Total Blend Weights Set : [{v.Vertexes[0].BlendWeights.Length}]")
+			
+
+			for x in range(v.Vertexes.Length):
+				if (v.Vertexes[x].BlendWeights != None) :
+					vertexdata = []
+					for y in range(v.Vertexes[x].BlendWeights.Length):
+						tempdata = [v.Vertexes[x].BlendWeights[y].Weight_1 , v.Vertexes[x].BlendWeights[y].Weight_2, v.Vertexes[x].BlendWeights[y].Weight_3, v.Vertexes[x].BlendWeights[y].Weight_4]
+						vertexdata.append(tempdata)
+					temp.append(vertexdata)
+				else:
+					print(f"No Bone Weights Found in Mesh {i}!")
+					break
+			
+			self.bonesWeight.append(temp)
+			self.bonesWeightCount.append(len(self.bonesWeight[i]))
+			if len(self.bonesWeight[i]) > 0:
+				print(f"Bone Weights 1,2,3,4 of Vertex Bone 0, Mesh {i} = {self.bonesWeight[i][0]}")
+				print(f"Bone Weights Count, Mesh {i} : {self.bonesWeightCount[i]}")
+		
+		return self.bonesWeight
 
 	def getNormalCols(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):
@@ -887,6 +1027,12 @@ class RX3_File_Hybrid():
 			self.getUVS(mainFile)
 
 			self.getIndicesData(mainFile)
+
+			self.getVertexColor(mainFile)
+
+			self.getBoneIndice(mainFile)
+			
+			self.getBoneWeight(mainFile)
 
 			fcOffset = []
 			for x in self.offsets:
