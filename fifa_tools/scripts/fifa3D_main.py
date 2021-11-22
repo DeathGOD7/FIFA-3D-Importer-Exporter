@@ -680,6 +680,11 @@ class fifa_rx3:
 		for j in range(colcount):
 			eval('cols.append(cols_' + str(j) + ')')
 
+		print(f"bones i0 0 value : {bones_i0[0]}")
+		if (len(bones_i1) > 0):
+			print(f"bones i1 0 value : {bones_i1[0]}")
+		print(f"bones w 0 value : {bones_w[0]}")
+
 		return (
 		 verts, cols, uvs, bones_i0, bones_w)
 

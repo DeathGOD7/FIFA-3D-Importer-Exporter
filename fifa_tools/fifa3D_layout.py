@@ -374,89 +374,114 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 		row = layout.row()
 		row.label(icon='INFO', text='Main File')
 		box = layout.box()
-
-		col = box.column()
-		col.alignment = 'EXPAND'
-		row = col.row()
-		row.alignment = 'RIGHT'
-		# row.scale_x=0.5
-		row.label(text='  Game Version')
-		row.prop(scn, 'game_enum', text='')
-		row = col.row()
-		row.alignment = 'EXPAND'
-		col.separator()
-		row.prop(scn, 'model_import_path')
-		row = col.row()
-
-		innerbox = row.box()
-		innerbox.scale_x = 0.7
-		innerbox.label(text='All Models')
-		col = innerbox.column()
-		col.scale_y = 1.2
-		col.prop(scn, 'geometry_flag')
-		col.prop(scn, 'trophy_flag')
-		col.prop(scn, 'bone_groups_flag')
-
-		innerbox = row.box()
-		innerbox.scale_x = 0.7
-		innerbox.label(text='Stadiums Only')
-		col = innerbox.column()
-		col.scale_y = 1.2
-		col.prop(scn, 'materials_flag')
-		col.prop(scn, 'props_flag')
-		col.prop(scn, 'collision_flag')
-
-		col = row.column()
-
-		innerbox = col.box()
-		innerbox.scale_x = 0.7
-		innerbox.label(text='Faces Only')
-		innerbox.prop(scn, 'bones_flag')
-
-		row = layout.row()
-		row.label(icon='INFO', text='Additional Model Files')
-		box = layout.box()
-		col = box.column()
-
-		row = col.row()
-		row.prop(scn, 'hair_import_path')
-		row = col.row()
-		row.prop(scn, 'obj_path')
-		row = col.row()
-		row.prop(scn, 'crwd_import_path')
-		row = col.row()
-		row.prop(scn, 'lnx_import_path')
-
-		row = layout.row()
-		row.label(text='Texture Files', icon='INFO')
-		box = layout.box()
-		col = box.column()
-		row = col.row()
-		row.prop(scn, 'stadium_texture_import_path')
-		row = col.row()
-		row.prop(scn, 'face_texture_import_path')
-		row = col.row()
-		row.prop(scn, 'hair_texture_import_path')
-		row = col.row()
-		row.prop(scn, 'eyes_texture_import_path')
 		
-		row = col.row()
-		row.alignment = 'CENTER'
-		row.scale_y = 1.2
-		sc1 = row.column()
-		sc1.enabled = not scn.materials_flag
-		sc1.prop(scn, 'create_materials_flag')
-		sc2 = row.column()
-		sc2.operator("mesh.assign_materials")
-		sc2.enabled = False
+		row.alignment = 'RIGHT'
+		row.label(text='  Method')
+		row.prop(scn, 'se7en_method', text='')
 
-		#r0 = layout.col()
-		r0 = layout.row()
-		r0.alignment = 'CENTER'
-		r0.scale_y = 1.2
-		r0.operator("mesh.fifa_import")
-		if dll_test:
-			r0.operator("system.test_dll", text='Test Import')
+		if scn.se7en_method == "Modern":
+			col = box.column()
+			col.alignment = 'EXPAND'
+			row = col.row()
+			row.alignment = 'RIGHT'
+			# row.scale_x=0.5
+			row.label(text='  Game Version')
+			row.prop(scn, 'game_enum', text='')
+			row = col.row()
+			row.alignment = 'EXPAND'
+			col.separator()
+			row.prop(scn, 'model_import_path')
+			row = col.row()
+
+			r0 = layout.row()
+			r0.alignment = 'CENTER'
+			r0.scale_y = 1.2
+			r0.operator("mesh.fifa_import")
+			if dll_test:
+				r0.operator("system.test_dll", text='Test Import')
+		elif scn.se7en_method == "Legacy":
+			col = box.column()
+			col.alignment = 'EXPAND'
+			row = col.row()
+			row.alignment = 'RIGHT'
+			# row.scale_x=0.5
+			row.label(text='  Game Version')
+			row.prop(scn, 'game_enum', text='')
+			row = col.row()
+			row.alignment = 'EXPAND'
+			col.separator()
+			row.prop(scn, 'model_import_path')
+			row = col.row()
+
+			innerbox = row.box()
+			innerbox.scale_x = 0.7
+			innerbox.label(text='All Models')
+			col = innerbox.column()
+			col.scale_y = 1.2
+			col.prop(scn, 'geometry_flag')
+			col.prop(scn, 'trophy_flag')
+			col.prop(scn, 'bone_groups_flag')
+
+			innerbox = row.box()
+			innerbox.scale_x = 0.7
+			innerbox.label(text='Stadiums Only')
+			col = innerbox.column()
+			col.scale_y = 1.2
+			col.prop(scn, 'materials_flag')
+			col.prop(scn, 'props_flag')
+			col.prop(scn, 'collision_flag')
+
+			col = row.column()
+
+			innerbox = col.box()
+			innerbox.scale_x = 0.7
+			innerbox.label(text='Faces Only')
+			innerbox.prop(scn, 'bones_flag')
+
+			row = layout.row()
+			row.label(icon='INFO', text='Additional Model Files')
+			box = layout.box()
+			col = box.column()
+
+			row = col.row()
+			row.prop(scn, 'hair_import_path')
+			row = col.row()
+			row.prop(scn, 'obj_path')
+			row = col.row()
+			row.prop(scn, 'crwd_import_path')
+			row = col.row()
+			row.prop(scn, 'lnx_import_path')
+
+			row = layout.row()
+			row.label(text='Texture Files', icon='INFO')
+			box = layout.box()
+			col = box.column()
+			row = col.row()
+			row.prop(scn, 'stadium_texture_import_path')
+			row = col.row()
+			row.prop(scn, 'face_texture_import_path')
+			row = col.row()
+			row.prop(scn, 'hair_texture_import_path')
+			row = col.row()
+			row.prop(scn, 'eyes_texture_import_path')
+			
+			row = col.row()
+			row.alignment = 'CENTER'
+			row.scale_y = 1.2
+			sc1 = row.column()
+			sc1.enabled = not scn.materials_flag
+			sc1.prop(scn, 'create_materials_flag')
+			sc2 = row.column()
+			sc2.operator("mesh.assign_materials")
+			sc2.enabled = False
+
+			#r0 = layout.col()
+			r0 = layout.row()
+			r0.alignment = 'CENTER'
+			r0.scale_y = 1.2
+			r0.operator("mesh.fifa_import")
+			if dll_test:
+				r0.operator("system.test_dll", text='Test Import')
 
 		col = layout.column()
 		r3 = col.row()
@@ -496,6 +521,14 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		scn = context.scene
 		layout = self.layout
 
+		# Information Panel
+		row1 = layout.row(align=True)
+		row1.label(icon='INFO', text='Export Information Panel')
+		box = layout.box()
+		col = box.column()
+		row = col.row()
+
+
 		#Enable if any export option selected
 		if (scn.stadium_export_flag or scn.trophy_export_flag or scn.face_edit_flag or scn.gen_overwriter_flag):
 			isExportActive = True
@@ -503,13 +536,6 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 			isExportActive = False
 		
 		#region Info Panel
-
-		# Information Panel
-		row1 = layout.row(align=True)
-		row1.label(icon='INFO', text='Export Information Panel')
-		box = layout.box()
-		col = box.column()
-		row = col.row()
 		if isExportActive != True:
 			row.label(text='[INFO] All good here. Ready to export.')
 		row.alignment = 'EXPAND'
@@ -558,115 +584,126 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 
 		#endregion
 
-		# New Exporter
 		row = layout.row(align=True)
 		row.label(icon='INFO', text="File Exporter")
-		box = layout.box()
-		col = box.column()
-		row = col.row()
 		row.alignment = 'RIGHT'
-		row.label(text='  Game Version')
-		row.prop(scn, 'game_enum', text='')
+		row.label(text='  Method')
+		row.prop(scn, 'se7en_method', text='')
+		# New Exporter
+		if scn.se7en_method == "Modern":
+			box = layout.box()
+			col = box.column()
+			row = col.row()
+			row.alignment = 'RIGHT'
+			row.label(text='  Game Version')
+			row.prop(scn, 'game_enum', text='')
+		elif scn.se7en_method == "Legacy":
+			box = layout.box()
+			col = box.column()
+			row = col.row()
+			row.alignment = 'RIGHT'
+			row.label(text='  Game Version')
+			row.prop(scn, 'game_enum', text='')
 
-		row = col.row()
-		row.scale_y = 1.2
-		row.alignment = 'EXPAND'
-		row.prop(scn, 'stadium_export_flag')
-		row.prop(scn, 'trophy_export_flag')
-
-		row = col.row()
-		row.prop(scn, 'export_path')
-
-		if scn.stadium_export_flag:
-
-			box = col.box()
-			box.label(text='Stadium Properties', icon='INFO')
-			row = box.row()
-			split = row.split()
-			split.scale_x = 1.5
-			split.prop(scn, 'stadium_version', text='Time')
-			split = row.split()
-			split.scale_x = 1.5
-			split.prop(scn, 'stadium_time', text='Weather')
-			split = row.split()
-			split.alignment = 'RIGHT'
-			split.scale_x = 1.5
-			split.label(text='File Id')
-			split.prop(scn, 'file_id', text='')
-		elif scn.trophy_export_flag:
-			box = col.box()
-			box.label(text='Trophy/Ball Properties', icon='INFO')
-			row = box.row()
-			row.label(text='File Id')
-			row.prop(scn, 'file_id', text='')
-
-		row = col.row()
-		row.scale_y = 1.2
-
-		if scn.trophy_export_flag:
-			txt = "TROPHY / BALL EXPORT"
-		else:
-			txt = "STADIUM EXPORT"
-		
-		row.operator("mesh.fifa_export", text=txt)
-		row.operator('mesh.texture_export')
-		row.operator('mesh.crowd_export')
-		row.operator('mesh.lights_export')
-
-		# if scn.stadium_export_flag and scn.trophy_export_flag:
-		# 	row.enabled = False
-		# elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
-		# 	row.enabled = False
-
-		if conflictFound:
-			row.enabled = False
-
-		# Basic Exporter Overwriter
-		row = layout.row(align=True)
-
-		row.label(icon='INFO', text='File Overwriter')
-		box = layout.box()
-		col = box.column()
-
-		row = col.row()
-		row.scale_y = 1.2
-		row.prop(scn, 'gen_overwriter_flag')
-		row.prop(scn, 'face_edit_flag')
-		if scn.face_edit_flag:
-			box = col.box()
-			box.label(text='Face Editing Options', icon='INFO')
-			col1 = box.column()
-			row = col1.row()
+			row = col.row()
+			row.scale_y = 1.2
 			row.alignment = 'EXPAND'
-			row.prop(scn, 'face_edit_head_flag')
-			row.prop(scn, 'face_edit_hair_flag')
-		elif scn.gen_overwriter_flag:
-			box = col.box()
-			box.label(text='General Overwriting Options', icon='INFO')
-			col1 = box.column()
-			row = col1.row()
-			row.alignment = 'EXPAND'
-			row.prop(scn, 'trophy_flag')
+			row.prop(scn, 'stadium_export_flag')
+			row.prop(scn, 'trophy_export_flag')
 
-		row = col.row()
-		row.prop(scn, 'export_path')
+			row = col.row()
+			row.prop(scn, 'export_path')
 
-		# Export row
-		row = col.row()
-		row.operator('mesh.texture_export')
-		if scn.face_edit_flag:
-			txt = "FACE MODEL EXPORT"
-		else:
-			txt = "OVERWRITE"
-		row.operator("mesh.fifa_overwrite", text=txt)
-		
-		# if scn.face_edit_flag and scn.gen_overwriter_flag:
-		# 	row.enabled = False
-		# elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
-		# 	row.enabled = False
+			if scn.stadium_export_flag:
 
-		if conflictFound:
-			row.enabled = False
+				box = col.box()
+				box.label(text='Stadium Properties', icon='INFO')
+				row = box.row()
+				split = row.split()
+				split.scale_x = 1.5
+				split.prop(scn, 'stadium_version', text='Time')
+				split = row.split()
+				split.scale_x = 1.5
+				split.prop(scn, 'stadium_time', text='Weather')
+				split = row.split()
+				split.alignment = 'RIGHT'
+				split.scale_x = 1.5
+				split.label(text='File Id')
+				split.prop(scn, 'file_id', text='')
+			elif scn.trophy_export_flag:
+				box = col.box()
+				box.label(text='Trophy/Ball Properties', icon='INFO')
+				row = box.row()
+				row.label(text='File Id')
+				row.prop(scn, 'file_id', text='')
+
+			row = col.row()
+			row.scale_y = 1.2
+
+			if scn.trophy_export_flag:
+				txt = "TROPHY / BALL EXPORT"
+			else:
+				txt = "STADIUM EXPORT"
+			
+			row.operator("mesh.fifa_export", text=txt)
+			row.operator('mesh.texture_export')
+			row.operator('mesh.crowd_export')
+			row.operator('mesh.lights_export')
+
+			# if scn.stadium_export_flag and scn.trophy_export_flag:
+			# 	row.enabled = False
+			# elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
+			# 	row.enabled = False
+
+			if conflictFound:
+				row.enabled = False
+
+			# Basic Exporter Overwriter
+			row = layout.row(align=True)
+
+			row.label(icon='INFO', text='File Overwriter')
+			box = layout.box()
+			col = box.column()
+
+			row = col.row()
+			row.scale_y = 1.2
+			row.prop(scn, 'gen_overwriter_flag')
+			row.prop(scn, 'face_edit_flag')
+			if scn.face_edit_flag:
+				box = col.box()
+				box.label(text='Face Editing Options', icon='INFO')
+				col1 = box.column()
+				row = col1.row()
+				row.alignment = 'EXPAND'
+				row.prop(scn, 'face_edit_head_flag')
+				row.prop(scn, 'face_edit_hair_flag')
+			elif scn.gen_overwriter_flag:
+				box = col.box()
+				box.label(text='General Overwriting Options', icon='INFO')
+				col1 = box.column()
+				row = col1.row()
+				row.alignment = 'EXPAND'
+				row.prop(scn, 'trophy_flag')
+
+			row = col.row()
+			row.prop(scn, 'export_path')
+
+			# Export row
+			row = col.row()
+			row.operator('mesh.texture_export')
+			if scn.face_edit_flag:
+				txt = "FACE MODEL EXPORT"
+			else:
+				txt = "OVERWRITE"
+			row.operator("mesh.fifa_overwrite", text=txt)
+			
+			# if scn.face_edit_flag and scn.gen_overwriter_flag:
+			# 	row.enabled = False
+			# elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
+			# 	row.enabled = False
+
+			if conflictFound:
+				row.enabled = False
 
 		col = layout.column()
 		r3 = col.row()
@@ -1013,6 +1050,14 @@ bpy.types.Scene.game_enum = bpy.props.EnumProperty(
 		],
 	default='FIFA14',
 	name="Game Version")
+
+bpy.types.Scene.se7en_method = bpy.props.EnumProperty(
+	items=[
+		('Legacy', 'Legacy', 'Legacy'),
+		('Modern', 'Modern', 'Modern')
+		],
+	default='Legacy',
+	name="Method")
 
 bpy.types.Scene.bones_flag = bpy.props.BoolProperty(
 	name="Import Bones",
