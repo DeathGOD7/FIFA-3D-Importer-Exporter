@@ -417,10 +417,36 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			col.scale_y = 1.2
 			col.prop(scn, 'bones_flag')
 
+			row = layout.row()
+			row.label(icon='INFO', text='Additional Model Files')
+			box = layout.box()
+			col = box.column()
+
+			row = col.row()
+			row.prop(scn, 'hair_import_path')
+			row = col.row()
+			row.prop(scn, 'crwd_import_path')
+			row = col.row()
+			row.prop(scn, 'lnx_import_path')
+
+			row = layout.row()
+			row.label(text='Texture Files', icon='INFO')
+			box = layout.box()
+			col = box.column()
+			row = col.row()
+			row.prop(scn, 'main_texture_import_path')
+			row = col.row()
+			row.prop(scn, 'face_texture_import_path')
+			row = col.row()
+			row.prop(scn, 'hair_texture_import_path')
+			row = col.row()
+			row.prop(scn, 'eyes_texture_import_path')
+
 			r0 = layout.row()
 			r0.alignment = 'CENTER'
 			r0.scale_y = 1.2
-			r0.operator("system.test_dll", text='Import')
+			r0.operator("system.test_dll", text='IMPORT')
+		
 		elif scn.se7en_mode == "Legacy":
 			col = box.column()
 			col.alignment = 'EXPAND'
@@ -617,6 +643,7 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 			row.alignment = 'RIGHT'
 			row.label(text='  Game Version')
 			row.prop(scn, 'game_enum', text='')
+		
 		elif scn.se7en_mode == "Legacy":
 			box = layout.box()
 			col = box.column()
@@ -956,6 +983,11 @@ bpy.types.Scene.obj_path = bpy.props.StringProperty(
 bpy.types.Scene.stadium_texture_import_path = bpy.props.StringProperty(
 	name="Stadium Texture File",
 	description='Select .rx3 texture file for importing',
+	subtype='FILE_PATH',
+)
+bpy.types.Scene.main_texture_import_path = bpy.props.StringProperty(
+	name="Main Texture File",
+	description='Select .rx3 texture file of main 3D model for importing',
 	subtype='FILE_PATH',
 )
 bpy.types.Scene.hair_texture_import_path = bpy.props.StringProperty(
