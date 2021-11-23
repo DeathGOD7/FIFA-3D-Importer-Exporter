@@ -428,9 +428,10 @@ class RX3_File():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V]
-				# data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
-				temp.append(data)
+				if (v.Vertexes[x].TextureCoordinates != None) :
+					data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V]
+					# data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
+					temp.append(data)
 			
 			self.uvs.append(temp)
 			self.uvCount.append(len(self.uvs[i]))
@@ -907,9 +908,10 @@ class RX3_File_Hybrid():
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
-				data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V]
-				# data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
-				temp.append(data)
+				if (v.Vertexes[x].TextureCoordinates != None) :
+					data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V]
+					# data = [v.Vertexes[x].TextureCoordinates[0].U , v.Vertexes[x].TextureCoordinates[0].V, v.Vertexes[x].TextureCoordinates[0].Xtra_Value]
+					temp.append(data)
 			
 			self.uvs.append(temp)
 			self.uvCount.append(len(self.uvs[i]))
