@@ -86,8 +86,10 @@ class RX3_File():
 		self.fileId = 0
 		self.gtype = gtype
 		# file info end
-		self.cols = []
+		self.cols = []  ## Normal / Binormals / Tangent Cols
 		self.colCount = []
+		self.collision = []
+		self.collisionCount = []
 		self.data = 0
 		self.endian = ""
 		self.endianStr = ""
@@ -264,58 +266,6 @@ class RX3_File():
 		
 		return obtainedOffsets
 
-	def read_file_data(self, rx3file, opts, count):
-		uvcount = 0
-		colcount = 0
-		uvs = []
-		cols = []
-		cols_0 = []
-		cols_1 = []
-		cols_2 = []
-		uvs_0, uvs_1, uvs_2, uvs_3, uvs_4, uvs_5, uvs_6, uvs_7 = ([], [], [], [], [], [], [], [])
-		bones_i0 = []
-		bones_i1 = []
-		bones_w = []
-		bones_c = []
-		for i in range(count):
-			uvcount = 0
-			colcount = 0
-			for j in opts:
-				if j[0][0] == 't':
-					if j[4] == '2f32':
-						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_1(f))')
-					elif j[4] == '2f16':
-						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_0(f))')
-					uvcount += 1
-				elif j[0][0] == 'n':
-					colcount += 1
-					cols_0.append(gh.read_cols(f))
-				elif j[0][0] == 'b':
-					colcount += 1
-					cols_2.append(gh.read_cols(f))
-				elif j[0][0] == 'g':
-					colcount += 1
-					cols_1.append(gh.read_cols(f))
-				elif j[0][0] == 'i':
-					if j[4] == '4u8':
-						eval('bones_i' + str(j[0][1]) + ".append(struct.unpack('<4B',f.read(4)))")
-					elif j[4] == '4u16':
-						eval('bones_i' + str(j[0][1]) + ".append(struct.unpack('<4H',f.read(8)))")
-				elif j[0][0] == 'w':
-					bones_w.append(struct.unpack('<4B', f.read(4)))
-				elif j[0][0] == 'c':
-					bones_c.append(struct.unpack('<4B', f.read(4)))
-					continue
-
-		for j in range(uvcount):
-			eval('uvs.append(uvs_' + str(j) + ')')
-
-		for j in range(colcount):
-			eval('cols.append(cols_' + str(j) + ')')
-
-		return (
-		 verts, cols, uvs, bones_i0, bones_w)
-
 	def getVertexFormats(self, rx3file):
 		for x in range(rx3file.Rx3VertexFormats.Length):
 			temp = []
@@ -490,6 +440,33 @@ class RX3_File():
 
 		return self.uvs
 
+	def getCollisions(self, rx3file):
+		# 160 = 1 > 3 > 9
+		# 3
+		# 3 X Y Z
+		if (rx3file.Rx3CollisionTriMesh != None):
+			for i in range(rx3file.Rx3CollisionTriMesh.Length):
+				c = rx3file.Rx3CollisionTriMesh[i]
+				temp = [] # per available mesh collision  ## eg 160 count
+				for x in range(len(c.CollisionTriangles)):
+					perCT = []	# per collision triangle  ## eg 3 for each of previous one
+					for y in range(len(c.CollisionTriangles[x])):
+						tempvar = c.CollisionTriangles[x][y]
+						data = [tempvar.X, tempvar.Y, tempvar.Z] #per x y z data in one  # eg 3 for each of previous one
+						perCT.append(data)
+					temp.append(perCT)
+
+				self.collision.append(temp)
+				self.collisionCount.append(len(self.collision[i]))
+				if len(self.cols[i]) > 0:
+					print(f"Collision X,Y,Z of CollisionTriMesh 0, Mesh {i} = {self.collision[i][0]}")
+					print(f"Collision X,Y,Z of CollisionTriMesh 1, Mesh {i} = {self.collision[i][1]}")
+					print(f"Collision Count, Mesh {i} : {self.collisionCount[i]}")
+
+
+		else:
+			print(f"No collision data found in file!")
+
 	def loadRx3(self):
 		file = self.file
 		if file != "":
@@ -531,6 +508,8 @@ class RX3_File():
 			self.getBoneIndice(mainFile)
 			
 			self.getBoneWeight(mainFile)
+
+			self.getCollisions(mainFile)
 
 			fcOffset = []
 			for x in self.offsets:
@@ -583,8 +562,10 @@ class RX3_File_Hybrid():
 		self.fileId = 0
 		self.gtype = gtype
 		# file info end
-		self.cols = []
+		self.cols = []  ## Normal / Binormals / Tangent Cols
 		self.colCount = []
+		self.collision = []
+		self.collisionCount = []
 		self.data = 0
 		self.endian = ""
 		self.endianStr = ""
@@ -760,58 +741,6 @@ class RX3_File_Hybrid():
 		print(f"Offsets : {obtainedOffsets}")
 		
 		return obtainedOffsets
-
-	def read_file_data(self, rx3file, opts, count):
-		uvcount = 0
-		colcount = 0
-		uvs = []
-		cols = []
-		cols_0 = []
-		cols_1 = []
-		cols_2 = []
-		uvs_0, uvs_1, uvs_2, uvs_3, uvs_4, uvs_5, uvs_6, uvs_7 = ([], [], [], [], [], [], [], [])
-		bones_i0 = []
-		bones_i1 = []
-		bones_w = []
-		bones_c = []
-		for i in range(count):
-			uvcount = 0
-			colcount = 0
-			for j in opts:
-				if j[0][0] == 't':
-					if j[4] == '2f32':
-						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_1(f))')
-					elif j[4] == '2f16':
-						eval('uvs_' + str(j[0][1]) + '.append(gh.read_uvs_0(f))')
-					uvcount += 1
-				elif j[0][0] == 'n':
-					colcount += 1
-					cols_0.append(gh.read_cols(f))
-				elif j[0][0] == 'b':
-					colcount += 1
-					cols_2.append(gh.read_cols(f))
-				elif j[0][0] == 'g':
-					colcount += 1
-					cols_1.append(gh.read_cols(f))
-				elif j[0][0] == 'i':
-					if j[4] == '4u8':
-						eval('bones_i' + str(j[0][1]) + ".append(struct.unpack('<4B',f.read(4)))")
-					elif j[4] == '4u16':
-						eval('bones_i' + str(j[0][1]) + ".append(struct.unpack('<4H',f.read(8)))")
-				elif j[0][0] == 'w':
-					bones_w.append(struct.unpack('<4B', f.read(4)))
-				elif j[0][0] == 'c':
-					bones_c.append(struct.unpack('<4B', f.read(4)))
-					continue
-
-		for j in range(uvcount):
-			eval('uvs.append(uvs_' + str(j) + ')')
-
-		for j in range(colcount):
-			eval('cols.append(cols_' + str(j) + ')')
-
-		return (
-		 verts, cols, uvs, bones_i0, bones_w)
 
 	def getVertexFormats(self, rx3file):
 		# RW4VertexDescriptors
@@ -990,6 +919,33 @@ class RX3_File_Hybrid():
 
 		return self.uvs
 
+	def getCollisions(self, rx3file):
+		# 160 = 1 > 3 > 9
+		# 3
+		# 3 X Y Z
+		if (rx3file.Rx3CollisionTriMesh != None):
+			for i in range(rx3file.Rx3CollisionTriMesh.Length):
+				c = rx3file.Rx3CollisionTriMesh[i]
+				temp = [] # per available mesh collision  ## eg 160 count
+				for x in range(len(c.CollisionTriangles)):
+					perCT = []	# per collision triangle  ## eg 3 for each of previous one
+					for y in range(len(c.CollisionTriangles[x])):
+						tempvar = c.CollisionTriangles[x][y]
+						data = [tempvar.X, tempvar.Y, tempvar.Z] #per x y z data in one  # eg 3 for each of previous one
+						perCT.append(data)
+					temp.append(perCT)
+
+				self.collision.append(temp)
+				self.collisionCount.append(len(self.collision[i]))
+				if len(self.cols[i]) > 0:
+					print(f"Collision X,Y,Z of CollisionTriMesh 0, Mesh {i} = {self.collision[i][0]}")
+					print(f"Collision X,Y,Z of CollisionTriMesh 1, Mesh {i} = {self.collision[i][1]}")
+					print(f"Collision Count, Mesh {i} : {self.collisionCount[i]}")
+
+
+		else:
+			print(f"No collision data found in file!")
+
 	def loadRx3(self):
 		file = self.file
 		if file != "":
@@ -1033,6 +989,8 @@ class RX3_File_Hybrid():
 			self.getBoneIndice(mainFile)
 			
 			self.getBoneWeight(mainFile)
+
+			self.getCollisions(mainFile)
 
 			fcOffset = []
 			for x in self.offsets:
