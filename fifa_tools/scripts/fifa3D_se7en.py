@@ -442,9 +442,11 @@ class RX3_File():
 		return self.uvs
 
 	def getCollisions(self, rx3file):
+		# 1
 		# 160 = 1 > 3 > 9
 		# 3
 		# 3 X Y Z
+
 		if (rx3file.Rx3CollisionTriMesh != None):
 			for i in range(rx3file.Rx3CollisionTriMesh.Length):
 				c = rx3file.Rx3CollisionTriMesh[i]
@@ -459,11 +461,12 @@ class RX3_File():
 
 				self.collision.append(temp)
 				self.collisionCount.append(len(self.collision[i]))
-				if len(self.cols[i]) > 0:
+				if len(self.collision[i]) > 0:
 					print(f"Collision X,Y,Z of CollisionTriMesh 0, Mesh {i} = {self.collision[i][0]}")
 					print(f"Collision X,Y,Z of CollisionTriMesh 1, Mesh {i} = {self.collision[i][1]}")
 					print(f"Collision Count, Mesh {i} : {self.collisionCount[i]}")
 
+			return self.collision
 
 		else:
 			print(f"No collision data found in file!")
@@ -590,9 +593,9 @@ class RX3_File_Hybrid():
 		# -> 4 bones/vertex : FIFA 11 - 14
 		# -> 8 bones/vertex : FIFA 15-16
 		self.bonesIndice = [] ## was also used as bone_i in original addon
-		self.bonesIndicecount = [] ## was also used as bone_i in original addon
+		self.bonesIndiceCount = [] ## was also used as bone_i in original addon
 		self.bonesWeight = [] ## was also used as bone_w in original addon
-		self.bonesWeightcount = []## was also used as bone_w in original addon
+		self.bonesWeightCount = []## was also used as bone_w in original addon
 		#bones section end
 
 		# Get file infos
@@ -922,28 +925,45 @@ class RX3_File_Hybrid():
 		return self.uvs
 
 	def getCollisions(self, rx3file):
-		# 160 = 1 > 3 > 9
-		# 3
-		# 3 X Y Z
-		if (rx3file.Rx3CollisionTriMesh != None):
-			for i in range(rx3file.Rx3CollisionTriMesh.Length):
-				c = rx3file.Rx3CollisionTriMesh[i]
-				temp = [] # per available mesh collision  ## eg 160 count
-				for x in range(len(c.CollisionTriangles)):
-					perCT = []	# per collision triangle  ## eg 3 for each of previous one
-					for y in range(len(c.CollisionTriangles[x])):
-						tempvar = c.CollisionTriangles[x][y]
-						data = [tempvar.X, tempvar.Y, tempvar.Z] #per x y z data in one  # eg 3 for each of previous one
-						perCT.append(data)
-					temp.append(perCT)
+		# 2 (maybe left and right)
+		# 2 bbox 1 and 2 on each (maybe top and bottom corner)
+		# 2 bbox each
+		# 4 values (val 1 2 3 4)
+		# x [0/1] [bbox1 or 2] [0/1 bbox] [values]
+
+		if (rx3file.RW4Section.RW4ModelCollisions != None):
+			for i in range(rx3file.RW4Section.RW4ModelCollisions.Length):
+				c = rx3file.RW4Section.RW4ModelCollisions[i]
+				temp = [] # per available mesh collision  ## eg 2 count
+				
+				# [0/1] = [[bbox1_1,bbox1_2][bbox2_1,bbox2_2]]
+				# [0/1][0/1] = [bbox1_1,bbox1_2]
+				# [0/1][0/1][0/1] = [1,2,3,4]
+
+				perBBOX1 = []	# per bbox1  ## eg 2
+				for x in range(len(c.BBox_1)):
+					tempvar = c.BBox_1[x]  ## bbox1_0/1
+					data = [tempvar.Value_1, tempvar.Value_2, tempvar.Value_3, tempvar.Value_4] #4 values
+					perBBOX1.append(data)
+				
+				perBBOX2 = []	# per bbox  ## eg 2 for each of previous one
+				for x in range(len(c.BBox_2)):
+					tempvar = tempvar = c.BBox_2[x]  ## bbox2_0/1
+					data = [tempvar.Value_1, tempvar.Value_2, tempvar.Value_3, tempvar.Value_4] #4 values
+					perBBOX2.append(data)
+					
+				temp.append(perBBOX1)
+				temp.append(perBBOX2)
+					
 
 				self.collision.append(temp)
 				self.collisionCount.append(len(self.collision[i]))
-				if len(self.cols[i]) > 0:
-					print(f"Collision X,Y,Z of CollisionTriMesh 0, Mesh {i} = {self.collision[i][0]}")
-					print(f"Collision X,Y,Z of CollisionTriMesh 1, Mesh {i} = {self.collision[i][1]}")
-					print(f"Collision Count, Mesh {i} : {self.collisionCount[i]}")
+				if len(self.collision[i]) > 0:
+					print(f"Collision 1,2,3,4 of BBOX 1_1, Set {i} = {self.collision[i][0]}")
+					print(f"Collision 1,2,3,4 of BBOX 1_2, Set {i} = {self.collision[i][1]}")
+					print(f"Collision Count, Set {i} : {self.collisionCount[i]}")
 
+			return self.collision
 
 		else:
 			print(f"No collision data found in file!")
