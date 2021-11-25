@@ -31,13 +31,14 @@ version_text = 'v' + str(version[0]) + '.' + \
 maindir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
 
 logdir = maindir + '\Logs'
+texdir = maindir + '\Textures'
+libsdir = maindir + "\Libs"
+
 x = datetime.datetime.now()
 logfilename = x.strftime("%Y-%m-%d")
-logfile = maindir + f'\Logs\{logfilename}.log'
+logfile = logdir + f"\\{logfilename}.log"
 
-texdir = maindir + '\Textures'
 
-libsdir = maindir + "\Libs"
 
 subdirlist = [maindir, logdir, texdir, libsdir]
 # -----------------------------------------
@@ -57,18 +58,11 @@ if (config['SETTINGS'].getboolean('First_Run')):
 	se7en_helper.InstallPythonNET()
 
 from fifa_tools import fifa3D_layout
+from fifa_tools.scripts.fifa3D_logger import logger
+globalLogFile = logger()
 # -----------------------------------------
 
 def register():
-	if not os.path.exists(logfile):
-		f = open(logfile,'a+')
-		f.writelines(f'Blender Version : {bpy.app.version_string}\n')
-		f.writelines(f'Python Version : {pythonVer} ({pythonArc})\n')
-		f.writelines(f'Addon : FIFA 3D Importer/Exporter {version_text}\n')
-		f.writelines(f'Author : Death GOD 7 , arti-10\n')
-		f.writelines(f'Date : {logfilename}\n')
-		f.writelines('-----------------------------------------------------------------\n')
-
 	fifa3D_layout.register()
 	print("\nRegistering FIFA 3D Importer/Exporter")
 

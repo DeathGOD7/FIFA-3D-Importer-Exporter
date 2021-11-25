@@ -269,7 +269,7 @@ class fifa_rx3:
 		self.collision_list = []
 		self.name = ''
 		self.code = self.init_read(self.path, mode)
-		self.logfile = fifa_tools.logfile
+		self.logfile = fifa_tools.globalLogFile
 
 		print(f"RX3 Data File Object : {self.code}")
 
@@ -479,7 +479,8 @@ class fifa_rx3:
 		scn = bpy.context.scene
 		print('READING FILE OFFSETS...')
 		print(f"Offsets : {self.offsets}")
-		log = open(self.logfile, 'a+')
+		log = self.logfile
+		log.writeLog(f"Mode : {scn.se7en_mode}")
 		for offset in self.offsets:
 			if offset[0] == 3263271920:
 				self.read_mesh_descr(offset[1])
@@ -493,8 +494,8 @@ class fifa_rx3:
 			elif offset[0] == 1285267122:
 				self.read_props(offset[1], self.endian)
 			elif offset[0] == 2116321516:
-				log.write('Group Offset: ' + str(offset[1]))
-				log.write('\n')
+				log.writeLog('Group Offset: ' + str(offset[1]))
+				log.writeLog('')
 				self.read_group(offset[1])
 				self.group_count += 1
 			elif offset[0] == 230948820:
@@ -514,7 +515,7 @@ class fifa_rx3:
 				self.indices_offsets.append((offset[1], temp[1]))
 				print(f"IndOff : {self.indices_offsets}")
 			elif offset[0] == 3751472158:
-				log.write('Bones Detected\n')
+				log.writeLog('Bones Detected')
 				self.data.seek(offset[1])
 				size = struct.unpack(self.endian + 'I', self.data.read(4))[0]
 				bc = struct.unpack(self.endian + 'I', self.data.read(4))[0]
@@ -529,8 +530,7 @@ class fifa_rx3:
 				count = len(self.mesh_offsets) - 1
 				self.data.read(4)
 				self.mesh_count += 1
-				log.write('Mesh Count: %3d || Vert Count: %5d || Chunk Length: %2d || File Offset: %7d || Of Type: %s' % (
-				 self.mesh_count, vc, chunk_length, offset[1], self.type))
+				log.writeLog('Mesh Count: %3d || Vert Count: %5d || Chunk Length: %2d || File Offset: %7d || Of Type: %s' % (self.mesh_count, vc, chunk_length, offset[1], self.type))
 				print(f'Mesh Description / Vertex Format : { self.mesh_descrs[count]}\nTotal Vertices Count:{vc}')
 				temp = self.read_file_data(self.data, self.mesh_descrs[count], vc)
 				#print(f"total uvs : {temp[2]}")
@@ -541,11 +541,11 @@ class fifa_rx3:
 				self.uvcount.append(len(temp[2]))
 				self.v_bones_i.append(temp[3])
 				self.v_bones_w.append(temp[4])
-				log.write('\n')
+				# log.writeLog('\n')
 				continue
 
 		print('FILE OFFSETS READ SUCCESSFULLY')
-		log.close()
+		# log.close()
 
 	def file_ident(self):
 		self.container_type, self.endianess, self.endian, self.size, self.offsets, self.count = self.file_ident_func()

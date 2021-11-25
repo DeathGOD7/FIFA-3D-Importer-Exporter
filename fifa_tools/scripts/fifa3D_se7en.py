@@ -1,3 +1,7 @@
+# Filename : fifa3D_se7en.py
+# Usage : Loading RX3 Files (FIFA 11 - FIFA 16)
+# Author : Death GOD 7
+
 import clr
 import os
 import sys
@@ -6,6 +10,7 @@ import fifa_tools
 import zlib, struct
 
 sys.path.append(f'{fifa_tools.libsdir}')
+
 
 clr.AddReference('SE7EN')
 ref1 = clr.AddReference('FIFALibrary_v21_11_13_0_x64')
