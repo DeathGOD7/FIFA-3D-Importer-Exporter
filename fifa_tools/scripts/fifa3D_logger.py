@@ -42,6 +42,6 @@ class logger():
 	def writeLog(self, message, msgType : LogType):
 		f = open(self.logfile,'a+')
 		currentTime = datetime.datetime.now().time().strftime("%r")
-		f.writelines(f"[{currentTime}] - [{msgType}] {message}\n")
+		f.writelines(f"{currentTime} - [{msgType}] {message}\n")
 		f.close()
 

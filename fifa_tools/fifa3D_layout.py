@@ -43,7 +43,7 @@ from fifa_tools.scripts import fifa3D_operators
 from fifa_tools.scripts.fifa3D_operators import light_props as light_props
 from fifa_tools.scripts import fifa3D_functions
 from fifa_tools.scripts import half
-
+from fifa_tools.scripts.fifa3D_logger import *
 
 
 #from fifa_tools.scripts.fifa3D_operators import light_props as light_props

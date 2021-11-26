@@ -35,6 +35,7 @@ from fifa_tools.scripts.fifa3D_functions import general_helper as gh
 from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
 import fifa_tools.scripts.fifa3D_main as fifa_main
 from fifa_tools.scripts.fifa3D_main import sig, crowdGroup
+from fifa_tools.scripts.fifa3D_logger import *
 
 f = 0
 e = 0
@@ -262,7 +263,7 @@ class se7en_import(bpy.types.Operator):
 			log = fifa_tools.globalLogFile
 			if choosenGame == gT.FIFA11:
 				mainImport = fifa3D_se7en.RX3_File_Hybrid(scn.model_import_path, choosenGame)
-				log.writeLog(f"Mode : {scn.se7en_mode}")
+				log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 				for i in range(mainImport.meshCount):
 					logstr = f"[{choosenGame}] RX3 Type : RX3 Hybrid || File Type : {mainImport.fileType} || File ID : {mainImport.fileId} || Endian Type : {mainImport.endianStr} || Mesh Count : {i+1}/{mainImport.meshCount} || Primitive Type : {mainImport.primitiveType} || Total Vertices : {mainImport.totalVertCount[i]} || Total Indices : {mainImport.indicesCount[i]} || Total Faces : {mainImport.faceCount[i]}"
 					
@@ -277,7 +278,7 @@ class se7en_import(bpy.types.Operator):
 					if (len(mainImport.bonesWeightCount) > i):
 						 logstr += f" || Total Bone Weight : {mainImport.bonesWeightCount[i]}" 
 
-					log.writeLog(logstr)
+					log.writeLog(logstr, LogType.INFO)
 
 					name = mainImport.fileType + '_' + str(mainImport.fileId) + '_' + str(i)
 					if mainImport.fileType == 'head':
@@ -289,7 +290,7 @@ class se7en_import(bpy.types.Operator):
 					meshimportcount += 1
 			elif choosenGame in mainrx3:
 				mainImport = fifa3D_se7en.RX3_File(scn.model_import_path , choosenGame)
-				log.writeLog(f"Mode : {scn.se7en_mode}")
+				log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 				for i in range(mainImport.meshCount):
 					logstr = f"[{choosenGame}] RX3 Type : RX3 || File Type : {mainImport.fileType} || File ID : {mainImport.fileId} || Endian Type : {mainImport.endianStr} || Mesh Count : {i+1}/{mainImport.meshCount} || Primitive Type : {mainImport.primitiveType} || Total Vertices : {mainImport.totalVertCount[i]} || Total Indices : {mainImport.indicesCount[i]} || Total Faces : {mainImport.faceCount[i]}"
 					
@@ -304,7 +305,7 @@ class se7en_import(bpy.types.Operator):
 					if (len(mainImport.bonesWeightCount) > i):
 						 logstr += f" || Total Bone Weight : {mainImport.bonesWeightCount[i]}" 
 
-					log.writeLog(logstr)
+					log.writeLog(logstr, LogType.INFO)
 					
 					name = mainImport.fileType + '_' + str(mainImport.fileId) + '_' + str(i)
 					if mainImport.fileType == 'head':

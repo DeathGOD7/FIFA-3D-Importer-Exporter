@@ -58,7 +58,7 @@ if (config['SETTINGS'].getboolean('First_Run')):
 	se7en_helper.InstallPythonNET()
 
 from fifa_tools import fifa3D_layout
-from fifa_tools.scripts.fifa3D_logger import logger
+from fifa_tools.scripts.fifa3D_logger import *
 globalLogFile = logger()
 # -----------------------------------------
 

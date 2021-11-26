@@ -10,6 +10,7 @@
 
 from fifa_tools import bl_info
 import fifa_tools
+from fifa_tools.scripts.fifa3D_logger import *
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
 #version = (0, 67, 'alpha')
@@ -480,7 +481,7 @@ class fifa_rx3:
 		print('READING FILE OFFSETS...')
 		print(f"Offsets : {self.offsets}")
 		log = self.logfile
-		log.writeLog(f"Mode : {scn.se7en_mode}")
+		log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 		for offset in self.offsets:
 			if offset[0] == 3263271920:
 				self.read_mesh_descr(offset[1])
@@ -494,8 +495,7 @@ class fifa_rx3:
 			elif offset[0] == 1285267122:
 				self.read_props(offset[1], self.endian)
 			elif offset[0] == 2116321516:
-				log.writeLog('Group Offset: ' + str(offset[1]))
-				log.writeLog('')
+				log.writeLog('Group Offset: ' + str(offset[1]), LogType.INFO)
 				self.read_group(offset[1])
 				self.group_count += 1
 			elif offset[0] == 230948820:
@@ -515,7 +515,7 @@ class fifa_rx3:
 				self.indices_offsets.append((offset[1], temp[1]))
 				print(f"IndOff : {self.indices_offsets}")
 			elif offset[0] == 3751472158:
-				log.writeLog('Bones Detected')
+				log.writeLog('Bones Detected', LogType.INFO)
 				self.data.seek(offset[1])
 				size = struct.unpack(self.endian + 'I', self.data.read(4))[0]
 				bc = struct.unpack(self.endian + 'I', self.data.read(4))[0]
@@ -530,7 +530,7 @@ class fifa_rx3:
 				count = len(self.mesh_offsets) - 1
 				self.data.read(4)
 				self.mesh_count += 1
-				log.writeLog('Mesh Count: %3d || Vert Count: %5d || Chunk Length: %2d || File Offset: %7d || Of Type: %s' % (self.mesh_count, vc, chunk_length, offset[1], self.type))
+				log.writeLog('Mesh Count: %3d || Vert Count: %5d || Chunk Length: %2d || File Offset: %7d || Of Type: %s' % (self.mesh_count, vc, chunk_length, offset[1], self.type), LogType.INFO)
 				print(f'Mesh Description / Vertex Format : { self.mesh_descrs[count]}\nTotal Vertices Count:{vc}')
 				temp = self.read_file_data(self.data, self.mesh_descrs[count], vc)
 				#print(f"total uvs : {temp[2]}")
