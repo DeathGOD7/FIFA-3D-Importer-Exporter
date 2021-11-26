@@ -541,7 +541,6 @@ class fifa_rx3:
 				self.uvcount.append(len(temp[2]))
 				self.v_bones_i.append(temp[3])
 				self.v_bones_w.append(temp[4])
-				# log.writeLog('\n')
 				continue
 
 		print('FILE OFFSETS READ SUCCESSFULLY')

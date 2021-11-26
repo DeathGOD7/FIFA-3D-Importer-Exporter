@@ -137,10 +137,11 @@ class general_helper:
 	@staticmethod
 	def read_cols(f):
 		val = struct.unpack('<I', f.read(4))[0]
-		# print(val)
+		print(val)
 		val_0 = (val & 1023) / 1023
 		val_1 = (val >> 10 & 1023) / 1023
 		val_2 = (val >> 20 & 1023) / 1023
+		print(f" 2 : {val_2}, 1 : {val_1}, 0 : {val_0}")
 		return (
 		 val_2, val_1, val_0)
 

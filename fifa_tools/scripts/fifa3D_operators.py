@@ -251,7 +251,7 @@ class auto_paint(bpy.types.Operator):
 class se7en_import(bpy.types.Operator):
 	bl_idname = 'system.se7en_import'
 	bl_label = ''
-	bl_description = 'For importing with the dll functions'
+	bl_description = 'For importing mesh with new method by DeathGOD7'
 
 	def invoke(self, context, event):
 		scn = context.scene
@@ -263,6 +263,7 @@ class se7en_import(bpy.types.Operator):
 			log = fifa_tools.globalLogFile
 			if choosenGame == gT.FIFA11:
 				mainImport = fifa3D_se7en.RX3_File_Hybrid(scn.model_import_path, choosenGame)
+				log.writeLog(f"File Import : {mainImport.fileName}{mainImport.fileExt}", LogType.INFO)
 				log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 				for i in range(mainImport.meshCount):
 					logstr = f"[{choosenGame}] RX3 Type : RX3 Hybrid || File Type : {mainImport.fileType} || File ID : {mainImport.fileId} || Endian Type : {mainImport.endianStr} || Mesh Count : {i+1}/{mainImport.meshCount} || Primitive Type : {mainImport.primitiveType} || Total Vertices : {mainImport.totalVertCount[i]} || Total Indices : {mainImport.indicesCount[i]} || Total Faces : {mainImport.faceCount[i]}"
@@ -286,10 +287,11 @@ class se7en_import(bpy.types.Operator):
 							name += '_' + "head"
 						elif i == 1:
 							name += '_' + "eyes"
-					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+					obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
 			elif choosenGame in mainrx3:
 				mainImport = fifa3D_se7en.RX3_File(scn.model_import_path , choosenGame)
+				log.writeLog(f"File Import : {mainImport.fileName}{mainImport.fileExt}", LogType.INFO)
 				log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 				for i in range(mainImport.meshCount):
 					logstr = f"[{choosenGame}] RX3 Type : RX3 || File Type : {mainImport.fileType} || File ID : {mainImport.fileId} || Endian Type : {mainImport.endianStr} || Mesh Count : {i+1}/{mainImport.meshCount} || Primitive Type : {mainImport.primitiveType} || Total Vertices : {mainImport.totalVertCount[i]} || Total Indices : {mainImport.indicesCount[i]} || Total Faces : {mainImport.faceCount[i]}"
@@ -313,8 +315,25 @@ class se7en_import(bpy.types.Operator):
 							name += '_' + "head"
 						elif i == 1:
 							name += '_' + "eyes"
-					fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+					obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
+					if scn.bone_groups_flag and len(mainImport.bonesIndice) > i:
+						groups = {}
+						tupleConverted = fifa3D_se7en.List_To_Tuple(mainImport.bonesIndice[i])
+						for x in range(len(tupleConverted)):
+							for y in tupleConverted[x]:
+								if y not in groups:
+									groups[y] = []
+								elif x in groups[y]:
+									continue
+								groups[y].append(x)
+
+						for j in groups:
+							if str(j) not in bpy.data.objects[obname].vertex_groups:
+								bpy.data.objects[obname].vertex_groups.new(name=str(j))
+							bpy.data.objects[obname].vertex_groups[str(j)].add(groups[j], 1, 'ADD')
+
+						continue
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
 		else:
@@ -589,7 +608,7 @@ class file_import(bpy.types.Operator):
 
 						for j in groups:
 							if str(j) not in bpy.data.objects[obname].vertex_groups:
-								bpy.data.objects[obname].vertex_groups.new(str(j))
+								bpy.data.objects[obname].vertex_groups.new(name=str(j))
 							bpy.data.objects[obname].vertex_groups[str(j)].add(groups[j], 1, 'ADD')
 
 						continue
@@ -672,7 +691,11 @@ class file_import(bpy.types.Operator):
 				for arm_id in range(len(f.bones)):
 					amt = bpy.data.armatures.new('armature_' + str(f.id) + '_' + str(arm_id))
 					ob = bpy.data.objects.new('armature_object_' + str(arm_id), amt)
-					scn.objects.link(ob)
+					
+					# -bpy.context.scene.objects.link(newCurve)
+					# +bpy.context.collection.objects.link(newCurve)
+					context.collection.objects.link(ob)
+					# scn.objects.link(ob)
 					bpy.context.scene.objects.active = ob
 					bpy.ops.object.mode_set(mode='EDIT')
 					for i in range(len(f.bones[arm_id])):

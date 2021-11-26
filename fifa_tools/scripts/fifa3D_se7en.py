@@ -79,6 +79,8 @@ def GetFileType(file):
 	except:
 		return 'corrupt_filename'
 
+def List_To_Tuple(lst):
+    return tuple(List_To_Tuple(i) if isinstance(i, list) else i for i in lst)
 
 class RX3_File():
 	def __init__(self, file, gtype): 
