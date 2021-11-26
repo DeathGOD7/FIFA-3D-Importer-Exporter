@@ -29,7 +29,7 @@ else:
 # from fifa_main import sig, crowdGroup
 
 import fifa_tools
-from fifa_tools.scripts import fifa3D_se7en
+from fifa_tools.scripts import fifa3D_se7en , fifa3D_helper
 import fifa_tools.scripts.fifa3D_functions as fifa_func
 from fifa_tools.scripts.fifa3D_functions import general_helper as gh
 from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
@@ -319,7 +319,7 @@ class se7en_import(bpy.types.Operator):
 					meshimportcount += 1
 					if scn.bone_groups_flag and len(mainImport.bonesIndice) > i:
 						groups = {}
-						tupleConverted = fifa3D_se7en.List_To_Tuple(mainImport.bonesIndice[i])
+						tupleConverted = fifa3D_helper.List_To_Tuple(mainImport.bonesIndice[i])
 						for x in range(len(tupleConverted)):
 							for y in tupleConverted[x]:
 								if y not in groups:
