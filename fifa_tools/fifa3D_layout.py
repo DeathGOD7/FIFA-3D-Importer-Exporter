@@ -1,15 +1,6 @@
-# bl_info = {
-# 	"name": "FIFA 3D IMPORTER/EXPORTER",
-# 	"description": "RX3 Importer/Exporter (Updated by Death GOD 7)",
-# 	"author": "Death GOD 7, arti-10",
-# 	"version": (0, 70, 'alpha'),
-# 	"blender": (2, 80, 0),
-# 	"location": "Toolbar [N]",
-# 	"warning": "",  # used for warning icon and text in addons panel
-# 	"wiki_url": "",
-# 	"tracker_url": "",
-# 	"category": "Import-Export"
-#    }
+# Filename : fifa3D_layout.py
+# Usage : Defines the addon structure in Blender Sidebar
+# Author : Death GOD 7
 
 from fifa_tools import bl_info
 vr = bl_info["version"]

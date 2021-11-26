@@ -1,11 +1,6 @@
-# uncompyle6 version 3.5.0
-# Python bytecode 3.4 (3310)
-# Decompiled from: Python 2.7.5 (default, Nov 16 2020, 22:23:17) 
-# [GCC 4.8.5 20150623 (Red Hat 4.8.5-44)]
-# Embedded file name: M:\Blender\blender-2.72-windows64\fifa_tools\scripts\fifa_main.py
-# Compiled at: 2015-03-16 19:47:39
-# Size of source mod 2**32: 76106 bytes
-
+# Filename : fifa3D_main.py
+# Usage : Main "BRAIN" of Legacy Mode
+# Author : Death GOD 7
 # Decompiled by Death GOD 7 from original fifa15_main.pyc
 
 from fifa_tools import bl_info

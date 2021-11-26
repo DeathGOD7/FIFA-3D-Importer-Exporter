@@ -1,3 +1,7 @@
+# Filename : se7en_helper.py
+# Usage : Installs all redist and required libs
+# Author : Death GOD 7
+
 import fifa_tools
 import os
 import configparser

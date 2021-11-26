@@ -1,3 +1,7 @@
+# Filename : __init__.py
+# Usage : Main file to load the full addon
+# Author : Death GOD 7
+
 bl_info = {
 	"name": "FIFA 3D IMPORTER/EXPORTER",
 	"description": "RX3 Importer/Exporter (Updated by Death GOD 7)",

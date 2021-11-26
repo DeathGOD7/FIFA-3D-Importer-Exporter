@@ -1,11 +1,6 @@
-# uncompyle6 version 3.5.0
-# Python bytecode 3.4 (3310)
-# Decompiled from: Python 2.7.5 (default, Nov 16 2020, 22:23:17) 
-# [GCC 4.8.5 20150623 (Red Hat 4.8.5-44)]
-# Embedded file name: M:\Blender\blender-2.72-windows64\fifa_tools\scripts\fifa_functions.py
-# Compiled at: 2015-03-16 04:14:55
-# Size of source mod 2**32: 19320 bytes
-
+# Filename : fifa3D_functions.py
+# Usage : Some functions used by legacy and modern mode
+# Author : Death GOD 7
 # Decompiled by Death GOD 7 from original fifa15_functions.pyc
 
 import struct, os, bpy, imp, bmesh, itertools, zlib, operator

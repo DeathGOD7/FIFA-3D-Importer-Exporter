@@ -1,3 +1,7 @@
+# Filename : package_manager.py
+# Usage : Responsible for installing the required packages
+# Author : Death GOD 7
+
 import os
 import sys
 import subprocess

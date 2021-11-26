@@ -1,3 +1,7 @@
+# Filename : archive_handler.py
+# Usage : Used in extracting or compressing files in tar.gz (DeathGOD7 Custom File)
+# Author : Death GOD 7
+
 import tarfile
 import os
 

@@ -1,5 +1,5 @@
 # Filename : fifa3D_logger.py
-# Usage : Logger
+# Usage : Logger made by DeathGOD7
 # Author : Death GOD 7
 
 import os

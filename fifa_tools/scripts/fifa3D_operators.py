@@ -1,4 +1,6 @@
-
+# Filename : fifa3D_operators.py
+# Usage : All operators that are registered in blender
+# Author : Death GOD 7
 # Decompiled by Death GOD 7 from original fifa15_operators.pyc
 
 import bpy, os, webbrowser, imp, math, sys, struct
