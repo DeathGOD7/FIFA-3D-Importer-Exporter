@@ -624,7 +624,7 @@ class RX3_File_Hybrid():
 			## Load Rx3
 			self.rx3Type =  GetRX3FileType(self.gtype)
 			self.skeletonType = GetSkeletonType(self.gtype)
-			if self.rx3Type == FileType.RX3:
+			if self.rx3Type == FileType.RX3_Hybrid:
 				if self.fileExt == ".rx3":
 					self.loadRx3()
 				else:
