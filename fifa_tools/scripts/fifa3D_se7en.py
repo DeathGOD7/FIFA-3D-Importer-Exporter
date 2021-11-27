@@ -496,9 +496,11 @@ class RX3_File():
 				
 				for x in range(len(v.BoneMatrices)):
 					if (v.BoneMatrices[x] != None) :
+						perBM = []
 						for y in range(len(v.BoneMatrices[x])):
-							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z]
-						temp.append(bonedata)
+							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z, v.BoneMatrices[x][y].Z]
+							perBM.append(bonedata)
+						temp.append(perBM)
 					else:
 						print(f"No Bone Matrices Found in Meshes!")
 						break
@@ -507,8 +509,8 @@ class RX3_File():
 				if len(self.bones[i]) > 0:
 					print(f"Bone Matrices X,Y,Z of Bone 0, All Mesh = {self.bones[i][0]}")
 					print(f"Bone Matrices X,Y,Z of Bone 1, All Mesh = {self.bones[i][1]}")
-					print(f"Bone Matrices X,Y,Z of Bone 3, All Mesh = {self.bones[i][3]}")
 					print(f"Bone Matrices X,Y,Z of Bone 2, All Mesh = {self.bones[i][2]}")
+					print(f"Bone Matrices X,Y,Z of Bone 3, All Mesh = {self.bones[i][3]}")
 					print(f"Bone Matrices Count, All Mesh : {self.bonesCount[i]}")
 				
 				break 
@@ -529,8 +531,9 @@ class RX3_File():
 			self.meshCount = mainFile.Rx3VertexBuffers.Length
 			print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
 
-			# print(len(mainFile.Rx3AnimationSkins[0].BoneMatrices[0]))
-			# print(len(mainFile.Rx3AnimationSkins[1].BoneMatrices[0]))
+			print(mainFile.Rx3AnimationSkins[0].BoneMatrices[0][0].X)
+			print(mainFile.Rx3AnimationSkins[0].BoneMatrices[0][0].Y)
+			print(mainFile.Rx3AnimationSkins[0].BoneMatrices[0][0].Z)
 			
 			# rx3file.Rx3VertexBuffers.Length => can be used for mesh count
 			# rx3file.Rx3IndexBuffers.Length => can also be used for mesh count
@@ -1032,9 +1035,11 @@ class RX3_File_Hybrid():
 				
 				for x in range(len(v.BoneMatrices)):
 					if (v.BoneMatrices[x] != None) :
+						perBM = []
 						for y in range(len(v.BoneMatrices[x])):
-							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z]
-						temp.append(bonedata)
+							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z, v.BoneMatrices[x][y].Z]
+							perBM.append(bonedata)
+						temp.append(perBM)
 					else:
 						print(f"No Bone Matrices Found in Meshes!")
 						break
@@ -1043,8 +1048,8 @@ class RX3_File_Hybrid():
 				if len(self.bones[i]) > 0:
 					print(f"Bone Matrices X,Y,Z of Bone 0, All Mesh = {self.bones[i][0]}")
 					print(f"Bone Matrices X,Y,Z of Bone 1, All Mesh = {self.bones[i][1]}")
-					print(f"Bone Matrices X,Y,Z of Bone 3, All Mesh = {self.bones[i][3]}")
 					print(f"Bone Matrices X,Y,Z of Bone 2, All Mesh = {self.bones[i][2]}")
+					print(f"Bone Matrices X,Y,Z of Bone 3, All Mesh = {self.bones[i][3]}")
 					print(f"Bone Matrices Count, All Mesh : {self.bonesCount[i]}")
 				
 				break 

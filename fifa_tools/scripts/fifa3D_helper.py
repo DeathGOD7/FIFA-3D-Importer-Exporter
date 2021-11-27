@@ -59,22 +59,56 @@ def LoadSkeletonInfo(skeletonType):
 		log.writeLog(f"No skeleton named \"{skeletonType}\" found of given game. It is probably not supported.", LogType.ERROR)
 		return None
 
+def matCalc():
+	mat = Matrix()
+	mat = mat.to_4x4()
+	for i in range(4):
+		for j in range(4):
+			mat[j][i] = round(struct.unpack('<f', self.data.read(4))[0], 8)
+
+	pos = Vector((mat[0][3], mat[1][3], mat[2][3]))
+	if k in (2, 3, 4, 324, 333):
+		print("Reading Bones...")
+		print('Matrix ID : ', k)
+		print(pos)
+	rot = mat.to_euler()
+	if not rot[0] == 0:
+		sx = round(rot[0] / abs(rot[0]), 1)
+	else:
+		sx = 1.0
+	if not rot[1] == 0:
+		sy = round(rot[1] / abs(rot[1]), 1)
+	else:
+		sy = 1.0
+	if not rot[2] == 0:
+		sz = round(rot[2] / abs(rot[2]), 1)
+	else:
+		sz = 1.0
+	axis, roll = gh.mat3_to_vec_roll(mat.to_3x3())
+	if k in (2, 3, 4, 324, 333):
+		print(sz)
+		print(pos)
+	# temp.append((pos, pos + axis, roll))
+
 def AddVertexSkeleton(bones, fileID, skI):
 	for bone_id in range(len(bones)):
 		amt = bpy.data.armatures.new('armature_' + str(fileID) + '_' + str(bone_id))
 		ob = bpy.data.objects.new('armature_object_' + str(bone_id), amt)
 		
-		context.collection.objects.link(ob)
-		bpy.context.view_layer.objects.active = obj
+		bpy.context.collection.objects.link(ob)
+		bpy.context.view_layer.objects.active = ob
 		bpy.ops.object.mode_set(mode='EDIT')
 		for i in range(len(bones[bone_id])):
-			bone = amt.edit_bones.new('mynewnewbone_' + str(i))
-			bone.head, bone.tail, bone.roll = bones[bone_id][i]
+			bone = amt.edit_bones.new(skI[str(i)])
+			bone.head = (bones[bone_id][i], )
+			bone.tail = (bones[bone_id][i], )
+			bone.roll = (bones[bone_id][i], )
 
 		bpy.ops.object.mode_set(mode='OBJECT')
 		ob.scale = Vector((1, 1, 1))
 		# ob.scale = Vector((0.01, 0.01, 0.01))
 		ob.rotation_euler[1] = 1.5707972049713135
+
 
 
 

@@ -331,7 +331,7 @@ class se7en_import(bpy.types.Operator):
 					
 					if (scn.bones_flag) and (len(mainImport.bones) > 0):
 						if skeletoninfo != None:
-							fifa3D_helper.AddVertexSkeleton(mainImport.bones[0], mainImport.fileId, skeletoninfo)
+							fifa3D_helper.AddVertexSkeleton(mainImport.bones, mainImport.fileId, skeletoninfo)
 			
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
@@ -688,6 +688,9 @@ class file_import(bpy.types.Operator):
 					bpy.data.objects[(f.type + '_' + str(f.id) + '_' + str(i))].name = str(i) + '_' + f.sub_names[i]
 
 			if scn.bones_flag is True and len(f.bones) > 0:
+				print(f.bones[0][0])
+				print(f.bones[0][1])
+				print(f.bones[0][2])
 				for arm_id in range(len(f.bones)):
 					amt = bpy.data.armatures.new('armature_' + str(f.id) + '_' + str(arm_id))
 					ob = bpy.data.objects.new('armature_object_' + str(arm_id), amt)
@@ -697,11 +700,14 @@ class file_import(bpy.types.Operator):
 					context.collection.objects.link(ob)
 					# scn.objects.link(ob)
 					# bpy.context.scene.objects.active = ob
-					bpy.context.view_layer.objects.active = obj
+					bpy.context.view_layer.objects.active = ob
 					bpy.ops.object.mode_set(mode='EDIT')
 					for i in range(len(f.bones[arm_id])):
 						bone = amt.edit_bones.new('mynewnewbone_' + str(i))
-						bone.head, bone.tail, bone.roll = f.bones[arm_id][i]
+						# bone.head, bone.tail, bone.roll = f.bones[arm_id][i]
+						bone.head = (f.bones[arm_id][i], )
+						bone.tail = (f.bones[arm_id][i], )
+						bone.roll = (f.bones[arm_id][i], )
 
 					bpy.ops.object.mode_set(mode='OBJECT')
 					ob.scale = Vector((0.01, 0.01, 0.01))
