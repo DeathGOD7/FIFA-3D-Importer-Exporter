@@ -350,10 +350,8 @@ class RX3_File():
 			
 			for x in range(v.Vertexes.Length):
 				if (v.Vertexes[x].BlendIndices != None) :
-					vertexdata = []
 					for y in range(v.Vertexes[x].BlendIndices.Length):
-						tempdata = [v.Vertexes[x].BlendIndices[y].Index_1 , v.Vertexes[x].BlendIndices[y].Index_2, v.Vertexes[x].BlendIndices[y].Index_3, v.Vertexes[x].BlendIndices[y].Index_4]
-						vertexdata.append(tempdata)
+						vertexdata = [v.Vertexes[x].BlendIndices[y].Index_1 , v.Vertexes[x].BlendIndices[y].Index_2, v.Vertexes[x].BlendIndices[y].Index_3, v.Vertexes[x].BlendIndices[y].Index_4]
 					temp.append(vertexdata)
 				else:
 					print(f"No Bone Indices Found in Mesh {i}!")
@@ -378,10 +376,8 @@ class RX3_File():
 
 			for x in range(v.Vertexes.Length):
 				if (v.Vertexes[x].BlendWeights != None) :
-					vertexdata = []
 					for y in range(v.Vertexes[x].BlendWeights.Length):
-						tempdata = [v.Vertexes[x].BlendWeights[y].Weight_1 , v.Vertexes[x].BlendWeights[y].Weight_2, v.Vertexes[x].BlendWeights[y].Weight_3, v.Vertexes[x].BlendWeights[y].Weight_4]
-						vertexdata.append(tempdata)
+						vertexdata = [v.Vertexes[x].BlendWeights[y].Weight_1 , v.Vertexes[x].BlendWeights[y].Weight_2, v.Vertexes[x].BlendWeights[y].Weight_3, v.Vertexes[x].BlendWeights[y].Weight_4]
 					temp.append(vertexdata)
 				else:
 					print(f"No Bone Weights Found in Mesh {i}!")
@@ -833,10 +829,8 @@ class RX3_File_Hybrid():
 			
 			for x in range(v.Vertexes.Length):
 				if (v.Vertexes[x].BlendIndices != None) :
-					vertexdata = []
 					for y in range(v.Vertexes[x].BlendIndices.Length):
-						tempdata = [v.Vertexes[x].BlendIndices[y].Index_1 , v.Vertexes[x].BlendIndices[y].Index_2, v.Vertexes[x].BlendIndices[y].Index_3, v.Vertexes[x].BlendIndices[y].Index_4]
-						vertexdata.append(tempdata)
+						vertexdata = [v.Vertexes[x].BlendIndices[y].Index_1 , v.Vertexes[x].BlendIndices[y].Index_2, v.Vertexes[x].BlendIndices[y].Index_3, v.Vertexes[x].BlendIndices[y].Index_4]
 					temp.append(vertexdata)
 				else:
 					print(f"No Bone Indices Found in Mesh {i}!")
@@ -861,10 +855,8 @@ class RX3_File_Hybrid():
 
 			for x in range(v.Vertexes.Length):
 				if (v.Vertexes[x].BlendWeights != None) :
-					vertexdata = []
 					for y in range(v.Vertexes[x].BlendWeights.Length):
-						tempdata = [v.Vertexes[x].BlendWeights[y].Weight_1 , v.Vertexes[x].BlendWeights[y].Weight_2, v.Vertexes[x].BlendWeights[y].Weight_3, v.Vertexes[x].BlendWeights[y].Weight_4]
-						vertexdata.append(tempdata)
+						vertexdata = [v.Vertexes[x].BlendWeights[y].Weight_1 , v.Vertexes[x].BlendWeights[y].Weight_2, v.Vertexes[x].BlendWeights[y].Weight_3, v.Vertexes[x].BlendWeights[y].Weight_4]
 					temp.append(vertexdata)
 				else:
 					print(f"No Bone Weights Found in Mesh {i}!")

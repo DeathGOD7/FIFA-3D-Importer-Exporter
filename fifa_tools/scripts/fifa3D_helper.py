@@ -14,10 +14,21 @@ def List_To_Tuple(lst):
 
 def Add_Vgroup_To_Objects(vg_indices, vg_weights, vg_name, obj):
 	assert(len(vg_indices) == len(vg_weights))
-	if vg_indices:
-		# We replace/override here...
-		vg = obj.vertex_groups.get(vg_name)
+	ob = bpy.data.objects[obj] 
+	groups = {}
+	vgindice = List_To_Tuple(vg_indices)
+	vgweight = List_To_Tuple(vg_weights)
+	for x in range(len(vgindice)):
+		for y in vgindice[x]:
+			if y not in groups:
+				groups[y] = []
+			elif x in groups[y]:
+				continue
+			groups[y].append(x)
+
+	for y in groups:
+		vg = ob.vertex_groups.get(str(y))
 		if vg is None:
-			vg = obj.vertex_groups.new(name=vg_name)
+			vg = ob.vertex_groups.new(name=str(y))
 		for i, w in zip(vg_indices, vg_weights):
-			vg.add((i,), w, 'REPLACE') 
+			vg.add(groups[j], w, 'ADD')
