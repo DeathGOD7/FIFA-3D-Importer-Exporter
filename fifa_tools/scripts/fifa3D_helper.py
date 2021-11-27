@@ -8,16 +8,17 @@ import bpy
 import fifa_tools
 import zlib, struct
 from enum import Enum
+from fifa_tools.scripts.fifa3D_logger import *
 
-def List_To_Tuple(lst):
-	return tuple(List_To_Tuple(i) if isinstance(i, list) else i for i in lst)
+def ListToTuple(lst):
+	return tuple(ListToTuple(i) if isinstance(i, list) else i for i in lst)
 
-def Add_Vgroup_To_Objects(vg_indices, vg_weights, vg_name, obj):
+def AddVgroupToObjects(vg_indices, vg_weights, skI, obj):
 	assert(len(vg_indices) == len(vg_weights))
 	ob = bpy.data.objects[obj] 
 	groups = {}
-	vgindice = List_To_Tuple(vg_indices)
-	vgweight = List_To_Tuple(vg_weights)
+	vgindice = ListToTuple(vg_indices)
+	vgweight = ListToTuple(vg_weights)
 	groupsV = {}
 	for x in range(len(vgindice)):
 		for y in vgindice[x]:
@@ -31,12 +32,29 @@ def Add_Vgroup_To_Objects(vg_indices, vg_weights, vg_name, obj):
 			groupsV[y].append(vgweight[x][t])
 
 	for y in groups:
-		vg = ob.vertex_groups.get(str(y))
+		vg = ob.vertex_groups.get(skI[str(y)])
 		if vg is None:
-			vg = ob.vertex_groups.new(name=str(y))
+			vg = ob.vertex_groups.new(name=skI[str(y)])
 		for x in groups[y]:
 			n = groups[y].index(x)
 			vg.add((x,), groupsV[y][n], 'ADD')
 
 def LoadSkeletonInfo(skeletonType):
-	dd = 0
+	log = fifa_tools.globalLogFile
+	dictSkeleton = {}
+	skeletonInfoDir = f"{fifa_tools.addonLoc}\\fifa_tools\\skeletons"
+	skeletonInfoFile = f"{skeletonType}.txt"
+	files = [f for f in os.listdir(skeletonInfoDir) if os.path.isfile(os.path.join(skeletonInfoDir, f)) if f.endswith(f".txt")]
+
+	if skeletonInfoFile in files:
+		f = open(f"{skeletonInfoDir}\\{skeletonInfoFile}", 'r')
+		lines = f.readlines()
+		for line in lines:
+			temp = line.split(sep=",")
+			key = temp[0]
+			value = temp[1]
+			dictSkeleton[key] = value
+		return dictSkeleton
+	else:
+		log.writeLog(f"No skeleton named \"{skeletonType}\" found of given game. It is probably not supported.", LogType.ERROR)
+		return None

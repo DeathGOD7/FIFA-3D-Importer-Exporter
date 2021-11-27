@@ -291,6 +291,11 @@ class se7en_import(bpy.types.Operator):
 							name += '_' + "eyes"
 					obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
+					if (scn.bone_groups_flag) and (len(mainImport.bonesIndice) > i) and (len(mainImport.bonesWeight) > 1):
+						skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.skeletonType.value)
+						if skeletoninfo != None:
+							fifa3D_helper.AddVgroupToObjects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], skeletoninfo, obname)
+
 			elif choosenGame in mainrx3:
 				mainImport = fifa3D_se7en.RX3_File(scn.model_import_path , choosenGame)
 				log.writeLog(f"File Import : {mainImport.fileName}{mainImport.fileExt}", LogType.INFO)
@@ -320,7 +325,9 @@ class se7en_import(bpy.types.Operator):
 					obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
 					if (scn.bone_groups_flag) and (len(mainImport.bonesIndice) > i) and (len(mainImport.bonesWeight) > 1):
-						fifa3D_helper.Add_Vgroup_To_Objects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], "test", obname)
+						skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.skeletonType.value)
+						if skeletoninfo != None:
+							fifa3D_helper.AddVgroupToObjects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], skeletoninfo, obname)
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
 		else:
