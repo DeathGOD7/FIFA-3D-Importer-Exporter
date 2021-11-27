@@ -519,6 +519,8 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 			r0.alignment = 'CENTER'
 			r0.scale_y = 1.2
 			r0.operator("mesh.fifa_import")
+			if scn.game_enum == "FIFA11":
+				r0.enabled = False
 
 		col = layout.column()
 		r3 = col.row()
