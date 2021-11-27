@@ -324,10 +324,15 @@ class se7en_import(bpy.types.Operator):
 							name += '_' + "eyes"
 					obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
+					skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.skeletonType.value)
 					if (scn.bone_groups_flag) and (len(mainImport.bonesIndice) > i) and (len(mainImport.bonesWeight) > 1):
-						skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.skeletonType.value)
 						if skeletoninfo != None:
 							fifa3D_helper.AddVgroupToObjects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], skeletoninfo, obname)
+					
+					if (scn.bones_flag) and (len(mainImport.bones) > 0):
+						if skeletoninfo != None:
+							fifa3D_helper.AddVertexSkeleton(mainImport.bones[0], mainImport.fileId, skeletoninfo)
+			
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
 		else:
@@ -691,7 +696,8 @@ class file_import(bpy.types.Operator):
 					# +bpy.context.collection.objects.link(newCurve)
 					context.collection.objects.link(ob)
 					# scn.objects.link(ob)
-					bpy.context.scene.objects.active = ob
+					# bpy.context.scene.objects.active = ob
+					bpy.context.view_layer.objects.active = obj
 					bpy.ops.object.mode_set(mode='EDIT')
 					for i in range(len(f.bones[arm_id])):
 						bone = amt.edit_bones.new('mynewnewbone_' + str(i))

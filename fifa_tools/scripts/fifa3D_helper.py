@@ -58,3 +58,23 @@ def LoadSkeletonInfo(skeletonType):
 	else:
 		log.writeLog(f"No skeleton named \"{skeletonType}\" found of given game. It is probably not supported.", LogType.ERROR)
 		return None
+
+def AddVertexSkeleton(bones, fileID, skI):
+	for bone_id in range(len(bones)):
+		amt = bpy.data.armatures.new('armature_' + str(fileID) + '_' + str(bone_id))
+		ob = bpy.data.objects.new('armature_object_' + str(bone_id), amt)
+		
+		context.collection.objects.link(ob)
+		bpy.context.view_layer.objects.active = obj
+		bpy.ops.object.mode_set(mode='EDIT')
+		for i in range(len(bones[bone_id])):
+			bone = amt.edit_bones.new('mynewnewbone_' + str(i))
+			bone.head, bone.tail, bone.roll = bones[bone_id][i]
+
+		bpy.ops.object.mode_set(mode='OBJECT')
+		ob.scale = Vector((1, 1, 1))
+		# ob.scale = Vector((0.01, 0.01, 0.01))
+		ob.rotation_euler[1] = 1.5707972049713135
+
+
+

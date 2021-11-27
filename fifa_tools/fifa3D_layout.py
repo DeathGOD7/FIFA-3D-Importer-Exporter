@@ -403,7 +403,7 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 
 			innerbox = row.box()
 			innerbox.scale_x = 0.7
-			innerbox.label(text='Faces Only')
+			innerbox.label(text='Full Skeleton')
 			col = innerbox.column()
 			col.scale_y = 1.2
 			col.prop(scn, 'bones_flag')
@@ -472,7 +472,7 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 
 			innerbox = row.box()
 			innerbox.scale_x = 0.7
-			innerbox.label(text='Faces Only')
+			innerbox.label(text='Full Skeleton')
 			col = innerbox.column()
 			col.scale_y = 1.2
 			col.prop(scn, 'bones_flag')
