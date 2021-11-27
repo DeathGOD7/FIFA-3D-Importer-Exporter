@@ -320,7 +320,7 @@ class se7en_import(bpy.types.Operator):
 					obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
 					meshimportcount += 1
 					if (scn.bone_groups_flag) and (len(mainImport.bonesIndice) > i) and (len(mainImport.bonesWeight) > 1):
-						fifa3D_helper.Add_Vgroup_To_Objects(mainImport.bonesIndice[i], mainImport.bonesWeight[i, "test", obname])
+						fifa3D_helper.Add_Vgroup_To_Objects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], "test", obname)
 			else:
 				print(f"Unsupported Game or Type : {scn.game_enum}")
 		else:
@@ -596,6 +596,7 @@ class file_import(bpy.types.Operator):
 						for j in groups:
 							if str(j) not in bpy.data.objects[obname].vertex_groups:
 								bpy.data.objects[obname].vertex_groups.new(name=str(j))
+							# print(groups[j])
 							bpy.data.objects[obname].vertex_groups[str(j)].add(groups[j], 1, 'ADD')
 
 						continue

@@ -18,17 +18,25 @@ def Add_Vgroup_To_Objects(vg_indices, vg_weights, vg_name, obj):
 	groups = {}
 	vgindice = List_To_Tuple(vg_indices)
 	vgweight = List_To_Tuple(vg_weights)
+	groupsV = {}
 	for x in range(len(vgindice)):
 		for y in vgindice[x]:
+			t = vgindice[x].index(y)
 			if y not in groups:
 				groups[y] = []
+				groupsV[y] = []
 			elif x in groups[y]:
 				continue
 			groups[y].append(x)
+			groupsV[y].append(vgweight[x][t])
 
 	for y in groups:
 		vg = ob.vertex_groups.get(str(y))
 		if vg is None:
 			vg = ob.vertex_groups.new(name=str(y))
-		for i, w in zip(vg_indices, vg_weights):
-			vg.add(groups[j], w, 'ADD')
+		for x in groups[y]:
+			n = groups[y].index(x)
+			vg.add((x,), groupsV[y][n], 'ADD')
+
+def LoadSkeletonInfo(skeletonType):
+	dd = 0

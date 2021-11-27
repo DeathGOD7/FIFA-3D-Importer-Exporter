@@ -35,8 +35,8 @@ class FileType(str, Enum):
 	FB = "FB" # FrostBite3 format (fbx)
 
 class SkeletonType(str, Enum):
-	OLD_SKELETON = "OLD_SKELETON"
-	FIFA11PC_SKELETON = "FIFA11PC_SKELETON"
+	OLD_SKELETON = "OLD_SKELETON" #RX2
+	FIFA11PC_SKELETON = "FIFA11PC_SKELETON" #RX3_Hybrid
 	IE_SKELETON = "IE_SKELETON" #impact engine
 	FIFA14_SKELETON = "FIFA14_SKELETON" #ignite engine_v1
 	FIFA15_SKELETON = "FIFA15_SKELETON" #ignite engine_v2
@@ -122,6 +122,8 @@ class RX3_File():
 		self.bonesWeight = [] ## was also used as bone_w in original addon
 		self.bonesWeightCount = []## was also used as bone_w in original addon
 		#bones section end
+		self.rx3Type = ""
+		self.skeletonType = ""
 
 		# Get file infos
 		fI = GetFileType(self.file)
@@ -132,7 +134,9 @@ class RX3_File():
 			self.fileId = fI[3]
 			self.filePath = fI[4]
 			## Load Rx3
-			if GetRX3FileType(self.gtype) == FileType.RX3:
+			self.rx3Type =  GetRX3FileType(self.gtype)
+			self.skeletonType = GetSkeletonType(self.gtype)
+			if self.rx3Type == FileType.RX3:
 				if self.fileExt == ".rx3":
 					self.loadRx3()
 				else:
@@ -361,6 +365,10 @@ class RX3_File():
 			self.bonesIndiceCount.append(len(self.bonesIndice[i]))
 			if len(self.bonesIndice[i]) > 0:
 				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 0, Mesh {i} = {self.bonesIndice[i][0]}")
+				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 1, Mesh {i} = {self.bonesIndice[i][1]}")
+				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 2, Mesh {i} = {self.bonesIndice[i][2]}")
+				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 3, Mesh {i} = {self.bonesIndice[i][3]}")
+				print(f"Bone Indice Index 1,2,3,4 of Vertex Bone 4, Mesh {i} = {self.bonesIndice[i][4]}")
 				print(f"Bone Indice Count, Mesh {i} : {self.bonesIndiceCount[i]}")
 		
 		return self.bonesIndice
@@ -387,6 +395,10 @@ class RX3_File():
 			self.bonesWeightCount.append(len(self.bonesWeight[i]))
 			if len(self.bonesWeight[i]) > 0:
 				print(f"Bone Weights 1,2,3,4 of Vertex Bone 0, Mesh {i} = {self.bonesWeight[i][0]}")
+				print(f"Bone Weights 1,2,3,4 of Vertex Bone 1, Mesh {i} = {self.bonesWeight[i][1]}")
+				print(f"Bone Weights 1,2,3,4 of Vertex Bone 2, Mesh {i} = {self.bonesWeight[i][2]}")
+				print(f"Bone Weights 1,2,3,4 of Vertex Bone 3, Mesh {i} = {self.bonesWeight[i][3]}")
+				print(f"Bone Weights 1,2,3,4 of Vertex Bone 4, Mesh {i} = {self.bonesWeight[i][4]}")
 				print(f"Bone Weights Count, Mesh {i} : {self.bonesWeightCount[i]}")
 		
 		return self.bonesWeight
@@ -598,6 +610,8 @@ class RX3_File_Hybrid():
 		self.bonesWeight = [] ## was also used as bone_w in original addon
 		self.bonesWeightCount = []## was also used as bone_w in original addon
 		#bones section end
+		self.rx3Type = ""
+		self.skeletonType = ""
 
 		# Get file infos
 		fI = GetFileType(self.file)
@@ -608,7 +622,9 @@ class RX3_File_Hybrid():
 			self.fileId = fI[3]
 			self.filePath = fI[4]
 			## Load Rx3
-			if GetRX3FileType(self.gtype) == FileType.RX3_Hybrid:
+			self.rx3Type =  GetRX3FileType(self.gtype)
+			self.skeletonType = GetSkeletonType(self.gtype)
+			if self.rx3Type == FileType.RX3:
 				if self.fileExt == ".rx3":
 					self.loadRx3()
 				else:
