@@ -498,7 +498,7 @@ class RX3_File():
 					if (v.BoneMatrices[x] != None) :
 						perBM = []
 						for y in range(len(v.BoneMatrices[x])):
-							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z, v.BoneMatrices[x][y].Z]
+							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z]
 							perBM.append(bonedata)
 						temp.append(perBM)
 					else:
@@ -1037,7 +1037,7 @@ class RX3_File_Hybrid():
 					if (v.BoneMatrices[x] != None) :
 						perBM = []
 						for y in range(len(v.BoneMatrices[x])):
-							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z, v.BoneMatrices[x][y].Z]
+							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z]
 							perBM.append(bonedata)
 						temp.append(perBM)
 					else:

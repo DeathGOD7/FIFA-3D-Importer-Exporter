@@ -705,9 +705,7 @@ class file_import(bpy.types.Operator):
 					for i in range(len(f.bones[arm_id])):
 						bone = amt.edit_bones.new('mynewnewbone_' + str(i))
 						# bone.head, bone.tail, bone.roll = f.bones[arm_id][i]
-						bone.head = (f.bones[arm_id][i], )
-						bone.tail = (f.bones[arm_id][i], )
-						bone.roll = (f.bones[arm_id][i], )
+						bone.head, bone.tail, bone.roll = f.bones[arm_id][i]
 
 					bpy.ops.object.mode_set(mode='OBJECT')
 					ob.scale = Vector((0.01, 0.01, 0.01))

@@ -8,6 +8,7 @@ import bpy
 import fifa_tools
 import zlib, struct
 from enum import Enum
+from mathutils import Vector, Euler, Matrix
 from fifa_tools.scripts.fifa3D_logger import *
 
 def ListToTuple(lst):
@@ -100,9 +101,9 @@ def AddVertexSkeleton(bones, fileID, skI):
 		bpy.ops.object.mode_set(mode='EDIT')
 		for i in range(len(bones[bone_id])):
 			bone = amt.edit_bones.new(skI[str(i)])
-			bone.head = (bones[bone_id][i], )
-			bone.tail = (bones[bone_id][i], )
-			bone.roll = (bones[bone_id][i], )
+			bone.head = bones[bone_id][i][3][0], bones[bone_id][i][3][1], bones[bone_id][i][3][2]
+			bone.tail = bones[bone_id][i][3][0], bones[bone_id][i][3][1], bones[bone_id][i][3][2]
+			bone.roll = bones[bone_id][i][3][2]
 
 		bpy.ops.object.mode_set(mode='OBJECT')
 		ob.scale = Vector((1, 1, 1))
