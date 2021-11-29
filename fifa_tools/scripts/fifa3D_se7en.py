@@ -13,7 +13,7 @@ sys.path.append(f'{fifa_tools.libsdir}')
 
 
 clr.AddReference('SE7EN')
-ref1 = clr.AddReference('FIFALibrary_v21_11_13_0_x64')
+ref1 = clr.AddReference('FIFALibrary_v21.11.28.0_x64')
 
 from SE7EN007 import *
 from FIFALibrary20 import *
