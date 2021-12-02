@@ -493,17 +493,19 @@ class RX3_File():
 				v = rx3file.Rx3AnimationSkins[i]
 
 				self.bonesCount.append(v.NumBones)
-				
+
+				# perBM = []  
 				for x in range(len(v.BoneMatrices)):
 					if (v.BoneMatrices[x] != None) :
-						perBM = []
-						for y in range(len(v.BoneMatrices[x])):
-							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z]
-							perBM.append(bonedata)
-						temp.append(perBM)
+						aBP = v.BoneMatrices[x].absBindPose
+						iPT = v.BoneMatrices[x].invPoseTranslation
+						bonedata = [aBP, [iPT.X , iPT.Y, iPT.Z]]
+						# perBM.append(bonedata)
+						temp.append(bonedata)
 					else:
 						print(f"No Bone Matrices Found in Meshes!")
 						break
+				
 				
 				self.bones.append(temp)
 				if len(self.bones[i]) > 0:
@@ -530,10 +532,6 @@ class RX3_File():
 
 			self.meshCount = mainFile.Rx3VertexBuffers.Length
 			print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
-
-			print(mainFile.Rx3AnimationSkins[0].BoneMatrices[0][0].X)
-			print(mainFile.Rx3AnimationSkins[0].BoneMatrices[0][0].Y)
-			print(mainFile.Rx3AnimationSkins[0].BoneMatrices[0][0].Z)
 			
 			# rx3file.Rx3VertexBuffers.Length => can be used for mesh count
 			# rx3file.Rx3IndexBuffers.Length => can also be used for mesh count
@@ -1033,13 +1031,14 @@ class RX3_File_Hybrid():
 
 				self.bonesCount.append(v.NumBones)
 				
+				# perBM = []  
 				for x in range(len(v.BoneMatrices)):
 					if (v.BoneMatrices[x] != None) :
-						perBM = []
-						for y in range(len(v.BoneMatrices[x])):
-							bonedata = [v.BoneMatrices[x][y].X , v.BoneMatrices[x][y].Y, v.BoneMatrices[x][y].Z]
-							perBM.append(bonedata)
-						temp.append(perBM)
+						aBP = v.BoneMatrices[x].absBindPose
+						iPT = v.BoneMatrices[x].invPoseTranslation
+						bonedata = [aBP, [iPT.X , iPT.Y, iPT.Z]]
+						# perBM.append(bonedata)
+						temp.append(bonedata)
 					else:
 						print(f"No Bone Matrices Found in Meshes!")
 						break
