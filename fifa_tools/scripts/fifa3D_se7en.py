@@ -555,11 +555,6 @@ class RX3_File():
 			mainFile = Rx3File()
 			mainFile.Load(file)
 
-			self.meshCount = mainFile.Rx3VertexBuffers.Length
-			print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
-			
-			# rx3file.Rx3VertexBuffers.Length => can be used for mesh count
-			# rx3file.Rx3IndexBuffers.Length => can also be used for mesh count
 
 			self.endian = mainFile.Rx3Header.Endianness
 			if self.endian == "b":
@@ -570,52 +565,58 @@ class RX3_File():
 				self.endianType = '<'
 				self.endianStr = "Little Endian"
 				print(f"Endian Type : {self.endianStr}")
-
+			
 			self.offsets = self.getOffsets(mainFile)
 
-			self.getVertexFormats(mainFile)
+			if not self.isTexture:
+				self.meshCount = mainFile.Rx3VertexBuffers.Length
+				print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
 
-			self.getVertexPosition(mainFile)
+				self.getVertexFormats(mainFile)
 
-			self.getNormalCols(mainFile)
+				self.getVertexPosition(mainFile)
 
-			self.getUVS(mainFile)
+				self.getNormalCols(mainFile)
 
-			self.getIndicesData(mainFile)
+				self.getUVS(mainFile)
 
-			self.getVertexColor(mainFile)
+				self.getIndicesData(mainFile)
 
-			self.getBoneIndice(mainFile)
-			
-			self.getBoneWeight(mainFile)
+				self.getVertexColor(mainFile)
 
-			self.getCollisions(mainFile)
+				self.getBoneIndice(mainFile)
+				
+				self.getBoneWeight(mainFile)
 
-			self.getBones(mainFile)
+				self.getCollisions(mainFile)
 
-			self.getTextures(mainFile)
+				self.getBones(mainFile)
 
-			fcOffset = []
-			for x in self.offsets:
-				if x[0] == 5798132:
-					fcOffset.append(x[1])
+				fcOffset = []
+				for x in self.offsets:
+					if x[0] == 5798132:
+						fcOffset.append(x[1])
 
-			# f.seek(-16, 2)
-			# self.primitiveType = int.from_bytes(f.read(1),"little")
-			self.primitiveType = mainFile.GetPrimitiveType(0)
+				# f.seek(-16, 2)
+				# self.primitiveType = int.from_bytes(f.read(1),"little")
+				self.primitiveType = mainFile.GetPrimitiveType(0)
 
-			if self.primitiveType == 4:
-				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
-				for x in range(self.meshCount):
-					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
-					self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
-			elif self.primitiveType == 6:
-				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
-				for x in range(self.meshCount):
-					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
-					self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
+				if self.primitiveType == 4:
+					print(f"Primitive Type : {self.primitiveType} (TriangleList)")
+					for x in range(self.meshCount):
+						print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
+						self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
+				elif self.primitiveType == 6:
+					print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
+					for x in range(self.meshCount):
+						print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
+						self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
+				else:
+					print("Unknown Primitive Type")
+		
 			else:
-				print("Unknown Primitive Type")
+				self.getTextures(mainFile)
+
 
 
 		else:
@@ -1097,11 +1098,6 @@ class RX3_File_Hybrid():
 			mainFile = Rx3File()
 			mainFile.Load(file)
 
-			self.meshCount = mainFile.Rx3VertexBuffers.Length
-			print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
-			#print(mainFile.Rx3IndexBuffers.Length)
-			# rx3file.Rx3VertexBuffers.Length => can be used for mesh count
-			# rx3file.Rx3IndexBuffers.Length => can also be used for mesh count
 
 			self.endian = mainFile.RW4Section.RW4Header.Endianness
 			if self.endian == 1:
@@ -1114,49 +1110,57 @@ class RX3_File_Hybrid():
 				self.endianType = '<'
 				self.endianStr = "Little Endian"
 				print(f"Endian Type : {self.endianStr}")
-
+			
 			self.offsets = self.getOffsets(mainFile)
 
-			self.getVertexFormats(mainFile)
+			if not self.isTexture:
+				self.meshCount = mainFile.Rx3VertexBuffers.Length
+				print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
 
-			self.getVertexPosition(mainFile)
+				self.getVertexFormats(mainFile)
 
-			self.getNormalCols(mainFile)
+				self.getVertexPosition(mainFile)
 
-			self.getUVS(mainFile)
+				self.getNormalCols(mainFile)
 
-			self.getIndicesData(mainFile)
+				self.getUVS(mainFile)
 
-			self.getVertexColor(mainFile)
+				self.getIndicesData(mainFile)
 
-			self.getBoneIndice(mainFile)
-			
-			self.getBoneWeight(mainFile)
+				self.getVertexColor(mainFile)
 
-			self.getCollisions(mainFile)
+				self.getBoneIndice(mainFile)
+				
+				self.getBoneWeight(mainFile)
 
-			self.getBones(mainFile)
+				self.getCollisions(mainFile)
 
-			fcOffset = []
-			for x in self.offsets:
-				if x[0] == 5798132:
-					fcOffset.append(x[1])
+				self.getBones(mainFile)
 
-			self.primitiveType = mainFile.GetPrimitiveType(0)
-			# self.primitiveType = mainFile.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
+				fcOffset = []
+				for x in self.offsets:
+					if x[0] == 5798132:
+						fcOffset.append(x[1])
 
-			if self.primitiveType == 4:
-				print(f"Primitive Type : {self.primitiveType} (TriangleList)")
-				for x in range(self.meshCount):
-					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
-					self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
-			elif self.primitiveType == 6:
-				print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
-				for x in range(self.meshCount):
-					print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
-					self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
+				self.primitiveType = mainFile.GetPrimitiveType(0)
+				# self.primitiveType = mainFile.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
+
+				if self.primitiveType == 4:
+					print(f"Primitive Type : {self.primitiveType} (TriangleList)")
+					for x in range(self.meshCount):
+						print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
+						self.faces.append(self.facereadlist(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
+				elif self.primitiveType == 6:
+					print(f"Primitive Type : {self.primitiveType} (TriangleFans)") #TriangleStrip
+					for x in range(self.meshCount):
+						print(f"Using Face Offset, Mesh {x} : {fcOffset[x]}")
+						self.faces.append(self.facereadstrip(self.data, fcOffset[x], x, self.indicesLength[x], self.indicesCount[x], self.endianType))
+				else:
+					print("Unknown Primitive Type")
+		
 			else:
-				print("Unknown Primitive Type")
+				self.getTextures(mainFile)
+
 
 		else:
 			print("Please choose the model file.")
