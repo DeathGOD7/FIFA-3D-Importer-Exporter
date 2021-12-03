@@ -44,21 +44,26 @@ class SkeletonType(str, Enum):
 	FROSTBITE_OLD_SKELETON = "FROSTBITE_OLD_SKELETON" #Fifa_online_4_old
 	FROSTBITE_NEW_SKELETON = "FROSTBITE_NEW_SKELETON" #Fifa_online_4_new + FIFA 17-21 pc
 
-class TextureType(str, Enum):
-	DXT1 = "DXT1",
-	DXT3 = "DXT3",
-	DXT5 = "DXT5",
-	A8R8G8B8 = "A8R8G8B8",
-	GREY8 = "GREY8",
-	GREY8ALFA8 = "GREY8ALFA8",
-	RGBA = "RGBA",
-	ATI2 = "ATI2",
-	ATI1 = "ATI1",
-	A4R4G4B4 = "A4R4G4B4",
-	R5G6B5 = "R5G6B5",
-	X1R5G5B5 = "X1R5G5B5",
-	BIT8 = "BIT8",
-	R8G8B8 = "R8G8B8"
+class TextureFormat(int, Enum):
+	DXT1 = 0,
+	DXT3 = 1,
+	DXT5 = 2,
+	A8R8G8B8 = 3,
+	GREY8 = 4,
+	GREY8ALFA8 = 5,
+	RGBA = 6,
+	ATI2 = 7,
+	ATI1 = 8,
+	A4R4G4B4 = 9,
+	R5G6B5 = 10,
+	X1R5G5B5 = 11,
+	BIT8 = 12,
+	R8G8B8 = 13
+
+class TextureType(int, Enum):
+	TEXTURE_2D = 0,
+	TEXTURE_CUBEMAP = 1,
+	TEXTURE_VOLUME = 2
 
 def GetRX3FileType(GType:GameType):
 	rx3 = [GameType.FIFA12, GameType.FIFA13, GameType.FIFA14, GameType.FIFA15, GameType.FIFA16]
@@ -145,6 +150,13 @@ class RX3_File():
 		self.skeletonType = ""
 		self.bones = []
 		self.bonesCount = []
+		#texture section
+		self.textureCount = 0
+		self.textureInfos = []
+		self.textureRes = []
+		#names
+		self.meshNames = []
+		self.texNames = []
 
 		# Get file infos
 		fI = GetFileType(self.file)
@@ -157,7 +169,7 @@ class RX3_File():
 			self.isTexture = fI[5]
 
 			## Load Rx3
-			self.rx3Type =  GetRX3FileType(self.gtype)
+			self.rx3Type = GetRX3FileType(self.gtype)
 			self.skeletonType = GetSkeletonType(self.gtype)
 			if self.rx3Type == FileType.RX3:
 				if self.fileExt == ".rx3":
@@ -545,7 +557,36 @@ class RX3_File():
 			print(f"No Animation data found in file!")
 
 	def getTextures(self, rx3file):
-		print(rx3file.Rx3Textures)
+		texdir = fifa_tools.texdir
+
+		self.textureCount = rx3file.Rx3Textures.Length
+
+		for x in range(self.textureCount):
+			temp = rx3file.Rx3Textures[x]
+			temp1 = [temp.Rx3TextureHeader.Width, temp.Rx3TextureHeader.Height]
+			
+			self.texNames.append(rx3file.Rx3NameTable.Names[x].Name)
+			
+			tF = GetTextureFormat(temp.Rx3TextureHeader.TextureFormat)
+			tT = GetTextureType(temp.Rx3TextureHeader.TextureType)
+			tS = temp.Rx3TextureHeader.TotalSize / 1024
+			if tS >= 1024:
+				tS = f"{math.ceil(tS / 1024)} MB"
+			else:
+				tS = f"{math.ceil(tS)} KB"
+			
+			
+			temp2 = [self.texNames[x], tF, tT, tS, f"{temp.Rx3TextureHeader.NumLevels} Mipmaps", f"{temp.Rx3TextureHeader.NumFaces} Tex Faces"]
+			
+			self.textureRes.append(temp1)
+			self.textureInfos.append(temp2)
+
+			print(f"Texture {x} Resolution : {self.textureRes[x]}")
+			print(f"Texture {x} Info : {self.textureInfos[x]}")
+		
+			# texture file extractor
+			ddsfile = temp.GetDds()
+			ddsfile.Save(f"{texdir}/{self.texNames[x]}.dds")			
 
 	def loadRx3(self):
 		file = self.file
@@ -571,6 +612,11 @@ class RX3_File():
 			if not self.isTexture:
 				self.meshCount = mainFile.Rx3VertexBuffers.Length
 				print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
+
+				for x in range(self.meshCount):
+					# temp = mainFile.Rx3NameTable.Names[x].Name.split(sep="_")
+					temp = mainFile.Rx3NameTable.Names[x].Name
+					self.meshNames.append(temp)
 
 				self.getVertexFormats(mainFile)
 
@@ -683,6 +729,13 @@ class RX3_File_Hybrid():
 		self.skeletonType = ""
 		self.bones = []
 		self.bonesCount = []
+		#texture section
+		self.textureCount = 0
+		self.textureInfos = []
+		self.textureRes = []
+		#names
+		self.meshNames = []
+		self.texNames = []
 
 		# Get file infos
 		fI = GetFileType(self.file)
@@ -1090,6 +1143,38 @@ class RX3_File_Hybrid():
 		else:
 			print(f"No Animation data found in file!")
 
+	def getTextures(self, rx3file):
+		texdir = fifa_tools.texdir
+
+		self.textureCount = rx3file.Rx3Textures.Length
+
+		for x in range(self.textureCount):
+			temp = rx3file.Rx3Textures[x]
+			temp1 = [temp.Rx3TextureHeader.Width, temp.Rx3TextureHeader.Height]
+			
+			self.texNames.append(rx3file.RW4Section.RW4NameSection.Names[x].Name.replace(".Raster",""))
+			
+			tF = GetTextureFormat(temp.Rx3TextureHeader.TextureFormat)
+			tT = GetTextureType(temp.Rx3TextureHeader.TextureType)
+			tS = temp.Rx3TextureHeader.TotalSize / 1024
+			if tS >= 1024:
+				tS = f"{math.ceil(tS / 1024)} MB"
+			else:
+				tS = f"{math.ceil(tS)} KB"
+			
+			
+			temp2 = [self.texNames[x], tF, tT, tS, f"{temp.Rx3TextureHeader.NumLevels} Mipmaps", f"{temp.Rx3TextureHeader.NumFaces} Tex Faces"]
+			
+			self.textureRes.append(temp1)
+			self.textureInfos.append(temp2)
+
+			print(f"Texture {x} Resolution : {self.textureRes[x]}")
+			print(f"Texture {x} Info : {self.textureInfos[x]}")
+		
+			# texture file extractor
+			ddsfile = temp.GetDds()
+			ddsfile.Save(f"{texdir}/{self.texNames[x]}.dds")			
+
 	def loadRx3(self):
 		file = self.file
 		if file != "":
@@ -1116,6 +1201,11 @@ class RX3_File_Hybrid():
 			if not self.isTexture:
 				self.meshCount = mainFile.Rx3VertexBuffers.Length
 				print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
+
+				for x in range(self.meshCount):
+					# temp = mainFile.Rx3NameTable.Names[x].Name.split(sep="_")
+					temp = mainFile.RW4Section.RW4NameSection.Names[x].Name
+					self.meshNames.append(temp)
 
 				self.getVertexFormats(mainFile)
 
