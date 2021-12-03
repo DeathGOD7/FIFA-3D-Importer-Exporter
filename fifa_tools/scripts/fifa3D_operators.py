@@ -691,6 +691,10 @@ class file_import(bpy.types.Operator):
 				print(f.bones[0][0])
 				print(f.bones[0][1])
 				print(f.bones[0][2])
+				print(f.bones[0][3])
+				print(f.bones[0][4])
+				print(f.bones[0][5])
+				print(f.bones[0][6])
 				for arm_id in range(len(f.bones)):
 					amt = bpy.data.armatures.new('armature_' + str(f.id) + '_' + str(arm_id))
 					ob = bpy.data.objects.new('armature_object_' + str(arm_id), amt)

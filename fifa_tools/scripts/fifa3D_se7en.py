@@ -44,6 +44,22 @@ class SkeletonType(str, Enum):
 	FROSTBITE_OLD_SKELETON = "FROSTBITE_OLD_SKELETON" #Fifa_online_4_old
 	FROSTBITE_NEW_SKELETON = "FROSTBITE_NEW_SKELETON" #Fifa_online_4_new + FIFA 17-21 pc
 
+class TextureType(str, Enum):
+	DXT1 = "DXT1",
+	DXT3 = "DXT3",
+	DXT5 = "DXT5",
+	A8R8G8B8 = "A8R8G8B8",
+	GREY8 = "GREY8",
+	GREY8ALFA8 = "GREY8ALFA8",
+	RGBA = "RGBA",
+	ATI2 = "ATI2",
+	ATI1 = "ATI1",
+	A4R4G4B4 = "A4R4G4B4",
+	R5G6B5 = "R5G6B5",
+	X1R5G5B5 = "X1R5G5B5",
+	BIT8 = "BIT8",
+	R8G8B8 = "R8G8B8"
+
 def GetRX3FileType(GType:GameType):
 	rx3 = [GameType.FIFA12, GameType.FIFA13, GameType.FIFA14, GameType.FIFA15, GameType.FIFA16]
 	rx3_hybrid = [GameType.FIFA11]
@@ -72,10 +88,12 @@ def GetSkeletonType(GType:GameType):
 def GetFileType(file):
 	filePath, fileName = os.path.split(file)
 	fileName, filEext = os.path.splitext(fileName)
+	temp = fileName.split(sep='_')
+	isTex = ("textures" or "texture") in temp
 	try:
-		fileId = fileName.split(sep='_')[1]
-		fileType = fileName.split(sep='_')[0]
-		return (fileName, filEext, fileType, fileId, filePath)
+		fileId = temp[1]
+		fileType = temp[0]
+		return (fileName, filEext, fileType, fileId, filePath, isTex)
 	except:
 		return 'corrupt_filename'
 
@@ -89,6 +107,7 @@ class RX3_File():
 		self.filePath = ""
 		self.fileType = ""
 		self.fileId = 0
+		self.isTexture = False
 		self.gtype = gtype
 		# file info end
 		self.cols = []  ## Normal / Binormals / Tangent Cols
@@ -135,6 +154,8 @@ class RX3_File():
 			self.fileType = fI[2]
 			self.fileId = fI[3]
 			self.filePath = fI[4]
+			self.isTexture = fI[5]
+
 			## Load Rx3
 			self.rx3Type =  GetRX3FileType(self.gtype)
 			self.skeletonType = GetSkeletonType(self.gtype)
@@ -157,6 +178,7 @@ class RX3_File():
 		print(f"File ID : {self.fileId}")
 		print(f"File Type : {self.fileType}")
 		print(f"File Path : {self.filePath}\n")
+		print(f"Texture File? : {self.isTexture}\n")
 
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
@@ -522,6 +544,9 @@ class RX3_File():
 		else:
 			print(f"No Animation data found in file!")
 
+	def getTextures(self, rx3file):
+		print(rx3file.Rx3Textures)
+
 	def loadRx3(self):
 		file = self.file
 		if file != "":
@@ -567,6 +592,8 @@ class RX3_File():
 			self.getCollisions(mainFile)
 
 			self.getBones(mainFile)
+
+			self.getTextures(mainFile)
 
 			fcOffset = []
 			for x in self.offsets:
@@ -617,6 +644,7 @@ class RX3_File_Hybrid():
 		self.filePath = ""
 		self.fileType = ""
 		self.fileId = 0
+		self.isTexture = False
 		self.gtype = gtype
 		# file info end
 		self.cols = []  ## Normal / Binormals / Tangent Cols
@@ -663,6 +691,8 @@ class RX3_File_Hybrid():
 			self.fileType = fI[2]
 			self.fileId = fI[3]
 			self.filePath = fI[4]
+			self.isTexture = fI[5]
+
 			## Load Rx3
 			self.rx3Type =  GetRX3FileType(self.gtype)
 			self.skeletonType = GetSkeletonType(self.gtype)
@@ -685,6 +715,7 @@ class RX3_File_Hybrid():
 		print(f"File ID : {self.fileId}")
 		print(f"File Type : {self.fileType}")
 		print(f"File Path : {self.filePath}\n")
+		print(f"Texture File? : {self.isTexture}\n")
 
 		if str(data.read(8))[2:-1] == 'chunkzip':
 			t = BytesIO()
