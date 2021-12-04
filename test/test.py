@@ -4,7 +4,7 @@ import sys
 import zlib, struct
 import math
 
-sys.path.append(r'E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\lib')
+sys.path.append(r'E:\SE7EN\Github\FIFA 3D Importer Exporter\test\lib')
 
 clr.AddReference('SE7EN')
 ref1 = clr.AddReference('FIFALibrary_v21.11.28.0_x64')
@@ -582,7 +582,7 @@ class RX3_File():
 			temp = rx3file.Rx3Textures[x]
 			temp1 = [temp.Rx3TextureHeader.Width, temp.Rx3TextureHeader.Height]
 			
-			self.texNames.append(rx3file.Rx3NameTable.Names[x].Name)
+			self.texNames.append(rx3file.Rx3NameTable.Names[x].Name.replace(".Raster", ""))
 			
 			tF = GetTextureFormat(temp.Rx3TextureHeader.TextureFormat)
 			tT = GetTextureType(temp.Rx3TextureHeader.TextureType)
@@ -1280,23 +1280,23 @@ class RX3_File_Hybrid():
 
 
 
-# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f16\head_16.rx3", GameType.FIFA16)
-# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f14\head_14.rx3", GameType.FIFA14)
-x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f14\specificball_0_13_0_textures.rx3", GameType.FIFA14)
-# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f14_practice_arena\stadium_665_1_textures.rx3", GameType.FIFA14)
+# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f16\head_16.rx3", GameType.FIFA16)
+# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\head_14.rx3", GameType.FIFA14)
+x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\specificball_0_13_0_textures.rx3", GameType.FIFA14)
+# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14_practice_arena\stadium_665_1_textures.rx3", GameType.FIFA14)
 # print(x1.rx3Type.value)
 # print(x1.skeletonType.value)
-# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f14\stadium_14.rx3", GameType.FIFA14)
+# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\stadium_14.rx3", GameType.FIFA14)
 print(x2.texNames)
 # print(x2.meshNames)
 for x in x2.meshNames:
 	print(x)
-# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f14\specificball_0_13_0.rx3", GameType.FIFA14)
-# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f14\shoe_14.rx3", GameType.FIFA14)
-# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f11\stadium_11.rx3", GameType.FIFA11)
-# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f11\head_11.rx3", GameType.FIFA11)
-# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f11\ball_11.rx3", GameType.FIFA11)
-# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\test\f11\ball_11_textures.rx3", GameType.FIFA11)
+# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\specificball_0_13_0.rx3", GameType.FIFA14)
+# x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\shoe_14.rx3", GameType.FIFA14)
+# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f11\stadium_11.rx3", GameType.FIFA11)
+# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f11\head_11.rx3", GameType.FIFA11)
+# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f11\ball_11.rx3", GameType.FIFA11)
+# y = RX3_File_Hybrid(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f11\ball_11_textures.rx3", GameType.FIFA11)
 # print(y.texNames)
 # print(y.meshNames)
 # zx = 0

@@ -415,10 +415,12 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 
 			row = col.row()
 			row.prop(scn, 'hair_import_path')
-			row = col.row()
-			row.prop(scn, 'crwd_import_path')
-			row = col.row()
-			row.prop(scn, 'lnx_import_path')
+			row1 = col.row()
+			row1.prop(scn, 'crwd_import_path')
+			row1.enabled = False
+			row2 = col.row()
+			row2.prop(scn, 'lnx_import_path')
+			row2.enabled = False
 
 			row = layout.row()
 			row.label(text='Texture Files', icon='INFO')

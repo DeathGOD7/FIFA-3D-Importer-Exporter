@@ -212,6 +212,42 @@ def se7en_importmesh(verts, faces, uvs, name, count, id, colors, normal_flag, no
 	#scn.objects.link(object)
 	return object.name
 
+def se7en_creatematerials(texID):
+	objs = [obj for obj in bpy.data.objects]
+	for x in texID:
+		temp = x.split(sep="_")[0]
+		if ("cm" in x) and any(temp in obj.name for obj in objs):
+			obj = [o for o in bpy.data.objects if temp in o.name]
+			for y in range(len(obj)):
+				se7en_assignmaterials(obj[y], x)
+
+def se7en_assignmaterials(obj , tex):
+	orgTexName = tex
+	texFor = tex.split(sep='_')[0]
+	if texFor not in bpy.data.materials:
+		new_mat = bpy.data.materials.new(texFor)
+		new_mat.specular_intensity = 0
+		new_mat.shadow_method = 'NONE'
+		new_mat.show_transparent_back = True
+		new_mat.alpha_threshold = 0
+	else:
+		new_mat = bpy.data.materials.new(texFor)
+		new_mat.specular_intensity = 0
+		new_mat.shadow_method = 'NONE'
+		new_mat.show_transparent_back = True
+		new_mat.alpha_threshold = 0
+
+	new_mat.use_nodes = True
+	bsdf = new_mat.node_tree.nodes["Principled BSDF"]
+		
+	new_tex = new_mat.node_tree.nodes.new('ShaderNodeTexImage')
+	new_tex.image = bpy.data.images.load(fifa_tools.texdir + '\\' + orgTexName + '.dds')
+	new_mat.node_tree.links.new(bsdf.inputs['Base Color'], new_tex.outputs['Color'])
+		
+	try:
+		obj.data.materials[0] = new_mat
+	except:
+		obj.data.materials.append(new_mat)
 
 class fifa_rx3:
 

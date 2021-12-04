@@ -8,6 +8,7 @@ import sys
 import bpy
 import fifa_tools
 import zlib, struct
+import math
 
 sys.path.append(f'{fifa_tools.libsdir}')
 
@@ -585,7 +586,7 @@ class RX3_File():
 			temp = rx3file.Rx3Textures[x]
 			temp1 = [temp.Rx3TextureHeader.Width, temp.Rx3TextureHeader.Height]
 			
-			self.texNames.append(rx3file.Rx3NameTable.Names[x].Name)
+			self.texNames.append(rx3file.Rx3NameTable.Names[x].Name.replace(".Raster", ""))
 			
 			tF = GetTextureFormat(temp.Rx3TextureHeader.TextureFormat)
 			tT = GetTextureType(temp.Rx3TextureHeader.TextureType)
