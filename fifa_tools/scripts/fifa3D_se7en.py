@@ -53,17 +53,17 @@ class TextureFormat(int, Enum):
 	GREY8ALFA8 = 5,
 	RGBA = 6,
 	ATI2 = 7,
-	ATI1 = 8,
-	A4R4G4B4 = 9,
-	R5G6B5 = 10,
-	X1R5G5B5 = 11,
-	BIT8 = 12,
-	R8G8B8 = 13
+	ATI1 = 12,
+	A4R4G4B4 = 109,
+	R5G6B5 = 120,
+	X1R5G5B5 = 126,
+	BIT8 = 123,
+	R8G8B8 = 127
 
 class TextureType(int, Enum):
-	TEXTURE_2D = 0,
-	TEXTURE_CUBEMAP = 1,
-	TEXTURE_VOLUME = 2
+	TEXTURE_2D = 1,
+	TEXTURE_CUBEMAP = 3,
+	TEXTURE_VOLUME = 4
 
 def GetRX3FileType(GType:GameType):
 	rx3 = [GameType.FIFA12, GameType.FIFA13, GameType.FIFA14, GameType.FIFA15, GameType.FIFA16]
@@ -101,6 +101,26 @@ def GetFileType(file):
 		return (fileName, filEext, fileType, fileId, filePath, isTex)
 	except:
 		return 'corrupt_filename'
+
+def GetTextureFormat(id):
+	values = [item.value for item in TextureFormat]
+	temp = ""
+	if id in values:
+		temp = TextureFormat(id).name
+	else:
+		temp = "Unknown Texture Format"
+
+	return temp
+
+def GetTextureType(id):
+	values = [item.value for item in TextureType]
+	temp = ""
+	if id in values:
+		temp = TextureType(id).name
+	else:
+		temp = "Unknown Texture Format"
+
+	return temp
 
 
 class RX3_File():
@@ -595,6 +615,10 @@ class RX3_File():
 	
 			mainFile = Rx3File()
 			mainFile.Load(file)
+
+			
+			# print(ETextureType.GetValues(ETextureType)[2])
+			# print(Rx3TextureFormat.GetValues(Rx3TextureFormat)[13])
 
 
 			self.endian = mainFile.Rx3Header.Endianness
