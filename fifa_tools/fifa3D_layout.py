@@ -571,7 +571,10 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 
 
 		#Enable if any export option selected
+
 		if (scn.stadium_export_flag or scn.trophy_export_flag or scn.face_edit_flag or scn.gen_overwriter_flag):
+			isExportActive = True
+		elif (scn.stadium_export_flag or scn.general_export_flag or scn.head_export_flag or scn.overwrite_export_flag):
 			isExportActive = True
 		else:
 			isExportActive = False
@@ -582,7 +585,9 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		row.alignment = 'EXPAND'
 
 		conflictFound = False
+		modernConflictFound = False
 
+		#region Old Legacy Checks
 		# Error Prompts
 		if (scn.stadium_export_flag and scn.trophy_export_flag) and not (scn.face_edit_flag or scn.gen_overwriter_flag):
 			row.label(text='[ERROR] Model Export conflict found.')
@@ -617,11 +622,59 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 
 		if scn.face_edit_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.trophy_export_flag):
 			row.label(text='[INFO] Face Editing Mode enabled.')
+			row.label(
+				text='[ERROR] Exporting and Overwriting both enabled.')
+			row = col.row()
+			row.label(text='[ERROR] Check your export flags.')
+			row = col.row()
+			conflictFound = True
 			row = col.row()
 
 		if scn.gen_overwriter_flag and not (scn.face_edit_flag or scn.stadium_export_flag or scn.trophy_export_flag):
 			row.label(text='[INFO] General Overwriting Mode enabled.')
 			row = col.row()
+		#endregion
+		
+		#region New Modern Checks
+		
+		# Error
+		if scn.general_export_flag and (scn.stadium_export_flag or scn.head_export_flag):
+			row.label(text='[ERROR] Model Export conflict found.')
+			row = col.row()
+			row.label(text='[ERROR] Check your export flags.')
+			row = col.row()
+			modernConflictFound = True
+		
+		elif scn.head_export_flag and (scn.general_export_flag or scn.stadium_export_flag):
+			row.label(text='[ERROR] Model Export conflict found.')
+			row = col.row()
+			row.label(text='[ERROR] Check your export flags.')
+			row = col.row()
+			modernConflictFound = True
+
+		elif scn.stadium_export_flag and (scn.general_export_flag or scn.head_export_flag):
+			row.label(text='[ERROR] Model Export conflict found.')
+			row = col.row()
+			row.label(text='[ERROR] Check your export flags.')
+			row = col.row()
+			modernConflictFound = True
+
+		# Valid Notifications
+		if scn.stadium_export_flag and not(scn.general_export_flag or scn.head_export_flag):
+			row.label(text='[INFO] Stadium Export enabled.')
+			row = col.row()
+
+		if scn.general_export_flag and not (scn.stadium_export_flag or scn.head_export_flag):
+			row.label(text='[INFO] General Export enabled.')
+			row = col.row()
+
+		if scn.head_export_flag and not (scn.stadium_export_flag or scn.general_export_flag):
+			row.label(text='[INFO] Head Export enabled.')
+			row = col.row()
+
+
+
+		#endregion
 
 		#endregion
 
@@ -638,6 +691,35 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 			row.alignment = 'RIGHT'
 			row.label(text='  Game Version')
 			row.prop(scn, 'game_enum', text='')
+			
+			row = col.row()
+			row.prop(scn, 'export_path')
+
+			row = col.row()
+			row.scale_y = 1.2
+			row.alignment = 'EXPAND'
+			# row.alignment = 'CENTER'
+			# row.prop(scn, 'overwrite_export_flag')
+			sc1 = row.column()
+			sc1.prop(scn, 'general_export_flag')
+			sc2 = row.column()
+			sc2.prop(scn, 'head_export_flag')
+			sc3 = row.column()
+			sc3.prop(scn, 'stadium_export_flag')
+			sc3.enabled = False
+
+			row = col.row()
+			row.scale_y = 1.2
+			
+			if scn.overwrite_export_flag:
+				txt = "OVERWRITE EXPORT"
+			else:
+				txt = "NEW EXPORT"
+			
+			row.operator("system.se7en_export", text=txt)
+
+			if modernConflictFound:
+				row.enabled = False
 		
 		elif scn.se7en_mode == "Legacy":
 			box = layout.box()
@@ -1166,6 +1248,28 @@ bpy.types.Scene.stadium_time = bpy.props.EnumProperty(
 		   ('2', 'Rainy Weather', 'Rainy Weather'),
 		   ('3', 'Snow', 'Snow')],
 	name="Stadium Time")
+
+## SE7EN Modern Method
+
+bpy.types.Scene.general_export_flag = bpy.props.BoolProperty(
+	name="General",
+	description="New Export Flag for General Models (Mode : Modern)",
+	default=False
+)
+
+bpy.types.Scene.head_export_flag = bpy.props.BoolProperty(
+	name="Head",
+	description="New Export Flag for Head Models (Mode : Modern)",
+	default=False
+)
+
+bpy.types.Scene.overwrite_export_flag = bpy.props.BoolProperty(
+	name="Overwrite",
+	description="New Overwrite Export (Mode : Modern)",
+	default=False
+)
+
+## END
 
 bpy.types.Scene.trophy_export_flag = bpy.props.BoolProperty(
 	name="Trophy/Ball",

@@ -13,7 +13,7 @@ def compress(path, archivename, ext=None):
 
 	print(f"Compressing : {files}")
 
-	with tarfile.open(f"{path}\{archivename}.tar.gz","w:gz") as tar:
+	with tarfile.open(f"{path}\\{archivename}.tar.gz","w:gz") as tar:
 		for file in files:
 			tar.add(os.path.basename(file))
 	

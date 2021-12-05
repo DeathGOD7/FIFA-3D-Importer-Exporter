@@ -137,6 +137,7 @@ class RX3_File():
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
+		self.dataRX3 = None
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
@@ -612,6 +613,7 @@ class RX3_File():
 	
 			mainFile = Rx3File()
 			mainFile.Load(file)
+			self.dataRX3 = mainFile
 
 			
 			# print(ETextureType.GetValues(ETextureType)[2])
@@ -692,14 +694,42 @@ class RX3_File():
 	#endregion
 
 	#region Exporter
-
+	
+	# def writeVertex(file):
+	# 	return None
+	
 	def saveRx3(self, rx3file):
-		file = rx3file + ".rx3"
+		outDirectory = rx3file
+		test = True
 		
-		if file != "":
-			outFile = open(file, 'wb+')
+		if outDirectory != "":
+			file = outDirectory + f"\\{self.fileType}_0_0.rx3"
+			outFile = self.dataRX3
+
+			if test:
+				game = "FIFA 14"
+				lfile = r"C:\Users\dell\Documents\SE7EN\FIFA 3D\Logs\testlogs.log"
+				log = open(lfile, "a+")
+				logmessage = open(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\scripts\msg","r")
+			else:
+				game = scn.game_enum
+				log = fifa_tools.globalLogFile
+				logmessage = open(fifa_tools.addonLoc + r"fifa_tools\scripts\msg", "r")
+
+			if (game == self.gtype):
+				print(f"Exporting file : {file}")
+			else:
+				lines = logmessage.readlines()
+				for line in lines:
+					log.writelines(line)
+				
+			
+
+			# outFile.Load(file)
 		else:
 			print(f"Please specify the export directory.")
+
+
 
 	#endregion
 
@@ -720,6 +750,7 @@ class RX3_File_Hybrid():
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
+		self.dataRX3 = None
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
@@ -1203,6 +1234,7 @@ class RX3_File_Hybrid():
 	
 			mainFile = Rx3File()
 			mainFile.Load(file)
+			self.dataRX3 = mainFile
 
 
 			self.endian = mainFile.RW4Section.RW4Header.Endianness
@@ -1282,10 +1314,10 @@ class RX3_File_Hybrid():
 
 # x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f16\head_16.rx3", GameType.FIFA16)
 x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\head_14.rx3", GameType.FIFA14)
-# l = list(x2.bones[0][0][0])
-# for x in x2.bones[0][0][0].values:
-# 	print(x)
-print(x2.bones[0][0][0].Get(0,0))
+print(x2.gtype.name) 
+print(x2.saveRx3("test.s")) 
+# print(x2.dataRX3.NumMeshes)
+# print(x2.bones[0][0][0].Get(0,0))
 # x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14\specificball_0_13_0_textures.rx3", GameType.FIFA14)
 # x2 = RX3_File(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\test\f14_practice_arena\stadium_665_1_textures.rx3", GameType.FIFA14)
 # print(x1.rx3Type.value)

@@ -4,10 +4,10 @@
 
 import os
 import sys
-import bpy
+import bpy, imp, struct, bmesh, zlib
 from bpy.types import Bone
 import fifa_tools
-import zlib, struct
+from math import radians, degrees
 from enum import Enum
 from mathutils import Vector, Euler, Matrix
 from fifa_tools.scripts.fifa3D_logger import *
@@ -92,6 +92,95 @@ def AddVertexSkeleton(bones, fileID, skI):
 		ob.scale = Vector((0.01, 0.01, 0.01))
 		ob.rotation_euler[1] = 1.5707972049713135
 
+def ConvertMeshToData(object):
+	verts = []
+	uvs = []
+	indices = []
+	cols = []
+	data = object.data
+	bm = bmesh.new()
+	bm.from_mesh(data)
+	uvs_0 = []
+	uvs_1 = []
+	uvs_2 = []
+	uvs_3 = []
+	uvs_4 = []
+	uvs_5 = []
+	uvs_6 = []
+	uvs_7 = []
+	col_0 = []
+	col_1 = []
+	col_2 = []
+	uvcount = len(bm.loops.layers.uv)
+	colcount = len(bm.loops.layers.color)
+	rot_x_mat = Matrix.Rotation(radians(90), 4, 'X')
+	scale_mat = Matrix.Scale(100, 4)
+	
+	if hasattr(bm.verts, "ensure_lookup_table"): 
+		bm.verts.ensure_lookup_table()
+		# only if you need to:
+		# bm.edges.ensure_lookup_table()   
+		# bm.faces.ensure_lookup_table()
+	
+	for vert in bm.verts:
+		co = scale_mat @ rot_x_mat @ object.matrix_world @ vert.co
+		
+		verts.append((co[0], -co[1], -co[2]))
+
+	bm.verts.ensure_lookup_table()
+	for i in range(len(bm.verts)):
+		for j in range(uvcount):
+			uvlayer = bm.loops.layers.uv[j]
+			eval('uvs_' + str(j) + '.append((round(bm.verts[i].link_loops[0][uvlayer].uv.x,8),round(1-bm.verts[i].link_loops[0][uvlayer].uv.y,8)))')
+	
+	for i in range(len(bm.verts)):
+		for j in range(colcount):
+			collayer = bm.loops.layers.color[j]
+			vert_data = bm.verts[i].link_loops[0][collayer]
+			eval('col_' + str(j) + '.append((vert_data[0]*1023,vert_data[1]*1023,vert_data[2]*1023))')
+
+	bm.faces.ensure_lookup_table()
+	for f in bm.faces:
+		bm.faces.ensure_lookup_table()
+		indices.append((
+			f.verts[0].index, f.verts[1].index, f.verts[2].index))
+
+	for j in range(uvcount):
+		eval('uvs.append(uvs_' + str(j) + ')')
+
+	for j in range(colcount):
+		eval('cols.append(col_' + str(j) + ')')
+
+	bm.free()
+
+	dd = r"C:\Users\dell\Documents\SE7EN\FIFA 3D\Logs"
+	
+	test = open(f"{dd}\\uv.txt", "w+")
+	for x in uvs:
+		test.writelines(str(x) + "\n")
+	test.close()
+	print(f"Blender UV Count : {len(uvs)}")
+	
+	test = open(f"{dd}\\verts.txt", "w+")
+	for x in verts:
+		test.writelines(str(x) + "\n")
+	test.close()
+	print(f"Blender verts Count : {len(verts)}")
+	
+	test = open(f"{dd}\\indices.txt", "w+")
+	for x in indices:
+		test.writelines(str(x) + "\n")
+	test.close()
+	print(f"Blender indices Count : {len(indices)}")
+	
+	test = open(f"{dd}\\cols.txt", "w+")
+	for x in cols:
+		test.writelines(str(x) + "\n")
+	test.close()
+	print(f"Blender cols Count : {len(cols)}")
+
+	return (
+		verts, uvs, cols, indices)
 
 
 

@@ -371,6 +371,20 @@ class se7en_import(bpy.types.Operator):
 		return {
 		 'FINISHED'}
 
+class se7en_export(bpy.types.Operator):
+	bl_idname = 'system.se7en_export'
+	bl_label = ''
+	bl_description = 'For exporting mesh with new method by DeathGOD7'
+
+	def invoke(self, context, event):
+		scn = context.scene
+		selectedObj = []
+		for obj in bpy.context.selected_objects:
+			selectedObj.append(obj)
+		if len(selectedObj) > 0:
+			fifa3D_helper.ConvertMeshToData(selectedObj[0])
+		return {
+		 'FINISHED'}
 
 class visit_thread_url(bpy.types.Operator):
 	bl_idname = 'system.visit_thread_url'
@@ -1788,6 +1802,7 @@ classes = [
 	assign_color_to_map,
 	auto_paint,
 	se7en_import,
+	se7en_export,
 	visit_thread_url,
 	visit_github_url,
 	report_bug,

@@ -141,6 +141,7 @@ class RX3_File():
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
+		self.dataRX3 = None
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
@@ -616,6 +617,7 @@ class RX3_File():
 	
 			mainFile = Rx3File()
 			mainFile.Load(file)
+			self.dataRX3 = mainFile
 
 			
 			# print(ETextureType.GetValues(ETextureType)[2])
@@ -696,14 +698,23 @@ class RX3_File():
 	#endregion
 
 	#region Exporter
-
+	
+	def writeVertex(file):
+		return None
+	
 	def saveRx3(self, rx3file):
-		file = rx3file + ".rx3"
+		outDirectory = rx3file
 		
-		if file != "":
-			outFile = open(file, 'wb+')
+		if outDirectory != "":
+			file = outDirectory + f"{self.fileType}_0_0.rx3"
+			outFile = self.dataRX3
+			
+
+			outFile.Load(file)
 		else:
 			print(f"Please specify the export directory.")
+
+
 
 	#endregion
 
@@ -724,6 +735,7 @@ class RX3_File_Hybrid():
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
+		self.dataRX3 = None
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
@@ -1207,6 +1219,7 @@ class RX3_File_Hybrid():
 	
 			mainFile = Rx3File()
 			mainFile.Load(file)
+			self.dataRX3 = mainFile
 
 
 			self.endian = mainFile.RW4Section.RW4Header.Endianness
