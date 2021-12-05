@@ -793,6 +793,8 @@ class fifa_rx3:
 				for j in range(4):
 					mat[j][i] = round(struct.unpack('<f', self.data.read(4))[0], 8)
 
+			#debug
+			# print(mat)
 			pos = Vector((mat[0][3], mat[1][3], mat[2][3]))
 			if k in (2, 3, 4, 324, 333):
 				print("Reading Bones...")
