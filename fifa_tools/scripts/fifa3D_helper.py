@@ -153,29 +153,38 @@ def ConvertMeshToData(object):
 
 	bm.free()
 
-	dd = r"C:\Users\dell\Documents\SE7EN\FIFA 3D\Logs"
+	dd = fifa_tools.logdir
 	
 	test = open(f"{dd}\\uv.txt", "w+")
-	for x in uvs:
-		test.writelines(str(x) + "\n")
+	for x in range(len(uvs)):
+		for y in uvs[x]:
+			test.writelines(str(y) + "\n")
+		test.writelines("\n\n\n")
+
 	test.close()
 	print(f"Blender UV Count : {len(uvs)}")
 	
 	test = open(f"{dd}\\verts.txt", "w+")
-	for x in verts:
-		test.writelines(str(x) + "\n")
+	for x in range(len(verts)):
+		for y in verts[x]:
+			test.writelines(str(y) + "\n")
+		test.writelines("\n\n\n")
 	test.close()
 	print(f"Blender verts Count : {len(verts)}")
 	
 	test = open(f"{dd}\\indices.txt", "w+")
-	for x in indices:
-		test.writelines(str(x) + "\n")
+	for x in range(len(indices)):
+		for y in indices[x]:
+			test.writelines(str(y) + "\n")
+		test.writelines("\n\n\n")
 	test.close()
 	print(f"Blender indices Count : {len(indices)}")
 	
 	test = open(f"{dd}\\cols.txt", "w+")
-	for x in cols:
-		test.writelines(str(x) + "\n")
+	for x in range(len(cols)):
+		for y in cols[x]:
+			test.writelines(str(y) + "\n")
+		test.writelines("\n\n\n")
 	test.close()
 	print(f"Blender cols Count : {len(cols)}")
 
