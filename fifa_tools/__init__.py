@@ -23,7 +23,7 @@ import datetime
 # --------------- Main Var ----------------
 pythonVer = platform.python_version()
 pythonArc = platform.architecture()[0]
-addonLoc = bpy.utils.user_resource('SCRIPTS', "addons")
+addonLoc = bpy.utils.user_resource('SCRIPTS', path="addons")
 
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
