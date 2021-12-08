@@ -271,9 +271,6 @@ class RX3_File():
 						continue
 					faces.append((temp[0], temp[1], temp[2]))
 
-		f = open("allfaces.txt", "w+")
-		f.writelines(str(faces))
-
 		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
 
