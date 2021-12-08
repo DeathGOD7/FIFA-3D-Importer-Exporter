@@ -162,7 +162,7 @@ def ConvertMeshToData(object):
 		test.writelines("\n\n\n")
 
 	test.close()
-	print(f"Blender UV Count : {len(uvs)}")
+	print(f"Blender UV Count : {len(uvs[0])}")
 	
 	test = open(f"{dd}\\verts.txt", "w+")
 	for x in range(len(verts)):
@@ -186,10 +186,9 @@ def ConvertMeshToData(object):
 			test.writelines(str(y) + "\n")
 		test.writelines("\n\n\n")
 	test.close()
-	print(f"Blender cols Count : {len(cols)}")
+	print(f"Blender cols Count : {len(cols[0])}")
 
-	return (
-		verts, uvs, cols, indices)
+	return (verts, uvs, cols, indices)
 
 
 
