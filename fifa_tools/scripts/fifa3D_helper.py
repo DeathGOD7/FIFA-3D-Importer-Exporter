@@ -151,44 +151,9 @@ def ConvertMeshToData(object):
 	for j in range(colcount):
 		eval('cols.append(col_' + str(j) + ')')
 
-	bm.free()
+	bm.free()	
 
-	dd = fifa_tools.logdir
-	
-	test = open(f"{dd}\\uv.txt", "w+")
-	for x in range(len(uvs)):
-		for y in uvs[x]:
-			test.writelines(str(y) + "\n")
-		test.writelines("\n\n\n")
-
-	test.close()
-	print(f"Blender UV Count : {len(uvs[0])}")
-	
-	test = open(f"{dd}\\verts.txt", "w+")
-	for x in range(len(verts)):
-		for y in verts[x]:
-			test.writelines(str(y) + "\n")
-		test.writelines("\n\n\n")
-	test.close()
-	print(f"Blender verts Count : {len(verts)}")
-	
-	test = open(f"{dd}\\indices.txt", "w+")
-	for x in range(len(indices)):
-		for y in indices[x]:
-			test.writelines(str(y) + "\n")
-		test.writelines("\n\n\n")
-	test.close()
-	print(f"Blender indices Count : {len(indices)}")
-	
-	test = open(f"{dd}\\cols.txt", "w+")
-	for x in range(len(cols)):
-		for y in cols[x]:
-			test.writelines(str(y) + "\n")
-		test.writelines("\n\n\n")
-	test.close()
-	print(f"Blender cols Count : {len(cols[0])}")
-
-	return (verts, uvs, cols, indices)
+	return (verts, indices, uvs, cols)
 
 
 

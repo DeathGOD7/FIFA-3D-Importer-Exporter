@@ -249,6 +249,8 @@ class auto_paint(bpy.types.Operator):
 		return {
 		 'FINISHED'}
 
+class MainFile():
+	mainImport = None
 
 class se7en_import(bpy.types.Operator):
 	bl_idname = 'system.se7en_import'
@@ -258,6 +260,8 @@ class se7en_import(bpy.types.Operator):
 	def invoke(self, context, event):
 		scn = context.scene
 		meshimportcount = 0
+		mainImport = bpy.context.scene.mainFile
+		# mainImport.mainFile
 		gT = fifa3D_se7en.GameType
 		mainrx3 = [gT.FIFA12, gT.FIFA13,gT.FIFA14,gT.FIFA15,gT.FIFA16]
 		meshlist = []
@@ -280,38 +284,38 @@ class se7en_import(bpy.types.Operator):
 				if choosenGame == gT.FIFA11:
 					log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 					for x in meshlist:
-						mainImport = fifa3D_se7en.RX3_File_Hybrid(x, choosenGame)
-						log.writeLog(f"File Import : {mainImport.fileName}{mainImport.fileExt}", LogType.INFO)
+						mainImport.mainFile = fifa3D_se7en.RX3_File_Hybrid(x, choosenGame)
+						log.writeLog(f"File Import : {mainImport.mainFile.fileName}{mainImport.mainFile.fileExt}", LogType.INFO)
 						
-						for i in range(mainImport.meshCount):
-							logstr = f"[{choosenGame}] RX3 Type : RX3 Hybrid || File Type : {mainImport.fileType} || File ID : {mainImport.fileId} || Endian Type : {mainImport.endianStr} || Mesh Count : {i+1}/{mainImport.meshCount} || Primitive Type : {mainImport.primitiveType} || Total Vertices : {mainImport.totalVertCount[i]} || Total Indices : {mainImport.indicesCount[i]} || Total Faces : {mainImport.faceCount[i]}"
+						for i in range(mainImport.mainFile.meshCount):
+							logstr = f"[{choosenGame}] RX3 Type : RX3 Hybrid || File Type : {mainImport.mainFile.fileType} || File ID : {mainImport.mainFile.fileId} || Endian Type : {mainImport.mainFile.endianStr} || Mesh Count : {i+1}/{mainImport.mainFile.meshCount} || Primitive Type : {mainImport.mainFile.primitiveType} || Total Vertices : {mainImport.mainFile.totalVertCount[i]} || Total Indices : {mainImport.mainFile.indicesCount[i]} || Total Faces : {mainImport.mainFile.faceCount[i]}"
 							
-							if (len(mainImport.uvCount) > i):
-								logstr += f" || Total UVS : {mainImport.uvCount[i]}"
-							if (len(mainImport.collisionCount) > i):
-								logstr += f" || Total Collision : {mainImport.collisionCount[i]}"
-							if (len(mainImport.vertexColorCount) > i):
-								logstr += f" || Total Vertex Color : {mainImport.vertexColorCount[i]}"
-							if (len(mainImport.bonesIndiceCount) > i):
-								logstr += f" || Total Bone Indice : {mainImport.bonesIndiceCount[i]}"
-							if (len(mainImport.bonesWeightCount) > i):
-								logstr += f" || Total Bone Weight : {mainImport.bonesWeightCount[i]}" 
+							if (len(mainImport.mainFile.uvCount) > i):
+								logstr += f" || Total UVS : {mainImport.mainFile.uvCount[i]}"
+							if (len(mainImport.mainFile.collisionCount) > i):
+								logstr += f" || Total Collision : {mainImport.mainFile.collisionCount[i]}"
+							if (len(mainImport.mainFile.vertexColorCount) > i):
+								logstr += f" || Total Vertex Color : {mainImport.mainFile.vertexColorCount[i]}"
+							if (len(mainImport.mainFile.bonesIndiceCount) > i):
+								logstr += f" || Total Bone Indice : {mainImport.mainFile.bonesIndiceCount[i]}"
+							if (len(mainImport.mainFile.bonesWeightCount) > i):
+								logstr += f" || Total Bone Weight : {mainImport.mainFile.bonesWeightCount[i]}" 
 
 							log.writeLog(logstr, LogType.INFO)
 
-							name = mainImport.fileType + '_' + str(mainImport.fileId) + '_' + str(i)
-							if mainImport.fileType == 'head':
+							name = mainImport.mainFile.fileType + '_' + str(mainImport.mainFile.fileId) + '_' + str(i)
+							if mainImport.mainFile.fileType == 'head':
 								if i == 0:
 									name += '_' + "head"
 								elif i == 1:
 									name += '_' + "eyes"
-							obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+							obname = fifa_main.se7en_importmesh(mainImport.mainFile.vertexPosition[i] , mainImport.mainFile.faces[i] , mainImport.mainFile.uvs[i] , name , meshimportcount , 0 , mainImport.mainFile.cols[i], False, [], scn.fifa_import_loc)
 							meshimportcount += 1
-							skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.skeletonType.value)
+							skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.mainFile.skeletonType.value)
 							
-							if (scn.bone_groups_flag) and (len(mainImport.bonesIndice) > i) and (len(mainImport.bonesWeight) > 1):
+							if (scn.bone_groups_flag) and (len(mainImport.mainFile.bonesIndice) > i) and (len(mainImport.mainFile.bonesWeight) > 1):
 								if skeletoninfo != None:
-									fifa3D_helper.AddVgroupToObjects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], skeletoninfo, obname)
+									fifa3D_helper.AddVgroupToObjects(mainImport.mainFile.bonesIndice[i], mainImport.mainFile.bonesWeight[i], skeletoninfo, obname)
 
 					if (scn.create_materials_flag) and (len(texlist) > 0):
 						for x in texlist:
@@ -322,42 +326,42 @@ class se7en_import(bpy.types.Operator):
 				elif choosenGame in mainrx3:
 					log.writeLog(f"Mode : {scn.se7en_mode}", LogType.INFO)
 					for x in meshlist:
-						mainImport = fifa3D_se7en.RX3_File(x , choosenGame)
-						log.writeLog(f"File Import : {mainImport.fileName}{mainImport.fileExt}", LogType.INFO)
+						mainImport.mainFile = fifa3D_se7en.RX3_File(x , choosenGame)
+						log.writeLog(f"File Import : {mainImport.mainFile.fileName}{mainImport.mainFile.fileExt}", LogType.INFO)
 						
-						for i in range(mainImport.meshCount):
-							logstr = f"[{choosenGame}] RX3 Type : RX3 || File Type : {mainImport.fileType} || File ID : {mainImport.fileId} || Endian Type : {mainImport.endianStr} || Mesh Count : {i+1}/{mainImport.meshCount} || Primitive Type : {mainImport.primitiveType} || Total Vertices : {mainImport.totalVertCount[i]} || Total Indices : {mainImport.indicesCount[i]} || Total Faces : {mainImport.faceCount[i]}"
+						for i in range(mainImport.mainFile.meshCount):
+							logstr = f"[{choosenGame}] RX3 Type : RX3 || File Type : {mainImport.mainFile.fileType} || File ID : {mainImport.mainFile.fileId} || Endian Type : {mainImport.mainFile.endianStr} || Mesh Count : {i+1}/{mainImport.mainFile.meshCount} || Primitive Type : {mainImport.mainFile.primitiveType} || Total Vertices : {mainImport.mainFile.totalVertCount[i]} || Total Indices : {mainImport.mainFile.indicesCount[i]} || Total Faces : {mainImport.mainFile.faceCount[i]}"
 							
-							if (len(mainImport.uvCount) > i):
-								logstr += f" || Total UVS : {mainImport.uvCount[i]}"
-							if (len(mainImport.collisionCount) > i):
-								logstr += f" || Total Collision : {mainImport.collisionCount[i]}"
-							if (len(mainImport.vertexColorCount) > i):
-								logstr += f" || Total Vertex Color : {mainImport.vertexColorCount[i]}"
-							if (len(mainImport.bonesIndiceCount) > i):
-								logstr += f" || Total Bone Indice : {mainImport.bonesIndiceCount[i]}"
-							if (len(mainImport.bonesWeightCount) > i):
-								logstr += f" || Total Bone Weight : {mainImport.bonesWeightCount[i]}" 
+							if (len(mainImport.mainFile.uvCount) > i):
+								logstr += f" || Total UVS : {mainImport.mainFile.uvCount[i]}"
+							if (len(mainImport.mainFile.collisionCount) > i):
+								logstr += f" || Total Collision : {mainImport.mainFile.collisionCount[i]}"
+							if (len(mainImport.mainFile.vertexColorCount) > i):
+								logstr += f" || Total Vertex Color : {mainImport.mainFile.vertexColorCount[i]}"
+							if (len(mainImport.mainFile.bonesIndiceCount) > i):
+								logstr += f" || Total Bone Indice : {mainImport.mainFile.bonesIndiceCount[i]}"
+							if (len(mainImport.mainFile.bonesWeightCount) > i):
+								logstr += f" || Total Bone Weight : {mainImport.mainFile.bonesWeightCount[i]}" 
 
 							log.writeLog(logstr, LogType.INFO)
 							
-							name = mainImport.fileType + '_' + str(mainImport.fileId) + '_' + str(i)
-							if mainImport.fileType == 'head':
+							name = mainImport.mainFile.fileType + '_' + str(mainImport.mainFile.fileId) + '_' + str(i)
+							if mainImport.mainFile.fileType == 'head':
 								if i == 0:
 									name += '_' + "head"
 								elif i == 1:
 									name += '_' + "eyes"
-							obname = fifa_main.se7en_importmesh(mainImport.vertexPosition[i] , mainImport.faces[i] , mainImport.uvs[i] , name , meshimportcount , 0 , mainImport.cols[i], False, [], scn.fifa_import_loc)
+							obname = fifa_main.se7en_importmesh(mainImport.mainFile.vertexPosition[i] , mainImport.mainFile.faces[i] , mainImport.mainFile.uvs[i] , name , meshimportcount , 0 , mainImport.mainFile.cols[i], False, [], scn.fifa_import_loc)
 							meshimportcount += 1
-							skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.skeletonType.value)
+							skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.mainFile.skeletonType.value)
 							
-							if (scn.bone_groups_flag) and (len(mainImport.bonesIndice) > i) and (len(mainImport.bonesWeight) > 1):
+							if (scn.bone_groups_flag) and (len(mainImport.mainFile.bonesIndice) > i) and (len(mainImport.mainFile.bonesWeight) > 1):
 								if skeletoninfo != None:
-									fifa3D_helper.AddVgroupToObjects(mainImport.bonesIndice[i], mainImport.bonesWeight[i], skeletoninfo, obname)
+									fifa3D_helper.AddVgroupToObjects(mainImport.mainFile.bonesIndice[i], mainImport.mainFile.bonesWeight[i], skeletoninfo, obname)
 							
-							if (scn.bones_flag) and (len(mainImport.bones) > 0):
+							if (scn.bones_flag) and (len(mainImport.mainFile.bones) > 0):
 								if skeletoninfo != None:
-									fifa3D_helper.AddVertexSkeleton(mainImport.bones, mainImport.fileId, skeletoninfo)
+									fifa3D_helper.AddVertexSkeleton(mainImport.mainFile.bones, mainImport.mainFile.fileId, skeletoninfo)
 						
 					if (scn.create_materials_flag) and (len(texlist) > 0):
 						for x in texlist:
@@ -378,11 +382,21 @@ class se7en_export(bpy.types.Operator):
 
 	def invoke(self, context, event):
 		scn = context.scene
+		mainImport = bpy.context.scene.mainFile
 		selectedObj = []
 		for obj in bpy.context.selected_objects:
 			selectedObj.append(obj)
 		if len(selectedObj) > 0:
-			fifa3D_helper.ConvertMeshToData(selectedObj[0])
+			gT = fifa3D_se7en.GameType
+			mainrx3 = [gT.FIFA12, gT.FIFA13,gT.FIFA14,gT.FIFA15,gT.FIFA16]
+			choosenGame = f"{scn.game_enum[0:4]} {scn.game_enum[4:6]}" 
+			if choosenGame == gT.FIFA11:
+				print(f"Currently Unsupported : {scn.game_enum}")
+			elif choosenGame in mainrx3:
+				mainImport.mainFile.saveRx3(scn.export_path, choosenGame, selectedObj)
+
+			else:
+				print(f"Unsupported Game or Type : {scn.game_enum}")
 		return {
 		 'FINISHED'}
 
@@ -1829,13 +1843,15 @@ def register():
 	for cls in classes:
 		make_annotations(cls) # what is this? Read the section on annotations above!
 		bpy.utils.register_class(cls)
+	
+	bpy.types.Scene.mainFile = MainFile()
 
 
 
 def unregister():  # note how unregistering is done in reverse
 	for cls in reversed(classes):
 		bpy.utils.unregister_class(cls)
-
+	del bpy.types.Scene.mainFile
 
 if __name__ == '__main__':
 	register()

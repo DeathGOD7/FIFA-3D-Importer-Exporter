@@ -9,6 +9,8 @@ import bpy
 import fifa_tools
 import zlib, struct
 import math
+from fifa_tools.scripts.fifa3D_helper import *
+from fifa_tools.scripts.fifa3D_logger import *
 
 sys.path.append(f'{fifa_tools.libsdir}')
 
@@ -699,22 +701,196 @@ class RX3_File():
 
 	#region Exporter
 	
-	def writeVertex(file):
-		return None
+	def GetVertex(self, vertex):
+		temp = [] # mesh
+
+		# obtained data from dll
+		# from dll = x, y, z
+		# for blender = x, z, y
+
+		# obtained data from blender
+		# from blender = x, y, z
+		# for dll = x, z, y
+
+		for x in range(len(vertex)):
+			tmp1 = []
+			for y in vertex[x]:
+				tmp1.append(y)
+			temp.append(tmp1)
+
+		return temp
 	
-	def saveRx3(self, rx3file):
-		outDirectory = rx3file
+	def GetIndice(self, indice):
+		temp = [] # mesh
+		for x in range(len(indice)):
+			for y in indice[x]:
+				temp.append(y)
+
+		return temp
+	
+	def GetCols(self, cols):
+		temp = [] # mesh per cols
+
+		for x in range(len(cols)):
+			for y in cols[x]:
+				tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+				temp.append(tmp1)
+
+		return temp
+	
+	def GetUVs(self, uvs):
+		temp = []
+		for x in range(len(uvs)):
+			for y in uvs[x]:
+				tmp1 = [y[0], y[1]]
+				temp.append(tmp1)
+
+		return temp
+	
+	### WRITING FILE ###
+
+	def WriteVertexData(self, meshid, vertex, uvs, cols, rx3file):
+		v = rx3file.Rx3VertexBuffers[meshid]
+		
+		totalcols = 0
+		if v.Vertexes[meshid].Normals != None:
+			totalcols += 1
+		if v.Vertexes[meshid].Binormals != None:
+			totalcols += 1
+		if v.Vertexes[meshid].Tangents != None:
+			totalcols += 1
+		
+		# v.Vertexes.Clear()   # 0 - x
+
+		collection = []
+		for x in range(len(vertex)):
+			vrt = Vertex()
+
+			## pos
+			pos = Position()
+			pos.X = vertex[0]  # 0 - x
+			pos.Z = -vertex[1]  # 1 - z
+			pos.Y = vertex[2]  # 2 - y
+
+			vrt.Positions.Add(pos)
+
+
+			## uvs
+			TextureCoord = TextureCoordinate()
+			TextureCoord.U = uvs[0]
+			TextureCoord.V = uvs[1]
+
+			vrt.TextureCoordinates.Add(TextureCoord)
+
+
+			## cols
+
+			fc = FifaUtil()
+
+			for x in (range(0, len(cols), totalcols)):
+				if totalcols == 1:
+					#normals / n
+					normal = Normal()
+					normal.DEC3N = fc.FloatsToDEC3N(cols[x][0],cols[x][1],cols[x][2])
+
+				if totalcols == 2:
+					#binormals / b
+					binormal = Binormal()
+					binormal.DEC3N = fc.FloatsToDEC3N(cols[x+1][0],cols[x+1][1],cols[x+1][2])
+
+				if totalcols == 3:
+					#tangent / g
+					tangent = Tangent()
+					tangent.DEC3N = fc.FloatsToDEC3N(cols[x+2][0],cols[x+2][1],cols[x+2][2])
+
+
+			vrt.Normals.Add(normal)
+			vrt.Binormals.Add(binormal)
+			vrt.Tangents.Add(tangent)
+
+
+			collection.append(vrt)
+
+		
+		v.Vertexes = collection
+
+	def WriteIndice(self, meshid, indice, rx3file):
+		i = rx3file.Rx3IndexBuffers[meshid]
+		# i.IndexStream.Clear()
+
+		i.IndexStream = indice
+
+	def saveRx3(self, file, gameenum, mesh):
+		outDirectory = file
 		
 		if outDirectory != "":
-			file = outDirectory + f"{self.fileType}_0_0.rx3"
+			file = outDirectory + f"\\{self.fileType}_0_0.rx3"
 			outFile = self.dataRX3
-			
+			game = gameenum
+			log = fifa_tools.globalLogFile
+			logmessage = open(fifa_tools.addonLoc + r"\fifa_tools\scripts\msg", "r")
 
-			outFile.Load(file)
+			if (game == self.gtype):
+				print(f"Exporting File : {file}")
+				
+				## for each mesh in obj get its data
+				if (self.meshCount != len(mesh)):
+					log.writeLog("Mesh count is different from what you loaded. Please do each file seperately.", "INFO")
+					return
+				
+				temp = []
+				for x in range(len(mesh)):
+					temp.append(ConvertMeshToData(mesh[x]))
+
+				vertex = []
+				indice = []
+				uvs = []
+				cols = []
+
+				for x in range(len(temp)):
+					# get vertex 0
+					print(f"Getting Vertex for Mesh {x}")
+					log.writeLog(f"Getting Vertex for Mesh {x}", "INFO")
+
+					vertex.append(self.GetVertex(temp[x][0]))
+
+					## get indice 1
+					print(f"Getting Indice for Mesh {x}")
+					log.writeLog(f"Getting Indice for Mesh {x}", "INFO")
+
+					indice.append(self.GetIndice(temp[x][1]))
+
+					### get uvs 2
+					print(f"Getting UVs for Mesh {x}")
+					log.writeLog(f"Getting UVs for Mesh {x}", "INFO")
+
+					uvs.append(self.GetUVs(temp[x][2]))
+
+					#### get cols 3
+					print(f"Getting Cols for Mesh {x}")
+					log.writeLog(f"Getting Cols for Mesh {x}", "INFO")
+
+					cols.append(self.GetCols(temp[x][3]))
+
+				for x in range(self.meshCount):
+					self.WriteVertexData(x, vertex[x], uvs[x], cols[x], outFile)
+					self.WriteIndice(x, indice[x], outFile)
+
+					# TriangleFan = 6,
+					# TriangleList = 4,
+
+					outFile.Rx3SimpleMeshes[x].PrimitiveType = 4
+
+
+				outFile.Save(file)
+
+			else:
+				lines = logmessage.readlines()
+				for line in lines:
+					log.writelines(line)
+				
 		else:
 			print(f"Please specify the export directory.")
-
-
 
 	#endregion
 
