@@ -138,8 +138,17 @@ class RX3_File():
 		self.isTexture = False
 		self.gtype = gtype
 		# file info end
-		self.cols = []  ## Normal / Binormals / Tangent Cols
-		self.colCount = []
+		
+		## Normals
+		self.cols_normals = []  
+		self.colCount_normals = []
+		## Binormals 
+		self.cols_binormals = []  
+		self.colCount_binormals = []
+		## Tangents
+		self.cols_tangents = []  
+		self.colCount_tangents = []
+
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
@@ -465,7 +474,9 @@ class RX3_File():
 
 	def getNormalCols(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):
-			temp = []
+			temp1 = [] #normals
+			temp2 = [] #binromals
+			temp3 = [] #tangents
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
@@ -473,27 +484,46 @@ class RX3_File():
 				if v.Vertexes[x].Normals != None:
 					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z]
 					# data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
-					temp.append(data1)
+					temp1.append(data1)
 				#binormals / b
 				if v.Vertexes[x].Binormals != None:
 					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z]
 					# data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
-					temp.append(data2)
+					temp2.append(data2)
 				#tangent / g
 				if v.Vertexes[x].Tangents != None:
 					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z]
 					# data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
-					temp.append(data3)
+					temp3.append(data3)
 			
-			self.cols.append(temp)
-			self.colCount.append(len(self.cols[i]))
-			if len(self.cols[i]) > 0:
-				print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
-				print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
-				print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
-				print(f"Color Count, Mesh {i} : {self.colCount[i]}")
+			self.cols_normals.append(temp1)
+			self.cols_binormals.append(temp2)
+			self.cols_tangents.append(temp3)
 
-		return self.cols
+			self.colCount_normals.append(len(self.cols_normals[i]))
+			self.colCount_binormals.append(len(self.cols_binormals[i]))
+			self.colCount_tangents.append(len(self.cols_tangents[i]))
+
+
+			if len(self.cols_normals[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Normal Col 0, Mesh {i} = {self.cols_normals[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Normal Col 1, Mesh {i} = {self.cols_normals[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Normal Col 2, Mesh {i} = {self.cols_normals[i][2]}")
+				print(f"Normal Color Count, Mesh {i} : {self.colCount_normals[i]}")
+
+			if len(self.cols_binormals[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Binormal Col 0, Mesh {i} = {self.cols_binormals[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Binormal Col 1, Mesh {i} = {self.cols_binormals[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Binormal Col 2, Mesh {i} = {self.cols_binormals[i][2]}")
+				print(f"Binormal Color Count, Mesh {i} : {self.colCount_binormals[i]}")
+
+			if len(self.cols_tangents[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Tangent Col 0, Mesh {i} = {self.cols_tangents[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Tangent Col 1, Mesh {i} = {self.cols_tangents[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Tangent Col 2, Mesh {i} = {self.cols_tangents[i][2]}")
+				print(f"Tangent Color Count, Mesh {i} : {self.colCount_tangents[i]}")
+
+		return self.cols_normals, self.cols_binormals, self.cols_tangents
 
 	def getUVS(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):
@@ -728,7 +758,7 @@ class RX3_File():
 
 		return temp
 	
-	def GetCols(self, cols, meshid, rx3file):
+	def GetCols(self, normalscol, binormalscol, tangentscol, meshid, rx3file):
 		v = rx3file.Rx3VertexBuffers[meshid]
 
 		hasnormal = False
@@ -737,90 +767,40 @@ class RX3_File():
 		if v.Vertexes[meshid].Normals != None:
 			hasnormal = True
 			print("Normals : " + str(hasnormal))
-			print("Normals Count : " + str(v.Vertexes[meshid].Normals[0].Count))
 		if v.Vertexes[meshid].Binormals != None:
 			hasbinormals = True
 			print("Binormals : " + str(hasbinormals))
-			print("Binormals Count : " + str(v.Vertexes[meshid].Binormals[0].Count))
 		if v.Vertexes[meshid].Tangents != None:
 			hastangents = True
 			print("Tangents : " + str(hastangents))
-			print("Tangents Count : " + str(v.Vertexes[meshid].Tangents[0].Count))
 
 
 		normals = [] # mesh per cols
 		binormals = [] # mesh per cols
 		tangents = [] # mesh per cols
 
-		if hasnormal and not (hasbinormals or hastangents):
-			print("Has normal cols only")
-			for x in range(0, len(cols), 1):
-				for y in cols[x]:
-					tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+		if hasnormal:
+			print("Has normal cols")
+			for x in range(0, len(normalscol), 1):
+				for y in normalscol[x]:
+					tmp1 = [y[0], y[1], y[2]]
 					normals.append(tmp1)
 
 			# for x in range(len(normals) - )
 
-		elif hasbinormals and not (hasnormal or hastangents):
-			print("Has binormals cols only")
-			for x in range(0, len(cols), 1):
-				for y in cols[x]:
-					tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+		if hasbinormals:
+			print("Has binormals cols")
+			for x in range(0, len(binormalscol), 1):
+				for y in binormalscol[x]:
+					tmp1 = [y[0], y[1], y[2]]
 					binormals.append(tmp1)
 
-		elif hastangents and not (hasnormal or hasbinormals):
-			print("Has tangents cols only")
-			for x in range(0, len(cols), 1):
-				for y in cols[x]:
-					tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+		if hastangents:
+			print("Has tangents cols")
+			for x in range(0, len(tangentscol), 1):
+				for y in tangentscol[x]:
+					tmp1 = [y[0], y[1], y[2]]
 					tangents.append(tmp1)
-
-		elif (hasnormal and hasbinormals) and not hastangents:
-			print("Has normal and binormals cols only")
-			for m in range(0, len(cols)):  ## per mesh
-				for n in range(0, len(cols[m]), 2):  ## per vertex
-					x = cols[m][n]
-					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
-					normals.append(tmp1)
-					y = cols[m][n+1]
-					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
-					binormals.append(tmp2)
-
-		elif (hasnormal and hastangents) and not hasbinormals:
-			print("Has normal and tangents cols only")
-			for m in range(0, len(cols)):  ## per mesh
-				for n in range(0, len(cols[m]), 2):  ## per vertex
-					x = cols[m][n]
-					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
-					normals.append(tmp1)
-					y = cols[m][n+1]
-					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
-					tangents.append(tmp2)
-
-		elif (hasbinormals and hastangents) and not hasnormal:
-			print("Has binormals and tangents cols only")
-			for m in range(0, len(cols)):  ## per mesh
-				for n in range(0, len(cols[m]), 2):  ## per vertex
-					x = cols[m][n]
-					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
-					binormals.append(tmp1)
-					y = cols[m][n+1]
-					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
-					tangents.append(tmp2)
-
-		else:
-			print("Has normal, binormals and tangents cols all")
-			for m in range(0, len(cols)):  ## per mesh
-				for n in range(0, len(cols[m]), 3):  ## per vertex
-					x = cols[m][n]
-					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
-					normals.append(tmp1)
-					y = cols[m][n+1]
-					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
-					binormals.append(tmp2)
-					z = cols[m][n+2]
-					tmp3 = [z[0]/1023, z[1]/1023, z[2]/1023]
-					tangents.append(tmp3)
 
 
 		return normals, binormals, tangents
@@ -840,27 +820,32 @@ class RX3_File():
 		v = rx3file.Rx3VertexBuffers[meshid]
 		vlengthold = v.Vertexes.Length
 		vlengthnew = len(vertex)
+		newvertex = vlengthnew - vlengthold
 
-		print(vlengthold)
-		print(vlengthnew)
+		# if (v.)
 
-		print(len(normals))
-		print(len(binormals))
-		print(len(tangents))
 
+
+		# [v.Vertexes[x].BlendWeights[y].Weight_1
+		# vertexdata = [v.Vertexes[x].BlendIndices[y].Index_1
+
+
+
+			# 	if (rx3file.Rx3AnimationSkins != None):
+			# for i in range(rx3file.Rx3AnimationSkins.Length):
+			# 	temp = []
+			# 	v = rx3file.Rx3AnimationSkins[i]
+
+		
 		hasnormal = False
 		hasbinormals = False
 		hastangents = False
-		totalcols = 0
 		if v.Vertexes[meshid].Normals != None:
 			hasnormal = True
-			totalcols += 1
 		if v.Vertexes[meshid].Binormals != None:
 			hasbinormals = True
-			totalcols += 1
 		if v.Vertexes[meshid].Tangents != None:
 			hastangents = True
-			totalcols += 1
 		
 		# v.Vertexes.Clear()   # 0 - x
 
@@ -893,30 +878,18 @@ class RX3_File():
 			if hasnormal:
 				#normals / n
 				normal = Normal()
-				if (x < vlengthold):
-					normal.DEC3N = fc.FloatsToDEC3N(normals[x][0],normals[x][1],normals[x][2])
-				else:
-					f = x-newvertex
-					normal.DEC3N = fc.FloatsToDEC3N(normals[f][0],normals[f][1],normals[f][2])
+				normal.DEC3N = fc.FloatsToDEC3N(normals[x][0],normals[x][1],normals[x][2])
 
 
 			if hasbinormals:
 				#binormals / b
 				binormal = Binormal()
-				if (x < vlengthold):
-					binormal.DEC3N = fc.FloatsToDEC3N(binormals[x][0],binormals[x][1],binormals[x][2])
-				else:
-					f = x-newvertex
-					binormal.DEC3N = fc.FloatsToDEC3N(binormals[f][0],binormals[f][1],binormals[f][2])
+				binormal.DEC3N = fc.FloatsToDEC3N(binormals[x][0],binormals[x][1],binormals[x][2])
 
 			if hastangents:
 				#tangent / g
 				tangent = Tangent()
-				if (x < vlengthold):
-					tangent.DEC3N = fc.FloatsToDEC3N(tangents[x][0],tangents[x][1],tangents[x][2])
-				else:
-					f = x-newvertex
-					tangent.DEC3N = fc.FloatsToDEC3N(tangents[f][0],tangents[f][1],tangents[f][2])
+				tangent.DEC3N = fc.FloatsToDEC3N(tangents[x][0],tangents[x][1],tangents[x][2])
 
 
 
@@ -935,7 +908,6 @@ class RX3_File():
 		
 		v.Vertexes = collection
 
-
 	def WriteIndice(self, meshid, indice, rx3file):
 		i = rx3file.Rx3IndexBuffers[meshid]
 		# i.IndexStream.Clear()
@@ -945,13 +917,20 @@ class RX3_File():
 
 	def saveRx3(self, fileloc, game, mesh):
 		outDirectory = fileloc
+		test = False
 		
 		if outDirectory != "":
 			file = outDirectory + f"\\{self.fileType}_0_0.rx3"
 
-			game = game
-			log = fifa_tools.globalLogFile
-			logmessage = open(fifa_tools.addonLoc + r"\fifa_tools\scripts\msg", "r")
+			if test:
+				game = "FIFA 14"
+				lfile = r"C:\Users\dell\Documents\SE7EN\FIFA 3D\Logs\testlogs.log"
+				log = open(lfile, "a+")
+				logmessage = open(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\scripts\msg","r")
+			else:
+				game = game
+				log = fifa_tools.globalLogFile
+				logmessage = open(fifa_tools.addonLoc + r"\fifa_tools\scripts\msg", "r")
 
 			if (game == self.gtype):
 				print(f"Exporting File : {file}")
@@ -961,9 +940,20 @@ class RX3_File():
 					log.writeLog("Mesh count is different from what you loaded. Please do each file seperately.", "INFO")
 					return
 				
+
 				temp = []
 				for x in range(len(mesh)):
-					temp.append(ConvertMeshToData(mesh[x]))
+					v = self.dataRX3.Rx3VertexBuffers[x]
+					hasnormal = False
+					hasbinormals = False
+					hastangents = False
+					if v.Vertexes[x].Normals != None:
+						hasnormal = True
+					if v.Vertexes[os.X_OK].Binormals != None:
+						hasbinormals = True
+					if v.Vertexes[x].Tangents != None:
+						hastangents = True
+					temp.append(ConvertMeshToData(mesh[x], hasnormal, hasbinormals, hastangents))
 
 				vertex = []
 				indice = []
@@ -995,13 +985,18 @@ class RX3_File():
 					print(f"Getting Cols for Mesh {x}")
 					log.writeLog(f"Getting Cols for Mesh {x}", "INFO")
 
-					temp = self.GetCols(temp[x][3], x, self.dataRX3)
-					# temp = self.GetCols(temp[x][3])
-					normals, binormals, tangents = temp
+					t0 = temp[x][3]
+					t1 = temp[x][4]
+					t2 = temp[x][5]
+
+					te = self.GetCols(t0, t1, t2, x, self.dataRX3)
+					normals.append(te[0])
+					binormals.append(te[1])
+					tangents.append(te[2])
 
 				for x in range(self.meshCount):
 					# (meshid, vertex, uvs, normals, binormals, tangents, rx3file):
-					self.WriteVertexData(x, vertex[x], uvs[x], normals, binormals, tangents, self.dataRX3)
+					self.WriteVertexData(x, vertex[x], uvs[x], normals[x], binormals[x], tangents[x], self.dataRX3)
 					self.WriteIndice(x, indice[x], self.dataRX3)
 
 					# TriangleFan = 6,
@@ -1036,8 +1031,17 @@ class RX3_File_Hybrid():
 		self.isTexture = False
 		self.gtype = gtype
 		# file info end
-		self.cols = []  ## Normal / Binormals / Tangent Cols
-		self.colCount = []
+		
+		## Normals
+		self.cols_normals = []  
+		self.colCount_normals = []
+		## Binormals 
+		self.cols_binormals = []  
+		self.colCount_binormals = []
+		## Tangents
+		self.cols_tangents = []  
+		self.colCount_tangents = []
+		
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
@@ -1358,7 +1362,9 @@ class RX3_File_Hybrid():
 
 	def getNormalCols(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):
-			temp = []
+			temp1 = [] #normals
+			temp2 = [] #binromals
+			temp3 = [] #tangents
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
@@ -1366,27 +1372,46 @@ class RX3_File_Hybrid():
 				if v.Vertexes[x].Normals != None:
 					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z]
 					# data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
-					temp.append(data1)
+					temp1.append(data1)
 				#binormals / b
 				if v.Vertexes[x].Binormals != None:
 					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z]
 					# data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
-					temp.append(data2)
+					temp2.append(data2)
 				#tangent / g
 				if v.Vertexes[x].Tangents != None:
 					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z]
 					# data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
-					temp.append(data3)
+					temp3.append(data3)
 			
-			self.cols.append(temp)
-			self.colCount.append(len(self.cols[i]))
-			if len(self.cols[i]) > 0:
-				print(f"Color X,Y,Z,DEC3N of Col 0, Mesh {i} = {self.cols[i][0]}")
-				print(f"Color X,Y,Z,DEC3N of Col 1, Mesh {i} = {self.cols[i][1]}")
-				print(f"Color X,Y,Z,DEC3N of Col 2, Mesh {i} = {self.cols[i][2]}")
-				print(f"Color Count, Mesh {i} : {self.colCount[i]}")
+			self.cols_normals.append(temp1)
+			self.cols_binormals.append(temp2)
+			self.cols_tangents.append(temp3)
 
-		return self.cols
+			self.colCount_normals.append(len(self.cols_normals[i]))
+			self.colCount_binormals.append(len(self.cols_binormals[i]))
+			self.colCount_tangents.append(len(self.cols_tangents[i]))
+
+
+			if len(self.cols_normals[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Normal Col 0, Mesh {i} = {self.cols_normals[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Normal Col 1, Mesh {i} = {self.cols_normals[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Normal Col 2, Mesh {i} = {self.cols_normals[i][2]}")
+				print(f"Normal Color Count, Mesh {i} : {self.colCount_normals[i]}")
+
+			if len(self.cols_binormals[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Binormal Col 0, Mesh {i} = {self.cols_binormals[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Binormal Col 1, Mesh {i} = {self.cols_binormals[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Binormal Col 2, Mesh {i} = {self.cols_binormals[i][2]}")
+				print(f"Binormal Color Count, Mesh {i} : {self.colCount_binormals[i]}")
+
+			if len(self.cols_tangents[i]) > 0:
+				print(f"Color X,Y,Z,DEC3N of Tangent Col 0, Mesh {i} = {self.cols_tangents[i][0]}")
+				print(f"Color X,Y,Z,DEC3N of Tangent Col 1, Mesh {i} = {self.cols_tangents[i][1]}")
+				print(f"Color X,Y,Z,DEC3N of Tangent Col 2, Mesh {i} = {self.cols_tangents[i][2]}")
+				print(f"Tangent Color Count, Mesh {i} : {self.colCount_tangents[i]}")
+
+		return self.cols_normals, self.cols_binormals, self.cols_tangents
 
 	def getUVS(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):

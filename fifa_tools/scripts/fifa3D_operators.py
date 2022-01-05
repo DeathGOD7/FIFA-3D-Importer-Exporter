@@ -309,7 +309,7 @@ class se7en_import(bpy.types.Operator):
 									name += '_' + "head"
 								elif i == 1:
 									name += '_' + "eyes"
-							obname = fifa_main.se7en_importmesh(mainImport.mainFile.vertexPosition[i] , mainImport.mainFile.faces[i] , mainImport.mainFile.uvs[i] , name , meshimportcount , 0 , mainImport.mainFile.cols[i], False, [], scn.fifa_import_loc)
+							obname = fifa_main.se7en_importmesh(mainImport.mainFile.vertexPosition[i] , mainImport.mainFile.faces[i] , mainImport.mainFile.uvs[i] , name , meshimportcount , 0 , mainImport.mainFile.cols_normals[i], mainImport.mainFile.cols_binormals[i], mainImport.mainFile.cols_tangents[i], False, [], scn.fifa_import_loc)
 							meshimportcount += 1
 							skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.mainFile.skeletonType.value)
 							
@@ -351,7 +351,7 @@ class se7en_import(bpy.types.Operator):
 									name += '_' + "head"
 								elif i == 1:
 									name += '_' + "eyes"
-							obname = fifa_main.se7en_importmesh(mainImport.mainFile.vertexPosition[i] , mainImport.mainFile.faces[i] , mainImport.mainFile.uvs[i] , name , meshimportcount , 0 , mainImport.mainFile.cols[i], False, [], scn.fifa_import_loc)
+							obname = fifa_main.se7en_importmesh(mainImport.mainFile.vertexPosition[i] , mainImport.mainFile.faces[i] , mainImport.mainFile.uvs[i] , name , meshimportcount , 0 , mainImport.mainFile.cols_normals[i], mainImport.mainFile.cols_binormals[i], mainImport.mainFile.cols_tangents[i], False, [], scn.fifa_import_loc)
 							meshimportcount += 1
 							skeletoninfo = fifa3D_helper.LoadSkeletonInfo(mainImport.mainFile.skeletonType.value)
 							

@@ -92,11 +92,13 @@ def AddVertexSkeleton(bones, fileID, skI):
 		ob.scale = Vector((0.01, 0.01, 0.01))
 		ob.rotation_euler[1] = 1.5707972049713135
 
-def ConvertMeshToData(object):
+def ConvertMeshToData(object, normal, binormal, tangent):
 	verts = []
 	uvs = []
 	indices = []
-	cols = []
+	cols_normals = []
+	cols_binormals = []
+	cols_tangents = []
 	data = object.data
 	bm = bmesh.new()
 	bm.from_mesh(data)
@@ -108,11 +110,11 @@ def ConvertMeshToData(object):
 	uvs_5 = []
 	uvs_6 = []
 	uvs_7 = []
-	col_0 = []
-	col_1 = []
-	col_2 = []
+	col_0 = [] #normal
+	col_1 = [] #binormal
+	col_2 = [] #tangent
 	uvcount = len(bm.loops.layers.uv)
-	colcount = len(bm.loops.layers.color)
+	# colcount = len(bm.loops.layers.color)
 	rot_x_mat = Matrix.Rotation(radians(90), 4, 'X')
 	scale_mat = Matrix.Scale(100, 4)
 	
@@ -133,11 +135,31 @@ def ConvertMeshToData(object):
 			uvlayer = bm.loops.layers.uv[j]
 			eval('uvs_' + str(j) + '.append((round(bm.verts[i].link_loops[0][uvlayer].uv.x,8),round(1-bm.verts[i].link_loops[0][uvlayer].uv.y,8)))')
 	
+	# for i in range(len(bm.verts)):
+	# 	for j in range(colcount):
+	# 		# collayer = bm.loops.layers.color[j]
+	# 		collayer = bm.loops.layers.color["Col"]
+	# 		vert_data = bm.verts[i].link_loops[0][collayer]
+	# 		eval('col_' + str(j) + '.append((vert_data[0]*1023,vert_data[1]*1023,vert_data[2]*1023))')
+
 	for i in range(len(bm.verts)):
-		for j in range(colcount):
-			collayer = bm.loops.layers.color[j]
-			vert_data = bm.verts[i].link_loops[0][collayer]
-			eval('col_' + str(j) + '.append((vert_data[0]*1023,vert_data[1]*1023,vert_data[2]*1023))')
+		# normal
+		if normal:
+			collayer0 = bm.loops.layers.color[('col_normal')]
+			vert_data0 = bm.verts[i].link_loops[0][collayer0]
+			col_0.append((vert_data0[0],vert_data0[1],vert_data0[2]))
+		
+		# binormal
+		if binormal:
+			collayer1 = bm.loops.layers.color[('col_binormal')]
+			vert_data1 = bm.verts[i].link_loops[0][collayer1]
+			col_1.append((vert_data1[0],vert_data1[1],vert_data1[2]))
+		
+		# normal
+		if tangent:
+			collayer2 = bm.loops.layers.color[('col_tangent')]
+			vert_data2 = bm.verts[i].link_loops[0][collayer2]
+			col_2.append((vert_data2[0],vert_data2[1],vert_data2[2]))
 
 	bm.faces.ensure_lookup_table()
 	for f in bm.faces:
@@ -148,12 +170,15 @@ def ConvertMeshToData(object):
 	for j in range(uvcount):
 		eval('uvs.append(uvs_' + str(j) + ')')
 
-	for j in range(colcount):
-		eval('cols.append(col_' + str(j) + ')')
+	# for j in range(colcount):
+	# 	eval('cols.append(col_' + str(j) + ')')
+	cols_normals.append(col_0)
+	cols_binormals.append(col_1)
+	cols_tangents.append(col_2)
 
 	bm.free()	
 
-	return (verts, indices, uvs, cols)
+	return (verts, indices, uvs, cols_normals, cols_binormals, cols_tangents)
 
 
 
