@@ -424,9 +424,12 @@ class general_helper:
 				for l in f.loops:
 					vert = l.vert
 					norm = vert.normal
-					l[collayer].r = general_helper.norm_to_col(round(-norm[1], 3))
-					l[collayer].g = general_helper.norm_to_col(round(norm[2], 3))
-					l[collayer].b = general_helper.norm_to_col(round(norm[0], 3))
+					l[collayer].x = general_helper.norm_to_col(round(-norm[1], 3))
+					l[collayer].y = general_helper.norm_to_col(round(norm[2], 3))
+					l[collayer].z = general_helper.norm_to_col(round(norm[0], 3))
+					# l[collayer].r = general_helper.norm_to_col(round(-norm[1], 3))
+					# l[collayer].g = general_helper.norm_to_col(round(norm[2], 3))
+					# l[collayer].b = general_helper.norm_to_col(round(norm[0], 3))
 
 		elif scn.autopaint_modes == '1':
 			collayer = bm.loops.layers.color.new('fnormalmap')

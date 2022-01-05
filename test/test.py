@@ -140,7 +140,7 @@ class RX3_File():
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
-		self.dataRX3 = None
+		self.dataRX3 = Rx3File()
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
@@ -266,18 +266,13 @@ class RX3_File():
 		elif indicesLength == 2:
 			string = endian + 'HHH'
 
-		n = open("allobtdata_list_blender.txt", "w+")
 		for i in range(self.faceCount[mID]):
 			temp = struct.unpack(string, f.read(indicesLength * 3))
-			n.writelines(str(temp))
 			if not temp[0] == temp[1]:
 				if not temp[2] == temp[1]:
 					if temp[0] == temp[2]:
 						continue
 					faces.append((temp[0], temp[1], temp[2]))
-
-		f = open("allfaces_list.txt", "w+")
-		f.writelines(str(faces))
 
 		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
@@ -305,11 +300,9 @@ class RX3_File():
 			string = endian + 'HHH'
 
 		flag = False
-		n = open("allobtdata_fan_blender.txt", "w+")
 		for i in range(self.faceCount[mID]):
 			back = f.tell()
 			temp = struct.unpack(string, f.read(indicesLength * 3))
-			n.writelines(str(temp))
 			if temp[0] == temp[1] or temp[1] == temp[2] or temp[0] == temp[2]:
 				flag = not flag
 				f.seek(back + indicesLength)
@@ -320,9 +313,6 @@ class RX3_File():
 				faces.append((temp[2], temp[1], temp[0]))
 			flag = not flag
 			f.seek(back + indicesLength)
-
-		f = open("allfaces_fan.txt", "w+")
-		f.writelines(str(faces))
 
 		print(f"Values of Face 0, Mesh {mID}: {faces[0]}")
 		return faces
@@ -472,7 +462,9 @@ class RX3_File():
 
 	def getNormalCols(self, rx3file):
 		for i in range(rx3file.Rx3VertexBuffers.Length):
-			temp = []
+			temp1 = [] #normals
+			temp2 = [] #binromals
+			temp3 = [] #tangents
 			v = rx3file.Rx3VertexBuffers[i]
 
 			for x in range(v.Vertexes.Length):
@@ -480,17 +472,17 @@ class RX3_File():
 				if v.Vertexes[x].Normals != None:
 					data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z]
 					# data1 = [v.Vertexes[x].Normals[0].Normal_x , v.Vertexes[x].Normals[0].Normal_y, v.Vertexes[x].Normals[0].Normal_z, v.Vertexes[x].Normals[0].DEC3N]
-					temp.append(data1)
+					temp1.append(data1)
 				#binormals / b
 				if v.Vertexes[x].Binormals != None:
 					data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z]
 					# data2 = [v.Vertexes[x].Binormals[0].Binormal_x , v.Vertexes[x].Binormals[0].Binormal_y, v.Vertexes[x].Binormals[0].Binormal_z, v.Vertexes[x].Binormals[0].DEC3N]
-					temp.append(data2)
+					temp2.append(data2)
 				#tangent / g
 				if v.Vertexes[x].Tangents != None:
 					data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z]
 					# data3 = [v.Vertexes[x].Tangents[0].Tangent_x , v.Vertexes[x].Tangents[0].Tangent_y, v.Vertexes[x].Tangents[0].Tangent_z, v.Vertexes[x].Tangents[0].DEC3N]
-					temp.append(data3)
+					temp3.append(data3)
 			
 			self.cols.append(temp)
 			self.colCount.append(len(self.cols[i]))
@@ -624,18 +616,16 @@ class RX3_File():
 		if file != "":
 			f = self.data = self.getDataRx3(file)
 	
-			mainFile = Rx3File()
-			mainFile.Load(file)
-			self.dataRX3 = mainFile
+			self.dataRX3.Load(file)
 
-			for x in range(mainFile.Rx3IndexBuffers.Length):
-				print(mainFile.Rx3IndexBuffers[x].IndexStream.Length)
+			for x in range(self.dataRX3.Rx3IndexBuffers.Length):
+				print(self.dataRX3.Rx3IndexBuffers[x].IndexStream.Length)
 				f = open("allindices__dll_new.txt", "w+")
-				for y in range(mainFile.Rx3IndexBuffers[x].IndexStream.Length):
-					f.writelines(str(mainFile.Rx3IndexBuffers[x].IndexStream[y]) + ", ")
+				for y in range(self.dataRX3.Rx3IndexBuffers[x].IndexStream.Length):
+					f.writelines(str(self.dataRX3.Rx3IndexBuffers[x].IndexStream[y]) + ", ")
 
 
-			self.endian = mainFile.Rx3Header.Endianness
+			self.endian = self.dataRX3.Rx3Header.Endianness
 			if self.endian == "b":
 				self.endianType = '>'
 				self.endianStr = "Big Endian"
@@ -645,36 +635,36 @@ class RX3_File():
 				self.endianStr = "Little Endian"
 				print(f"Endian Type : {self.endianStr}")
 			
-			self.offsets = self.getOffsets(mainFile)
+			self.offsets = self.getOffsets(self.dataRX3)
 
 			if not self.isTexture:
-				self.meshCount = mainFile.Rx3VertexBuffers.Length
-				print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
+				self.meshCount = self.dataRX3.Rx3VertexBuffers.Length
+				print(f"Total Mesh Count : {self.dataRX3.Rx3IndexBuffers.Length}")
 
 				for x in range(self.meshCount):
-					# temp = mainFile.Rx3NameTable.Names[x].Name.split(sep="_")
-					temp = mainFile.Rx3NameTable.Names[x].Name
+					# temp = self.dataRX3.Rx3NameTable.Names[x].Name.split(sep="_")
+					temp = self.dataRX3.Rx3NameTable.Names[x].Name
 					self.meshNames.append(temp)
 
-				self.getVertexFormats(mainFile)
+				self.getVertexFormats(self.dataRX3)
 
-				self.getVertexPosition(mainFile)
+				self.getVertexPosition(self.dataRX3)
 
-				self.getNormalCols(mainFile)
+				self.getNormalCols(self.dataRX3)
 
-				self.getUVS(mainFile)
+				self.getUVS(self.dataRX3)
 
-				self.getIndicesData(mainFile)
+				self.getIndicesData(self.dataRX3)
 
-				self.getVertexColor(mainFile)
+				self.getVertexColor(self.dataRX3)
 
-				self.getBoneIndice(mainFile)
+				self.getBoneIndice(self.dataRX3)
 				
-				self.getBoneWeight(mainFile)
+				self.getBoneWeight(self.dataRX3)
 
-				self.getCollisions(mainFile)
+				self.getCollisions(self.dataRX3)
 
-				self.getBones(mainFile)
+				self.getBones(self.dataRX3)
 
 				fcOffset = []
 				for x in self.offsets:
@@ -683,7 +673,7 @@ class RX3_File():
 
 				# f.seek(-16, 2)
 				# self.primitiveType = int.from_bytes(f.read(1),"little")
-				self.primitiveType = mainFile.GetPrimitiveType(0)
+				self.primitiveType = self.dataRX3.GetPrimitiveType(0)
 
 				if self.primitiveType == 4:
 					print(f"Primitive Type : {self.primitiveType} (TriangleList)")
@@ -699,7 +689,7 @@ class RX3_File():
 					print("Unknown Primitive Type")
 		
 			else:
-				self.getTextures(mainFile)
+				self.getTextures(self.dataRX3)
 
 
 
@@ -737,15 +727,102 @@ class RX3_File():
 
 		return temp
 	
-	def GetCols(self, cols):
-		temp = [] # mesh per cols
+	def GetCols(self, cols, meshid, rx3file):
+		v = rx3file.Rx3VertexBuffers[meshid]
 
-		for x in range(len(cols)):
-			for y in cols[x]:
-				tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
-				temp.append(tmp1)
+		hasnormal = False
+		hasbinormals = False
+		hastangents = False
+		if v.Vertexes[meshid].Normals != None:
+			hasnormal = True
+			print("Normals : " + str(hasnormal))
+			print("Normals Count : " + str(v.Vertexes[meshid].Normals[0].Count))
+		if v.Vertexes[meshid].Binormals != None:
+			hasbinormals = True
+			print("Binormals : " + str(hasbinormals))
+			print("Binormals Count : " + str(v.Vertexes[meshid].Binormals[0].Count))
+		if v.Vertexes[meshid].Tangents != None:
+			hastangents = True
+			print("Tangents : " + str(hastangents))
+			print("Tangents Count : " + str(v.Vertexes[meshid].Tangents[0].Count))
 
-		return temp
+
+		normals = [] # mesh per cols
+		binormals = [] # mesh per cols
+		tangents = [] # mesh per cols
+
+		if hasnormal and not (hasbinormals or hastangents):
+			print("Has normal cols only")
+			for x in range(0, len(cols), 1):
+				for y in cols[x]:
+					tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					normals.append(tmp1)
+
+			# for x in range(len(normals) - )
+
+		elif hasbinormals and not (hasnormal or hastangents):
+			print("Has binormals cols only")
+			for x in range(0, len(cols), 1):
+				for y in cols[x]:
+					tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					binormals.append(tmp1)
+
+		elif hastangents and not (hasnormal or hasbinormals):
+			print("Has tangents cols only")
+			for x in range(0, len(cols), 1):
+				for y in cols[x]:
+					tmp1 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					tangents.append(tmp1)
+
+		elif (hasnormal and hasbinormals) and not hastangents:
+			print("Has normal and binormals cols only")
+			for m in range(0, len(cols)):  ## per mesh
+				for n in range(0, len(cols[m]), 2):  ## per vertex
+					x = cols[m][n]
+					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
+					normals.append(tmp1)
+					y = cols[m][n+1]
+					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					binormals.append(tmp2)
+
+		elif (hasnormal and hastangents) and not hasbinormals:
+			print("Has normal and tangents cols only")
+			for m in range(0, len(cols)):  ## per mesh
+				for n in range(0, len(cols[m]), 2):  ## per vertex
+					x = cols[m][n]
+					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
+					normals.append(tmp1)
+					y = cols[m][n+1]
+					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					tangents.append(tmp2)
+
+		elif (hasbinormals and hastangents) and not hasnormal:
+			print("Has binormals and tangents cols only")
+			for m in range(0, len(cols)):  ## per mesh
+				for n in range(0, len(cols[m]), 2):  ## per vertex
+					x = cols[m][n]
+					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
+					binormals.append(tmp1)
+					y = cols[m][n+1]
+					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					tangents.append(tmp2)
+
+		else:
+			print("Has normal, binormals and tangents cols all")
+			for m in range(0, len(cols)):  ## per mesh
+				for n in range(0, len(cols[m]), 3):  ## per vertex
+					x = cols[m][n]
+					tmp1 = [x[0]/1023, x[1]/1023, x[2]/1023]
+					normals.append(tmp1)
+					y = cols[m][n+1]
+					tmp2 = [y[0]/1023, y[1]/1023, y[2]/1023]
+					binormals.append(tmp2)
+					z = cols[m][n+2]
+					tmp3 = [z[0]/1023, z[1]/1023, z[2]/1023]
+					tangents.append(tmp3)
+
+
+		return normals, binormals, tangents
 	
 	def GetUVs(self, uvs):
 		temp = []
@@ -758,16 +835,36 @@ class RX3_File():
 	
 	### WRITING FILE ###
 
-	def WriteVertexData(self, meshid, vertex, uvs, cols, rx3file):
+	def WriteVertexData(self, meshid, vertex, uvs, normals, binormals, tangents, rx3file):
 		v = rx3file.Rx3VertexBuffers[meshid]
+		vlengthold = v.Vertexes.Length
+		vlengthnew = len(vertex)
+		newvertex = vlengthnew - vlengthold
+
+		# if (v.)
+
+
+
+		# [v.Vertexes[x].BlendWeights[y].Weight_1
+		# vertexdata = [v.Vertexes[x].BlendIndices[y].Index_1
+
+
+
+			# 	if (rx3file.Rx3AnimationSkins != None):
+			# for i in range(rx3file.Rx3AnimationSkins.Length):
+			# 	temp = []
+			# 	v = rx3file.Rx3AnimationSkins[i]
+
 		
-		totalcols = 0
+		hasnormal = False
+		hasbinormals = False
+		hastangents = False
 		if v.Vertexes[meshid].Normals != None:
-			totalcols += 1
+			hasnormal = True
 		if v.Vertexes[meshid].Binormals != None:
-			totalcols += 1
+			hasbinormals = True
 		if v.Vertexes[meshid].Tangents != None:
-			totalcols += 1
+			hastangents = True
 		
 		# v.Vertexes.Clear()   # 0 - x
 
@@ -777,45 +874,63 @@ class RX3_File():
 
 			## pos
 			pos = Position()
-			pos.X = vertex[0]  # 0 - x
-			pos.Z = -vertex[1]  # 1 - z
-			pos.Y = vertex[2]  # 2 - y
+			pos.X = vertex[x][0]  # 0 - x
+			pos.Z = -vertex[x][1]  # 1 - z
+			pos.Y = vertex[x][2]  # 2 - y
 
-			vrt.Positions.Add(pos)
+			vrt.Positions = [pos]
 
 
 			## uvs
 			TextureCoord = TextureCoordinate()
-			TextureCoord.U = uvs[0]
-			TextureCoord.V = uvs[1]
+			TextureCoord.U = uvs[x][0]
+			TextureCoord.V = uvs[x][1]
 
-			vrt.TextureCoordinates.Add(TextureCoord)
+			vrt.TextureCoordinates = [TextureCoord]
 
 
 			## cols
 
 			fc = FifaUtil()
 
-			for x in (range(0, len(cols), totalcols)):
-				if totalcols == 1:
-					#normals / n
-					normal = Normal()
-					normal.DEC3N = fc.FloatsToDEC3N(cols[x][0],cols[x][1],cols[x][2])
 
-				if totalcols == 2:
-					#binormals / b
-					binormal = Binormal()
-					binormal.DEC3N = fc.FloatsToDEC3N(cols[x+1][0],cols[x+1][1],cols[x+1][2])
-
-				if totalcols == 3:
-					#tangent / g
-					tangent = Tangent()
-					tangent.DEC3N = fc.FloatsToDEC3N(cols[x+2][0],cols[x+2][1],cols[x+2][2])
+			if hasnormal:
+				#normals / n
+				normal = Normal()
+				if (x < vlengthold):
+					normal.DEC3N = fc.FloatsToDEC3N(normals[x][0],normals[x][1],normals[x][2])
+				else:
+					f = x-newvertex
+					normal.DEC3N = fc.FloatsToDEC3N(normals[f][0],normals[f][1],normals[f][2])
 
 
-			vrt.Normals.Add(normal)
-			vrt.Binormals.Add(binormal)
-			vrt.Tangents.Add(tangent)
+			if hasbinormals:
+				#binormals / b
+				binormal = Binormal()
+				if (x < vlengthold):
+					binormal.DEC3N = fc.FloatsToDEC3N(binormals[x][0],binormals[x][1],binormals[x][2])
+				else:
+					f = x-newvertex
+					binormal.DEC3N = fc.FloatsToDEC3N(binormals[f][0],binormals[f][1],binormals[f][2])
+
+			if hastangents:
+				#tangent / g
+				tangent = Tangent()
+				if (x < vlengthold):
+					tangent.DEC3N = fc.FloatsToDEC3N(tangents[x][0],tangents[x][1],tangents[x][2])
+				else:
+					f = x-newvertex
+					tangent.DEC3N = fc.FloatsToDEC3N(tangents[f][0],tangents[f][1],tangents[f][2])
+
+
+			if hasnormal:
+				vrt.Normals = [normal]
+			
+			if hasbinormals:
+				vrt.Binormals = [binormal]
+			
+			if hastangents:
+				vrt.Tangents = [tangent]
 
 
 			collection.append(vrt)
@@ -831,13 +946,12 @@ class RX3_File():
 		i.IndexStream = indice
 
 
-	def saveRx3(self, file, mesh):
-		outDirectory = file
+	def saveRx3(self, fileloc, game, mesh):
+		outDirectory = fileloc
 		test = True
 		
 		if outDirectory != "":
 			file = outDirectory + f"\\{self.fileType}_0_0.rx3"
-			outFile = self.dataRX3
 
 			if test:
 				game = "FIFA 14"
@@ -845,9 +959,9 @@ class RX3_File():
 				log = open(lfile, "a+")
 				logmessage = open(r"E:\SE7EN\Github\FIFA 3D Importer Exporter\fifa_tools\scripts\msg","r")
 			else:
-				game = scn.game_enum
+				game = game
 				log = fifa_tools.globalLogFile
-				logmessage = open(fifa_tools.addonLoc + r"fifa_tools\scripts\msg", "r")
+				logmessage = open(fifa_tools.addonLoc + r"\fifa_tools\scripts\msg", "r")
 
 			if (game == self.gtype):
 				print(f"Exporting File : {file}")
@@ -864,7 +978,9 @@ class RX3_File():
 				vertex = []
 				indice = []
 				uvs = []
-				cols = []
+				normals = [] #  per cols
+				binormals = [] #  per cols
+				tangents = [] #  per cols
 
 				for x in range(len(temp)):
 					# get vertex 0
@@ -889,19 +1005,21 @@ class RX3_File():
 					print(f"Getting Cols for Mesh {x}")
 					log.writeLog(f"Getting Cols for Mesh {x}", "INFO")
 
-					cols.append(self.GetCols(temp[x][3]))
+					temp = self.GetCols(temp[x][3], x, self.dataRX3)
+					normals, binormals, tangents = temp
 
 				for x in range(self.meshCount):
-					self.WriteVertexData(x, vertex[x], uvs[x], cols[x], outFile)
-					self.WriteIndice(x, indice[x], outFile)
+					# (meshid, vertex, uvs, normals, binormals, tangents, rx3file):
+					self.WriteVertexData(x, vertex[x], uvs[x], normals, binormals, tangents, self.dataRX3)
+					self.WriteIndice(x, indice[x], self.dataRX3)
 
 					# TriangleFan = 6,
 					# TriangleList = 4,
 
-					outFile.Rx3SimpleMeshes[x].PrimitiveType = 4
+					self.dataRX3.Rx3SimpleMeshes[x].PrimitiveType = 4
 
 
-				outFile.Save(file)
+				self.dataRX3.Save(file)
 
 			else:
 				lines = logmessage.readlines()
@@ -932,7 +1050,7 @@ class RX3_File_Hybrid():
 		self.collision = []
 		self.collisionCount = []
 		self.data = 0
-		self.dataRX3 = None
+		self.dataRX3 = Rx3File()
 		self.endian = ""
 		self.endianStr = ""
 		self.endianType = ""
@@ -1414,12 +1532,9 @@ class RX3_File_Hybrid():
 		if file != "":
 			f = self.data = self.getDataRx3(file)
 	
-			mainFile = Rx3File()
-			mainFile.Load(file)
-			self.dataRX3 = mainFile
+			self.dataRX3.Load(file)
 
-
-			self.endian = mainFile.RW4Section.RW4Header.Endianness
+			self.endian = self.dataRX3.RW4Section.RW4Header.Endianness
 			if self.endian == 1:
 				self.endian = "b"
 				self.endianType = '>'
@@ -1431,44 +1546,44 @@ class RX3_File_Hybrid():
 				self.endianStr = "Little Endian"
 				print(f"Endian Type : {self.endianStr}")
 			
-			self.offsets = self.getOffsets(mainFile)
+			self.offsets = self.getOffsets(self.dataRX3)
 
 			if not self.isTexture:
-				self.meshCount = mainFile.Rx3VertexBuffers.Length
-				print(f"Total Mesh Count : {mainFile.Rx3IndexBuffers.Length}")
+				self.meshCount = self.dataRX3.Rx3VertexBuffers.Length
+				print(f"Total Mesh Count : {self.dataRX3.Rx3IndexBuffers.Length}")
 
 				for x in range(self.meshCount):
-					# temp = mainFile.Rx3NameTable.Names[x].Name.split(sep="_")
-					temp = mainFile.RW4Section.RW4NameSection.Names[x].Name
+					# temp = self.dataRX3.Rx3NameTable.Names[x].Name.split(sep="_")
+					temp = self.dataRX3.RW4Section.RW4NameSection.Names[x].Name
 					self.meshNames.append(temp)
 
-				self.getVertexFormats(mainFile)
+				self.getVertexFormats(self.dataRX3)
 
-				self.getVertexPosition(mainFile)
+				self.getVertexPosition(self.dataRX3)
 
-				self.getNormalCols(mainFile)
+				self.getNormalCols(self.dataRX3)
 
-				self.getUVS(mainFile)
+				self.getUVS(self.dataRX3)
 
-				self.getIndicesData(mainFile)
+				self.getIndicesData(self.dataRX3)
 
-				self.getVertexColor(mainFile)
+				self.getVertexColor(self.dataRX3)
 
-				self.getBoneIndice(mainFile)
+				self.getBoneIndice(self.dataRX3)
 				
-				self.getBoneWeight(mainFile)
+				self.getBoneWeight(self.dataRX3)
 
-				self.getCollisions(mainFile)
+				self.getCollisions(self.dataRX3)
 
-				self.getBones(mainFile)
+				self.getBones(self.dataRX3)
 
 				fcOffset = []
 				for x in self.offsets:
 					if x[0] == 5798132:
 						fcOffset.append(x[1])
 
-				self.primitiveType = mainFile.GetPrimitiveType(0)
-				# self.primitiveType = mainFile.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
+				self.primitiveType = self.dataRX3.GetPrimitiveType(0)
+				# self.primitiveType = self.dataRX3.RW4Section.RW4Shader_FxRenderableSimples[0].PrimitiveType
 
 				if self.primitiveType == 4:
 					print(f"Primitive Type : {self.primitiveType} (TriangleList)")
@@ -1484,7 +1599,7 @@ class RX3_File_Hybrid():
 					print("Unknown Primitive Type")
 		
 			else:
-				self.getTextures(mainFile)
+				self.getTextures(self.dataRX3)
 
 
 		else:
@@ -1509,6 +1624,7 @@ class RX3_File_Hybrid():
 # # print(x2.meshNames)
 # for x in x2.meshNames:
 # 	print(x)
+x2 = RX3_File(r".\f14\shoe_14.rx3", GameType.FIFA14)
 # x2 = RX3_File(r".\f14\specificball_0_13_0.rx3", GameType.FIFA14)
 # # x3 = RX3_File(r".\f14\ball_14.rx3", GameType.FIFA14)
 
