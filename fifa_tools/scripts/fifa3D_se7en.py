@@ -822,6 +822,14 @@ class RX3_File():
 		vlengthnew = len(vertex)
 		newvertex = vlengthnew - vlengthold
 
+		
+		print(f"old vertex length : {vlengthold}")
+		print(f"new vertex length : {vlengthnew}")
+		print(f"new uvs length : {len(uvs)}")
+		print(f"new normal cols length : {len(normals)}")
+		print(f"new binormals cols length : {len(binormals)}")
+		print(f"new tangents cols length : {len(tangents)}")
+
 		# if (v.)
 
 
@@ -911,7 +919,7 @@ class RX3_File():
 	def WriteIndice(self, meshid, indice, rx3file):
 		i = rx3file.Rx3IndexBuffers[meshid]
 		# i.IndexStream.Clear()
-
+		print(f"indice length : {len(indice)}")
 		i.IndexStream = indice
 
 
