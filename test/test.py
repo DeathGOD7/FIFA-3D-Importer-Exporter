@@ -852,15 +852,20 @@ class RX3_File():
 		
 		# v.Vertexes.Clear()   # 0 - x
 
+
 		collection = []
 		for x in range(len(vertex)):
 			vrt = Vertex()
 
 			## pos
 			pos = Position()
+			# pos.X = vertex[x][0]  # 0 - x
+			# pos.Y = vertex[x][2]  # 2 - y
+			# pos.Z = -vertex[x][1]  # 1 - z
+
 			pos.X = vertex[x][0]  # 0 - x
-			pos.Z = -vertex[x][1]  # 1 - z
-			pos.Y = vertex[x][2]  # 2 - y
+			pos.Y = vertex[x][1]  # 1 - y
+			pos.Z = vertex[x][2]  # 2 - z
 
 			vrt.Positions = [pos]
 
@@ -1643,7 +1648,15 @@ class RX3_File_Hybrid():
 # # print(x2.meshNames)
 # for x in x2.meshNames:
 # 	print(x)
-x2 = RX3_File(r".\f14\shoe_14.rx3", GameType.FIFA14)
+
+
+# x2 = RX3_File(r".\f14\specificball_0_13_0.rx3", GameType.FIFA14)
+# x3 = RX3_File(r".\f14\New Folder\specificball_0_0.rx3", GameType.FIFA14)
+
+x2 = RX3_File(r".\f14\ball_0.rx3", GameType.FIFA14)
+x3 = RX3_File(r".\f14\New Folder\ball_0_0.rx3", GameType.FIFA14)
+
+
 # x2 = RX3_File(r".\f14\specificball_0_13_0.rx3", GameType.FIFA14)
 # # x3 = RX3_File(r".\f14\ball_14.rx3", GameType.FIFA14)
 
@@ -1670,6 +1683,9 @@ x2 = RX3_File(r".\f14\shoe_14.rx3", GameType.FIFA14)
 # for x in x2.cols :
 # 	for y in x:
 # 		f.writelines(str(x))
+
+
+# get all vertex index from rx3file and convert it to faces
 
 
 # x2 = RX3_File(r".\f14\shoe_14.rx3", GameType.FIFA14)

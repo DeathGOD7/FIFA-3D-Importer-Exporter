@@ -123,10 +123,10 @@ def ConvertMeshToData(object, normal, binormal, tangent):
 		# only if you need to:
 		# bm.edges.ensure_lookup_table()   
 		# bm.faces.ensure_lookup_table()
-	
+	f = open(r"C:\Users\dell\Documents\SE7EN\FIFA 3D\Logs\test.txt", "w")
 	for vert in bm.verts:
 		co = scale_mat @ rot_x_mat @ object.matrix_world @ vert.co
-		
+		f.writelines(f"({co[0]}, {-co[1]}, {-co[2]})")
 		verts.append((co[0], -co[1], -co[2]))
 
 	bm.verts.ensure_lookup_table()

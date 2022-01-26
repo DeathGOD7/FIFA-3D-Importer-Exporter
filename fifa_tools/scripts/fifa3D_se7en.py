@@ -857,15 +857,23 @@ class RX3_File():
 		
 		# v.Vertexes.Clear()   # 0 - x
 
+		ff = open(r"C:\Users\dell\Documents\SE7EN\FIFA 3D\Logs\test1.txt", "w")
+
 		collection = []
 		for x in range(len(vertex)):
 			vrt = Vertex()
 
 			## pos
 			pos = Position()
+			# pos.X = vertex[x][0]  # 0 - x
+			# pos.Y = vertex[x][2]  # 2 - y
+			# pos.Z = -vertex[x][1]  # 1 - z
+
 			pos.X = vertex[x][0]  # 0 - x
-			pos.Z = -vertex[x][1]  # 1 - z
-			pos.Y = vertex[x][2]  # 2 - y
+			pos.Y = vertex[x][1]  # 1 - y
+			pos.Z = vertex[x][2]  # 2 - z
+
+			ff.writelines(f"({pos.X}, {pos.Y}, {pos.Z})")
 
 			vrt.Positions = [pos]
 
