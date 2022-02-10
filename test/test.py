@@ -9,8 +9,8 @@ import math
 sys.path.append(r'.\lib')
 
 clr.AddReference('SE7EN')
-ref1 = clr.AddReference('FIFALibrary_v21.11.28.0_x64')
-# ref1 = clr.AddReference('FIFALibrary_v21.12.08_beta')
+# ref1 = clr.AddReference('FIFALibrary_v21.11.28.0_x64')
+ref1 = clr.AddReference('FIFALibrary_22.02.07_Beta')
 
 from SE7EN007 import *
 from FIFALibrary20 import *

@@ -415,6 +415,8 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 
 			row = col.row()
 			row.prop(scn, 'hair_import_path')
+			row0 = col.row()
+			row0.prop(scn, 'hairlod_import_path')
 			row1 = col.row()
 			row1.prop(scn, 'crwd_import_path')
 			row1.enabled = False
@@ -1038,7 +1040,12 @@ bpy.types.Scene.model_import_path = bpy.props.StringProperty(
 )
 bpy.types.Scene.hair_import_path = bpy.props.StringProperty(
 	name="Hair File",
-	description='Select additional .rx3 model file',
+	description='Select additional .rx3 hair model file',
+	subtype='FILE_PATH'
+)
+bpy.types.Scene.hairlod_import_path = bpy.props.StringProperty(
+	name="Hairlod File",
+	description='Select additional .rx3 hairlod model file',
 	subtype='FILE_PATH'
 )
 bpy.types.Scene.crwd_import_path = bpy.props.StringProperty(
