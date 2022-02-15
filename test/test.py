@@ -10,7 +10,7 @@ sys.path.append(r'.\lib')
 
 clr.AddReference('SE7EN')
 # ref1 = clr.AddReference('FIFALibrary_v21.11.28.0_x64')
-ref1 = clr.AddReference('FIFALibrary_22.02.07_Beta')
+ref1 = clr.AddReference('FIFALibrary_v22.02.11_x64_Beta')
 
 from SE7EN007 import *
 from FIFALibrary20 import *
@@ -880,24 +880,34 @@ class RX3_File():
 
 			## cols
 
-			fc = FifaUtil()
+			#fc = FifaUtil()
 
 
 			if hasnormal:
 				#normals / n
 				normal = Normal()
-				normal.DEC3N = fc.FloatsToDEC3N(normals[x][0],normals[x][1],normals[x][2])
+				normal.Normal_x = normals[x][0]
+				normal.Normal_y = normals[x][1]
+				normal.Normal_z = normals[x][2]
+				# normal.DEC3N = fc.FloatsToDEC3N(normals[x][0],normals[x][1],normals[x][2])
 
 
 			if hasbinormals:
 				#binormals / b
 				binormal = Binormal()
-				binormal.DEC3N = fc.FloatsToDEC3N(binormals[x][0],binormals[x][1],binormals[x][2])
+				binormal.Binormal_x = binormals[x][0]
+				binormal.Binormal_y = binormals[x][1]
+				binormal.Binormal_z = binormals[x][2]
+				# binormal.DEC3N = fc.FloatsToDEC3N(binormals[x][0],binormals[x][1],binormals[x][2])
 
 			if hastangents:
 				#tangent / g
 				tangent = Tangent()
-				tangent.DEC3N = fc.FloatsToDEC3N(tangents[x][0],tangents[x][1],tangents[x][2])
+				tangent.Tangent_x = tangents[x][0]
+				tangent.Tangent_y = tangents[x][1]
+				tangent.Tangent_z = tangents[x][2]
+				# tangent.DEC3N = fc.FloatsToDEC3N(tangents[x][0],tangents[x][1],tangents[x][2])
+
 
 
 
@@ -1654,7 +1664,7 @@ class RX3_File_Hybrid():
 # x3 = RX3_File(r".\f14\New Folder\specificball_0_0.rx3", GameType.FIFA14)
 
 x2 = RX3_File(r".\f14\ball_0.rx3", GameType.FIFA14)
-x3 = RX3_File(r".\f14\New Folder\ball_0_0.rx3", GameType.FIFA14)
+x3 = RX3_File(r".\f14\e\ball_0.rx3", GameType.FIFA14)
 
 
 # x2 = RX3_File(r".\f14\specificball_0_13_0.rx3", GameType.FIFA14)
