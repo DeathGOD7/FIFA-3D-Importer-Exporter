@@ -10,10 +10,10 @@ sys.path.append(r'.\lib')
 
 clr.AddReference('SE7EN')
 # ref1 = clr.AddReference('FIFALibrary_v21.11.28.0_x64')
-ref1 = clr.AddReference('FIFALibrary_v22.02.11_x64_Beta')
+ref1 = clr.AddReference('FIFALibrary_v22.06.29_x64')
 
 from SE7EN007 import *
-from FIFALibrary20 import *
+from FIFALibrary22 import *
 from enum import Enum
 
 class fifa_tools():

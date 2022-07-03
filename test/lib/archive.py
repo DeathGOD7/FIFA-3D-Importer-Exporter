@@ -37,5 +37,5 @@ def decompress(archivename, path = ""):
 	else:
 		print(f"Given file is not tar file.")
 
-xas = "E:\\SE7EN\\Github\\FIFA 3D Importer Exporter\\test\\lib\\"
+xas = "S:\\GitHub\\FIFA 3D Importer Exporter\\test\\lib\\"
 compress(xas, "FIFA3D_Libs", "dll")
