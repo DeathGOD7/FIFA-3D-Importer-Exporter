@@ -1,0 +1,112 @@
+labels:
+  - name: api
+    description: This issue or pull request is related to API
+    color: b60205
+  - name: not related
+    description: not related to us or our plugins/addons
+    color: d93f0b
+  - name: awaiting response
+    description: Waiting for response
+    color: fbca04
+  - name: bug
+    description: Something isn't working
+    color: d73a4a
+  - name: can reproduce
+    description: This issue is reproducible
+    color: 4d5e94
+  - name: can't reproduce
+    description: This issue is not reproducible
+    color: d93f0b
+  - name: database
+    description: This issue or pull request is related to database
+    color: 0052cc
+  - name: dependencies
+    description: Pull requests that update a dependency file
+    color: 0366d6
+  - name: devOps
+    description: Tasks related to devOps
+    color: 0c4f20
+  - name: discord
+    description: This issue is related to Discord/API
+    color: 7289da
+  - name: discussion
+    description: This issue or pull request is currently under discussion
+    color: 7108c2
+  - name: documentation
+    description: Improvements or additions to documentation
+    color: 0075ca
+  - name: duplicate
+    description: This issue or pull request already exists
+    color: cfd3d7
+  - name: enhancement
+    description: New feature or request
+    color: a2eeef
+  - name: good first issue
+    description: Good for newcomers
+    color: 7057ff
+  - name: has PR
+    description: This issue has a pull request
+    color: d4c5f9
+  - name: help wanted
+    description: Extra attention is needed
+    color: "008672"
+  - name: invalid
+    description: This doesn't seem right
+    color: e4e669
+  - name: needs triage
+    description: This issue is yet to be reproduced
+    color: 0052cc
+  - name: performance
+    description: This issue or pull request is related to performance
+    color: 006b75
+  - name: "priority: severe"
+    description: code breaking bugs and codes. immediate action needed
+    color: b60205
+  - name: "priority: high"
+    description: Tasks with high priority. Needs to be completed immediately!
+    color: d93f0b
+  - name: "priority: low"
+    description: Tasks with low priority.
+    color: fbca04
+  - name: "priority: medium"
+    description: Tasks with medium priority. Not urgent, but better to resolve ASAP!
+    color: "5319e7"
+  - name: question
+    description: Further information is requested
+    color: d876e3
+  - name: "semver: major"
+    description: Incompatible API changes
+    color: b60205
+  - name: "semver: minor"
+    description: New functionality; backward compatibility manner
+    color: d93f0b
+  - name: "semver: patch"
+    description: Backward compatible bug fixes
+    color: fbca04
+  - name: solved
+    description: issue is solved
+    color: 0e8a16
+  - name: "status: approved"
+    description: This pull request was approved
+    color: 0e8a16
+  - name: "status: in progress"
+    description: This pull request review is in progress
+    color: 006b75
+  - name: "status: in review"
+    description: This pull request is currently being reviewed
+    color: aae128
+  - name: "status: pending"
+    description: This pull request is yet to be reviewed
+    color: da2e71
+  - name: "status: stale"
+    description: Stale
+    color: f9d0c4
+  - name: "status: declined"
+    description: the pr or issue is declined
+    color: b60205
+  - name: translation
+    description: This issue or pull request is related to translations
+    color: dd79b4
+  - name: wontfix
+    description: This will not be worked on
+    color: ffffff
