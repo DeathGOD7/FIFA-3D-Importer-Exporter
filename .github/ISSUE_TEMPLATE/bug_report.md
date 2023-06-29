@@ -28,7 +28,7 @@ If applicable, add screenshots to help explain your problem.
  - Architecture [e.g 32bit / 64bit] (Only Blender 2.80 supports 32-Bit) 
 
 **Log File**
-If there is any log file of today in "C:\Users\{YOUR USERNAME}\Documents\SE7EN\FIFA 3D\Logs", please upload it to "paste.gg" or "hastebin.com" and post the link here.
+If there is any log file of today in "C:\Users\\{YOUR USERNAME}\Documents\SE7EN\FIFA 3D\Logs", please upload it to "paste.gg" or "hastebin.com" and post the link here.
 
 **Additional context**
 Please open the system console of Blender (Window > Toggle System Console)
