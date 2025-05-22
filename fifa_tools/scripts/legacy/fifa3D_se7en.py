@@ -9,8 +9,8 @@ import bpy
 import fifa_tools
 import zlib, struct
 import math
-from fifa_tools.scripts.fifa3D_helper import *
-from fifa_tools.scripts.fifa3D_logger import *
+from fifa_tools.scripts.utils.fifa3D_helper import *
+from fifa_tools.scripts.utils import Logger, LogType
 
 sys.path.append(f'{fifa_tools.libsdir}')
 

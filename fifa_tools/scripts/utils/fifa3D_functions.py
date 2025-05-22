@@ -8,17 +8,8 @@ from mathutils import Vector, Euler, Matrix
 from math import radians, sqrt, degrees, acos, atan2
 from random import randint
 import fifa_tools
-linux_path = '/media/2tb/Blender/blender-2.71-windows64'
-if os.name == 'nt':
-	prePath = ''
-else:
-	prePath = linux_path + os.sep
-# halfpath = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'half.py'
-# half = imp.load_source(
-#     'half', prePath + halfpath)
-#half = imp.load_compiled('half', prePath + 'fifa_tools' + os.sep + 'scripts' + os.sep + 'half.pyc')
-
-from fifa_tools.scripts import half
+from fifa_tools.scripts.utils import half
+from fifa_tools.scripts.utils import make_annotations
 
 #dir = fifa_tools.addonLoc + '\\fifa_tools'
 comp = half.Float16Compressor()
@@ -95,9 +86,7 @@ class texture_helper:
 		return (
 		 texture_dict, textures_list, ambient, status)
 
-
 class general_helper:
-
 	@staticmethod
 	def read_vertices_1(f):
 		vert_tup = struct.unpack('<3f', f.read(12))
@@ -521,24 +510,10 @@ class general_helper:
 		bm.to_mesh(me)
 		bm.free()
 
-def make_annotations(cls):
-	"""Converts class fields to annotations if running with Blender 2.8"""
-	if bpy.app.version < (2, 80):
-		return cls
-	bl_props = {k: v for k, v in cls.__dict__.items() if isinstance(v, tuple)}
-	if bl_props:
-		if '__annotations__' not in cls.__dict__:
-			setattr(cls, '__annotations__', {})
-		annotations = cls.__dict__['__annotations__']
-		for k, v in bl_props.items():
-			annotations[k] = v
-			delattr(cls, k)
-	return cls
-
 classes = [
 	texture_helper,
 	general_helper
-	]
+]
 
 def register():
 	for cls in classes:

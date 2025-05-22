@@ -5,41 +5,21 @@
 
 from fifa_tools import bl_info
 import fifa_tools
-from fifa_tools.scripts.fifa3D_logger import *
+from fifa_tools.scripts.utils import *
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
-#version = (0, 67, 'alpha')
 
 import bpy, imp, os, struct, bmesh, zlib, sys
 from math import radians, degrees
 from io import BytesIO
 from shutil import copyfile
-linux_path = '/media/2tb/Blender/blender-2.71-windows64'
-if os.name == 'nt':
-	prePath = ''
-else:
-	prePath = linux_path + os.sep
-# fifa_func_path = 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.py'
-# fifa_func = imp.load_source(
-#     'fifa_func', prePath + fifa_func_path)
-#fifa_func = imp.load_compiled('fifa_func', 'fifa_tools' + os.sep + 'scripts' + os.sep + 'fifa3D_functions.pyc')
 from mathutils import Vector, Euler, Matrix
 from math import radians, sqrt
 from subprocess import call
 
-version_text = 'v' + str(version[0]) + '.' + \
-	str(version[1]) + '.' + str(version[2])
-credit1 = version_text + ", FIFA 3D Importer / Exporter "
-credit2 = "Maintained & Updated by Death GOD 7 (Original Author : arti-10)"
-sig = credit1 + '\n' + credit2
-
-# from fifa_func import general_helper as gh
-# from fifa_func import texture_helper as tex_gh
-# from fifa_func import half
-
-from fifa_tools.scripts.fifa3D_functions import general_helper as gh
-from fifa_tools.scripts.fifa3D_functions import texture_helper as tex_gh
-from fifa_tools.scripts.fifa3D_functions import half
+from fifa_tools.scripts.utils.fifa3D_functions import general_helper as gh
+from fifa_tools.scripts.utils.fifa3D_functions import texture_helper as tex_gh
+from fifa_tools.scripts.utils.fifa3D_functions import half
 
 comp = half.Float16Compressor()
 
@@ -97,7 +77,6 @@ class crowdGroup:
 			self.almostEmpty.extend(items)
 		else:
 			self.empty.extend(items)
-
 
 def createmesh(verts, faces, uvs, name, count, id, subname, colors, normal_flag, normals, loc):
 	# scn = bpy.context.scene
@@ -1301,10 +1280,10 @@ def write_textures_to_file(textures_list, type, id):
 		f.data.close()
 		return 'error'
 	else:
-		f.data.seek(f.offset_list[(-1)][1])
-		f.data.seek(f.offset_list[(-1)][2], 1)
-		s = bytes(sig, 'utf-8')
-		f.data.write(s)
+		# f.data.seek(f.offset_list[(-1)][1])
+		# f.data.seek(f.offset_list[(-1)][2], 1)
+		# s = bytes(sig, 'utf-8')
+		# f.data.write(s)
 		f.data.close()
 		print(f.offset_list)
 	return 'success'

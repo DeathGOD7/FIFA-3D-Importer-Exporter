@@ -5,54 +5,37 @@
 from fifa_tools import bl_info
 vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
-#version = (0, 67, 'alpha')
 
 import bpy
 import imp
 import os
 from bpy.props import *
 from bpy.types import Operator
-#import sys 
 
-linux_path = '/media/2tb/Blender/blender-2.71-windows64'
+import fifa_tools
 
-# Detect different operating system
-
-if os.name == 'nt':  # windows detected
-	print('\nWindows Platform Detected')
-	prePath = ''
-else:
-	prePath = linux_path + os.sep
-
-# fifa_operators_path = 'fifa_tools' + os.sep + \
-#     'scripts' + os.sep + 'fifa3D_operators.py'
-# fifa_operators = imp.load_source(
-# 	'fifa_operators', prePath + fifa_operators_path)
-
-from fifa_tools.scripts import fifa3D_main
-from fifa_tools.scripts import fifa3D_operators
-from fifa_tools.scripts.fifa3D_operators import light_props as light_props
-from fifa_tools.scripts import fifa3D_functions
-from fifa_tools.scripts import half
-from fifa_tools.scripts.fifa3D_logger import *
-
-
-#from fifa_tools.scripts.fifa3D_operators import light_props as light_props
-
-#fifa3D_operators.outregister()
+from fifa_tools.scripts.legacy import fifa3D_main
+from fifa_tools.scripts.legacy import fifa3D_operators
+from fifa_tools.scripts.legacy.fifa3D_operators import light_props as light_props
+from fifa_tools.scripts.utils import fifa3D_functions
+from fifa_tools.scripts.utils import half
+from fifa_tools.scripts.utils import Logger
 
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
 
-credit1 = "           " + version_text + ", FIFA 3D Importer / Exporter "
-credit2 = "           " + "Maintained & Updated by Death GOD 7"
-credit3 = "           " + "(Original Author : arti-10)"
+credit1 = version_text + ", FIFA 3D Importer / Exporter "
+credit2 = "Maintained & Updated by Death GOD 7"
+credit3 = "(Original Author : arti-10)"
 
 game_version = " 3D " # you can add number if you want which shows up in panel layout , removed by deathgod7
 dev_status = 0
+isFirstRun = fifa_tools.configManager.config['SETTINGS'].getboolean('First_Run')
 
-###VERTEX GROUP PANEL###
 
+### FIRST INSTALL PANEL
+
+### MAIN PANEL DEFINITION
 class FIFA_PT_CrowdSection(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
 
@@ -119,34 +102,6 @@ class FIFA_PT_CrowdSection(bpy.types.Panel):
 		r3 = col.row()
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
-
-# FACEGEN PANEL
-# class FaceGenSection(bpy.types.Panel):
-	# """Creates a Panel in the Object properties window"""
-	# bl_label = "FIFA 3D IE - FaceGen Tools"
-	# bl_idname = "facegen_panel"
-	# bl_space_type = 'PROPERTIES'
-	# bl_region_type = 'WINDOW'
-	# bl_context = "data"
-	# def draw(self,context):
-
-		# layout=self.layout
-		# scn=bpy.context.scene
-
-		# row=layout.row()
-		# row.label(icon='INFO',text='FaceGen Tools')
-		# row=layout.row()
-		# row.operator('mesh.ob_vertex_groups_separate')
-
-
-# MAIN PANEL DEFINITION
-
-
-# -------------------------------------------------------------------
-#   SE7EN Functions
-# -------------------------------------------------------------------
-
-
 
 class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
@@ -222,7 +177,6 @@ class FIFA_PT_Vertex_color_panel(bpy.types.Panel):
 		r3 = col.row()
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
-
 
 class FIFA_PT_lights_panel(bpy.types.Panel):
 	bl_category = "FIFA 3D I/E"
@@ -342,7 +296,6 @@ class FIFA_PT_lights_panel(bpy.types.Panel):
 		r3 = col.row()
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
-
 
 class FIFA_PT_FifaImporter(bpy.types.Panel):
 	"""Create category in N-Menu"""
@@ -549,7 +502,6 @@ class FIFA_PT_FifaImporter(bpy.types.Panel):
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
 
-
 class FIFA_PT_FifaExporter(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
@@ -590,92 +542,90 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		modernConflictFound = False
 
 		#region Old Legacy Checks
-		# Error Prompts
-		if (scn.stadium_export_flag and scn.trophy_export_flag) and not (scn.face_edit_flag or scn.gen_overwriter_flag):
-			row.label(text='[ERROR] Model Export conflict found.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			conflictFound = True
-		
-		elif (scn.face_edit_flag and scn.gen_overwriter_flag) and not (scn.stadium_export_flag or scn.trophy_export_flag):
-			row.label(text='[ERROR] File Overwriter conflict found.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			conflictFound = True
+		if scn.se7en_mode == "Legacy":
+			# Error Prompts
+			if (scn.stadium_export_flag and scn.trophy_export_flag) and not (scn.face_edit_flag or scn.gen_overwriter_flag):
+				row.label(text='[ERROR] Model Export conflict found.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				conflictFound = True
+			
+			elif (scn.face_edit_flag and scn.gen_overwriter_flag) and not (scn.stadium_export_flag or scn.trophy_export_flag):
+				row.label(text='[ERROR] File Overwriter conflict found.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				conflictFound = True
 
-		elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
-			row.label(
-				text='[ERROR] Exporting and Overwriting both enabled.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			conflictFound = True
+			elif (scn.stadium_export_flag or scn.trophy_export_flag) and (scn.face_edit_flag or scn.gen_overwriter_flag):
+				row.label(
+					text='[ERROR] Exporting and Overwriting both enabled.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				conflictFound = True
 
-		# Valid Notifications
-		if scn.stadium_export_flag and not(scn.trophy_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
-			row.label(text='[INFO] Stadium Export enabled.')
-			row = col.row()
+			# Valid Notifications
+			if scn.stadium_export_flag and not(scn.trophy_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
+				row.label(text='[INFO] Stadium Export enabled.')
+				row = col.row()
 
-		if scn.trophy_export_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
-			row.label(text='[INFO] Trophy/Ball Export enabled.')
-			row = col.row()
+			if scn.trophy_export_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.face_edit_flag):
+				row.label(text='[INFO] Trophy/Ball Export enabled.')
+				row = col.row()
 
-		if scn.face_edit_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.trophy_export_flag):
-			row.label(text='[INFO] Face Editing Mode enabled.')
-			row.label(
-				text='[ERROR] Exporting and Overwriting both enabled.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			conflictFound = True
-			row = col.row()
+			if scn.face_edit_flag and not (scn.stadium_export_flag or scn.gen_overwriter_flag or scn.trophy_export_flag):
+				row.label(text='[INFO] Face Editing Mode enabled.')
+				row.label(
+					text='[ERROR] Exporting and Overwriting both enabled.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				conflictFound = True
+				row = col.row()
 
-		if scn.gen_overwriter_flag and not (scn.face_edit_flag or scn.stadium_export_flag or scn.trophy_export_flag):
-			row.label(text='[INFO] General Overwriting Mode enabled.')
-			row = col.row()
+			if scn.gen_overwriter_flag and not (scn.face_edit_flag or scn.stadium_export_flag or scn.trophy_export_flag):
+				row.label(text='[INFO] General Overwriting Mode enabled.')
+				row = col.row()
 		#endregion
 		
 		#region New Modern Checks
-		
-		# Error
-		if scn.general_export_flag and (scn.stadium_export_flag or scn.head_export_flag):
-			row.label(text='[ERROR] Model Export conflict found.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			modernConflictFound = True
-		
-		elif scn.head_export_flag and (scn.general_export_flag or scn.stadium_export_flag):
-			row.label(text='[ERROR] Model Export conflict found.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			modernConflictFound = True
+		else:
+			# Error
+			if scn.general_export_flag and (scn.stadium_export_flag or scn.head_export_flag):
+				row.label(text='[ERROR] Model Export conflict found.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				modernConflictFound = True
+			
+			elif scn.head_export_flag and (scn.general_export_flag or scn.stadium_export_flag):
+				row.label(text='[ERROR] Model Export conflict found.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				modernConflictFound = True
 
-		elif scn.stadium_export_flag and (scn.general_export_flag or scn.head_export_flag):
-			row.label(text='[ERROR] Model Export conflict found.')
-			row = col.row()
-			row.label(text='[ERROR] Check your export flags.')
-			row = col.row()
-			modernConflictFound = True
+			elif scn.stadium_export_flag and (scn.general_export_flag or scn.head_export_flag):
+				row.label(text='[ERROR] Model Export conflict found.')
+				row = col.row()
+				row.label(text='[ERROR] Check your export flags.')
+				row = col.row()
+				modernConflictFound = True
 
-		# Valid Notifications
-		if scn.stadium_export_flag and not(scn.general_export_flag or scn.head_export_flag):
-			row.label(text='[INFO] Stadium Export enabled.')
-			row = col.row()
+			# Valid Notifications
+			if scn.stadium_export_flag and not(scn.general_export_flag or scn.head_export_flag):
+				row.label(text='[INFO] Stadium Export enabled.')
+				row = col.row()
 
-		if scn.general_export_flag and not (scn.stadium_export_flag or scn.head_export_flag):
-			row.label(text='[INFO] General Export enabled.')
-			row = col.row()
+			if scn.general_export_flag and not (scn.stadium_export_flag or scn.head_export_flag):
+				row.label(text='[INFO] General Export enabled.')
+				row = col.row()
 
-		if scn.head_export_flag and not (scn.stadium_export_flag or scn.general_export_flag):
-			row.label(text='[INFO] Head Export enabled.')
-			row = col.row()
-
-
-
+			if scn.head_export_flag and not (scn.stadium_export_flag or scn.general_export_flag):
+				row.label(text='[INFO] Head Export enabled.')
+				row = col.row()
 		#endregion
 
 		#endregion
@@ -685,6 +635,7 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		row.alignment = 'RIGHT'
 		row.label(text='  Mode')
 		row.prop(scn, 'se7en_mode', text='')
+		
 		# New Exporter
 		if scn.se7en_mode == "Modern":
 			box = layout.box()
@@ -854,7 +805,6 @@ class FIFA_PT_FifaExporter(bpy.types.Panel):
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
 
-
 class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
@@ -916,7 +866,6 @@ class FIFA_PT_FifaStadium_Tools(bpy.types.Panel):
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
 
-
 class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 	"""Create category in N-Menu"""
 	bl_category = "FIFA 3D I/E"
@@ -974,7 +923,6 @@ class FIFA_PT_FifaHelping_Tools(bpy.types.Panel):
 		r3.alignment = 'CENTER'
 		r3.label(text=credit3)
 
-
 if dev_status:
 	class FIFA_PT_DeveloperPanel(bpy.types.Panel):
 		"""Create category in N-Menu"""
@@ -1030,6 +978,27 @@ if dev_status:
 
 
 ###SCENE CUSTOM PROPERTIES###
+bpy.types.Scene.game_enum = bpy.props.EnumProperty(
+	# Identifier, Name, Description
+	items=[
+		('FIFA11', 'FIFA 11', 'FIFA 11'),
+		('FIFA12', 'FIFA 12', 'FIFA 12'),
+		('FIFA13', 'FIFA 13', 'FIFA 13'),
+		('FIFA14', 'FIFA 14', 'FIFA 14'),
+		('FIFA15', 'FIFA 15', 'FIFA 15'),
+		('FIFA16', 'FIFA 16', 'FIFA 16')
+		],
+	default='FIFA14',
+	name="Game Version")
+
+bpy.types.Scene.se7en_mode = bpy.props.EnumProperty(
+	items=[
+		('Legacy', 'Legacy', 'Legacy'),
+		('Modern', 'Modern', 'Modern')
+		],
+	default='Modern',
+	name="Mode")
+
 # IMPORT PROPERTIES
 ###PATHS###
 # Model Paths
@@ -1175,25 +1144,7 @@ bpy.types.Scene.crowd_fullness_enum = bpy.props.EnumProperty(
 		   ('empty_1', 'Empty', 'Empty')],
 	name='Crowd Fullness')
 
-bpy.types.Scene.game_enum = bpy.props.EnumProperty(
-	items=[
-		('FIFA11', 'FIFA 11', 'FIFA 11'),
-		('FIFA12', 'FIFA 12', 'FIFA 12'),
-		('FIFA13', 'FIFA 13', 'FIFA 13'),
-		('FIFA14', 'FIFA 14', 'FIFA 14'),
-		('FIFA15', 'FIFA 15', 'FIFA 15'),
-		('FIFA16', 'FIFA 16', 'FIFA 16')
-		],
-	default='FIFA14',
-	name="Game Version")
 
-bpy.types.Scene.se7en_mode = bpy.props.EnumProperty(
-	items=[
-		('Legacy', 'Legacy', 'Legacy'),
-		('Modern', 'Modern', 'Modern')
-		],
-	default='Legacy',
-	name="Mode")
 
 bpy.types.Scene.bones_flag = bpy.props.BoolProperty(
 	name="Import Bones",

@@ -1,7 +1,6 @@
 import struct
 import binascii
 
-
 class Float16Compressor:
 
     def __init__(self):

@@ -20,6 +20,7 @@ import os
 import sys
 import platform
 import datetime
+
 # --------------- Main Var ----------------
 pythonVer = platform.python_version()
 pythonArc = platform.architecture()[0]
@@ -29,50 +30,65 @@ vr = bl_info["version"]
 version = (vr[0], vr[1], vr[2])
 version_text = 'v' + str(version[0]) + '.' + \
 	str(version[1]) + '.' + str(version[2])
+
+credit1 = version_text + ", FIFA 3D Importer / Exporter "
+credit2 = "Maintained & Updated by Death GOD 7"
+credit3 = "(Original Author : arti-10)"
+
+game_version = " 3D " # you can add number if you want which shows up in panel layout , removed by deathgod7
+dev_status = 0
+
 # -----------------------------------------
 
 # --------------- Dir Initialize ----------------
-maindir = os.path.expanduser('~\Documents\SE7EN\FIFA 3D')
+# --------------- Dir Initialize ----------------
+maindir = os.path.join(os.path.expanduser("~"), "Documents", "SE7EN", "FIFA3D")
 
-logdir = maindir + '\Logs'
-texdir = maindir + '\Textures'
-libsdir = maindir + "\Libs"
+# maindir = os.path.join(os.environ["USERPROFILE"], "Documents", "SE7EN", "FIFA3D")
+
+logdir = os.path.join(maindir, 'Logs')
+texdir = os.path.join(maindir, 'Textures')
+libsdir = os.path.join(maindir, 'Libs')
+updatesdir = os.path.join(maindir, 'Updates')
 
 x = datetime.datetime.now()
 logfilename = x.strftime("%Y-%m-%d")
-logfile = logdir + f"\\{logfilename}.log"
+logfile = os.path.join(logdir, f"{logfilename}.log")
 
-
-
-subdirlist = [maindir, logdir, texdir, libsdir]
+subdirlist = [maindir, logdir, texdir, libsdir, updatesdir]
 # -----------------------------------------
 
 # --------------- Import Addon ----------------
-from fifa_tools import se7en_helper
+from fifa_tools.scripts.utils import PackageManager, DependencyManager, ConfigManager, Logger, LogType
 
 for x in subdirlist:
 	if not os.path.exists(x):
 		os.makedirs(x)
 
-if not os.path.exists(f'{maindir}\FIFA3DIE.ini'):
-	se7en_helper.CreateConfig("FIFA3DIE")
+configManager = ConfigManager("FIFA3DIE")
+packageManager = PackageManager(configManager)
+dependencyManager = DependencyManager(configManager)
+logFile = Logger()
 
-config = se7en_helper.ReadConfig('FIFA3DIE')
-if (config['SETTINGS'].getboolean('First_Run')):
-	se7en_helper.InstallPythonNET()
+isFirstRun = configManager.config['SETTINGS'].getboolean('First_Run')
 
-from fifa_tools import fifa3D_layout
-from fifa_tools.scripts.fifa3D_logger import *
-globalLogFile = logger()
+import fifa_tools.scripts.fifa3D_layout as fifa3D_layout
+
 # -----------------------------------------
 
 def register():
-	fifa3D_layout.register()
+	print("FIFA 3D Importer/Exporter " + version_text)
+	print("Python Version: " + pythonVer + " " + pythonArc)
+	print("Addon Location: " + addonLoc)
+	print("FIFA 3D Directory: " + maindir)
 	print("\nRegistering FIFA 3D Importer/Exporter")
+	fifa3D_layout.register()
+	print("FIFA 3D Importer/Exporter registered successfully")
 
 def unregister():
-	fifa3D_layout.unregister()
 	print("\nUnregistering FIFA 3D Importer/Exporter")
+	fifa3D_layout.unregister()
+	print("FIFA 3D Importer/Exporter unregistered successfully")
 
 if __name__ == "__main__":
 	register()
