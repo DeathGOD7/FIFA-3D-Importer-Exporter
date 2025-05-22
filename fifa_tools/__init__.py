@@ -81,12 +81,12 @@ def register():
 	print("Python Version: " + pythonVer + " " + pythonArc)
 	print("Addon Location: " + addonLoc)
 	print("FIFA 3D Directory: " + maindir)
-	print("\nRegistering FIFA 3D Importer/Exporter")
+	print("Registering FIFA 3D Importer/Exporter")
 	fifa3D_layout.register()
 	print("FIFA 3D Importer/Exporter registered successfully")
 
 def unregister():
-	print("\nUnregistering FIFA 3D Importer/Exporter")
+	print("Unregistering FIFA 3D Importer/Exporter")
 	fifa3D_layout.unregister()
 	print("FIFA 3D Importer/Exporter unregistered successfully")
 

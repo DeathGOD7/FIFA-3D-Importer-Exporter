@@ -49,7 +49,7 @@ class FIFA3D_PT_FirstInstall(bpy.types.Panel):
 		box.label(icon='INFO', text='Info')
 		col1 = box.column()
 		col1.label(text = "Since this is your first time installing this addon.")
-		col1.label(text = "Please follow the guide on how to install properly.")
+		col1.label(text = "Please follow the guide on how to install it properly.")
 		col1.label(text = "1) Click on 'Install Python.NET'")
 		col1.label(text = "2) Get the libs from github repo")
 		col1.label(text = "3) Put it in your ..\\Documents\\SE7EN\FIFA3D\\Updates")

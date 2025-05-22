@@ -85,45 +85,40 @@ class ArchiveManager():
 	ArchiveManager class for managing archive files.
 
 	Methods:
-	- __init__(self): Initializes the ArchiveManager.
 	- compress(self, path, archivename, ext=None): Compresses files in a specified directory into a tar.gz archive.
-	- decompress(self, archivename, path=""): Decompresses a tar.gz archive into a specified directory.
+	- decompress(self, archivename, path=""): Decompresses a tar.gz or tar archive into a specified directory.
 	"""
 	
 	def __init__(self):
 		pass
 
 	def compress(self, path, archivename, ext=None):
-		if ext != None:
-			files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) if f.endswith(f".{ext}")]
-		else:
-			files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+		if not os.path.isdir(path):
+			print(f"Error: '{path}' is not a directory.")
+			return
 
-		print(f"Compressing : {files}")
-
-		with tarfile.open(f"{path}\\{archivename}.tar.gz","w:gz") as tar:
-			for file in files:
-				tar.add(os.path.basename(file))
+		with tarfile.open(f"{archivename}.tar.gz", "w:gz") as tar:
+			for root, _, files in os.walk(path):
+				for file in files:
+					if ext is None or file.endswith(f".{ext}"):
+						full = os.path.join(root, file)
+						rel = os.path.relpath(full, start=path)
+						tar.add(full, arcname=rel)
+						print(f"Added: {rel}")
 		
-		print(f"Files Compressed.")
+		print("Files compressed.")
 
-	def decompress(self, archivename, path = ""):
-		if tarfile.is_tarfile(archivename):
-			if path == "":
-				outdir = "."
-			else:
-				outdir = path
+	def decompress(self, archivename, path=""):
+		if not tarfile.is_tarfile(archivename):
+			print("Error: Given file is not a valid tar archive.")
+			return
 
-			if archivename.endswith("tar.gz"):
-				tar = tarfile.open(archivename, "r:gz")
-				tar.extractall(outdir)
-				tar.close()
-			elif archivename.endswith("tar"):
-				tar = tarfile.open(archivename, "r:")
-				tar.extractall(outdir)
-				tar.close()
-		else:
-			print(f"Given file is not tar file.")		
+		outdir = path if path else "."
+
+		mode = "r:gz" if archivename.endswith(".tar.gz") else "r:"
+		with tarfile.open(archivename, mode) as tar:
+			tar.extractall(outdir)
+			print(f"Extracted to: {outdir}")		
 
 class PackageManager():
 	"""
@@ -141,7 +136,6 @@ class PackageManager():
 		self.config = configmanager.config
 		self.python_exe = os.path.join(sys.prefix, 'bin', 'python.exe')
 		print(f"Using python from : {self.python_exe}")
-		print(f"Python Version : {fifa_tools.pythonVer} ({fifa_tools.pythonArc})")
 		self.checkFirstRun()
 
 	def checkFirstRun(self):
@@ -180,9 +174,10 @@ class DependencyManager():
 		self.config = configmanager.config
 		self.installedVersion = self.config['VERSIONS']['FIFA3DLibs']
 		self.isInstalled = self.installedVersion != "0.0.0"
-		self.checkDependencies()
 
 	def checkDependencies(self):
+		self.availableVersions.clear()
+
 		if not os.path.exists(self.depsLoc):
 			os.makedirs(self.depsLoc)
 
@@ -197,7 +192,7 @@ class DependencyManager():
 
 		if not self.isInstalled:
 			print("FIFA3DLibs not installed. Please install the libs.")
-			print("Please download the libs from the website and place them in the Updates folder.")
+			print("Please download the libs from the GitHub and place them in the Updates folder.")
 
 	def installLibs(self, version):
 		if version not in self.availableVersions:
@@ -211,11 +206,10 @@ class DependencyManager():
 
 		updatefile = os.path.join(self.depsUpdateLoc, f"FIFA3DLibs_v{version}.tar.gz")
 		if os.path.exists(updatefile):
-			print(f"Installing FIFA3DLibs v{version}...")
 			archive_manager = ArchiveManager()
 			archive_manager.decompress(updatefile, self.depsLoc)
 			self.configManager.writeConfig("VERSIONS", "FIFA3DLibs", version)
-			print(f"FIFA3DLibs v{version} installed.")
+			self.isInstalled = True
 
 class ConfigManager():
 	"""
